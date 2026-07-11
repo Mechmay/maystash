@@ -1,0 +1,22 @@
+# maystash
+
+> Personal site of May — long-form, reproducible writing on AI agents, second brains
+> (persistent AI memory systems), security, and building products from zero.
+> Every article is a complete blueprint: frameworks, templates, and copy-paste starter kits.
+> Plain-markdown source, no paywall, no gating.
+
+## Posts
+
+- [The AI Memory Everyone's Building Is a Diary. Here's How to Build a Brain That Sleeps.](https://maystash.xyz/posts/brain-that-sleeps/):
+  Seven primitives for a self-improving AI second brain on plain text files — index-first
+  retrieval, verified/guess tagging, rule distillation, git as memory versioning, a weekly
+  "dreaming" consolidation pass, memory-poisoning defenses, and a copy-paste starter kit.
+
+## Feeds
+
+- [RSS](https://maystash.xyz/rss.xml)
+- [Sitemap](https://maystash.xyz/sitemap-index.xml)
+
+## Author
+
+May — cybersecurity, web3, applied AI, 0→1 products.

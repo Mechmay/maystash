@@ -1,0 +1,219 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
+
+const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).length / 220));
+---
+<Layout title="maystash — a stash of tech, brains & builds">
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-slate mono">
+      <span>SCENE 001</span>
+      <span>INT. INTERNET — NIGHT</span>
+      <span>TAKE ∞</span>
+    </div>
+    <h1 class="hero-title">MAY<br />STASH</h1>
+    <p class="hero-tagline">
+      A stash of things I build, break, and figure out —
+      <em>AI, second brains, security, and whatever refuses to leave my head.</em>
+    </p>
+    <div class="hero-scroll mono">↓ ROLL FILM</div>
+  </header>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track mono">
+      {Array(2).fill(0).map(() => (
+        <span>SECOND BRAINS · AI AGENTS · SECURITY · WEB3 · SHIPPING 0→1 · PLAIN TEXT SUPREMACY · SECOND BRAINS · AI AGENTS · SECURITY · WEB3 · SHIPPING 0→1 · PLAIN TEXT SUPREMACY · </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- FEATURE PRESENTATION -->
+  <main class="reel">
+    <div class="reel-header mono reveal">NOW SHOWING — FEATURE PRESENTATION</div>
+
+    {posts.map((post, i) => (
+      <a href={`/posts/${post.id}/`} class="card reveal">
+        <div class="card-ch mono">CH.{post.data.chapter}</div>
+        <div class="card-body">
+          <h2 class="card-title">{post.data.title}</h2>
+          <p class="card-tagline">{post.data.tagline}</p>
+          <div class="card-meta mono">
+            <span>{fmt(post.data.date)}</span>
+            <span>{readMins(post.body ?? '')} MIN READ</span>
+            <span class="card-cta">WATCH →</span>
+          </div>
+        </div>
+      </a>
+    ))}
+
+    <!-- COMING SOON -->
+    <div class="soon reveal">
+      <div class="soon-label mono">COMING SOON TO THIS THEATRE</div>
+      <ul class="soon-list">
+        <li><span class="mono">CH.02</span> Build logs — shipping products in public, scars included</li>
+        <li><span class="mono">CH.03</span> Security field notes — how things break, told like heists</li>
+        <li><span class="mono">CH.04</span> Agent experiments — loops, dreams, and controlled chaos</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- ABOUT STRIP -->
+  <section class="about reveal">
+    <div class="about-slate mono">CAST &amp; CREW — ONE PERSON, MANY HATS</div>
+    <p class="about-text">
+      I'm <strong>May</strong>. I work across cybersecurity, web3, applied AI, and 0→1 products.
+      This site is where the useful stuff gets written down properly —
+      long-form, no fluff, everything reproducible.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  /* ---- hero ---- */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 6rem 1.5rem 4rem;
+    position: relative;
+  }
+  .hero-slate {
+    display: flex;
+    gap: 2.5rem;
+    color: var(--bone-dim);
+    margin-bottom: 2.2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 22vw, 19rem);
+    line-height: 0.86;
+    letter-spacing: 0.01em;
+    color: var(--bone);
+    text-shadow: 0.04em 0.04em 0 var(--klein);
+  }
+  .hero-tagline {
+    max-width: 34rem;
+    margin-top: 2.4rem;
+    font-size: 1.3rem;
+    color: var(--bone-dim);
+  }
+  .hero-tagline em { color: var(--bone); font-style: italic; }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    color: var(--bone-dim);
+    animation: bob 2.2s ease-in-out infinite;
+  }
+  @keyframes bob { 50% { transform: translateY(6px); } }
+
+  /* ---- marquee ---- */
+  .marquee {
+    border-top: 1px solid #26262b;
+    border-bottom: 1px solid #26262b;
+    overflow: hidden;
+    padding: 0.8rem 0;
+    background: var(--klein);
+  }
+  .marquee-track {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 30s linear infinite;
+    color: var(--bone);
+    font-size: 0.78rem;
+  }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ---- reel / cards ---- */
+  .reel { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+  .reel-header { color: var(--bone-dim); margin-bottom: 2.2rem; }
+
+  .card {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    padding: 2.4rem 1.6rem;
+    border-top: 1px solid #26262b;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.25s ease;
+    position: relative;
+  }
+  .card:hover { background: var(--klein); }
+  .card:hover .card-ch, .card:hover .card-meta { color: var(--bone); }
+  .card-ch { color: var(--acid); padding-top: 0.6rem; min-width: 4.5rem; }
+  .card-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.6rem, 4vw, 3.2rem);
+    line-height: 1.05;
+    letter-spacing: 0.005em;
+    color: var(--bone);
+    text-transform: uppercase;
+  }
+  .card-tagline {
+    margin-top: 0.9rem;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--bone-dim);
+    max-width: 52rem;
+  }
+  .card:hover .card-tagline { color: var(--bone); }
+  .card-meta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.3rem;
+    color: var(--bone-dim);
+    flex-wrap: wrap;
+  }
+  .card-cta { color: var(--acid); }
+
+  /* ---- coming soon ---- */
+  .soon { border-top: 1px solid #26262b; padding: 3rem 1.6rem; }
+  .soon-label { color: var(--bone-dim); margin-bottom: 1.4rem; }
+  .soon-list { list-style: none; }
+  .soon-list li {
+    padding: 0.7rem 0;
+    color: var(--bone-dim);
+    font-size: 1.1rem;
+    font-style: italic;
+    display: flex;
+    gap: 1.4rem;
+    align-items: baseline;
+  }
+  .soon-list .mono { color: #55555e; font-style: normal; }
+
+  /* ---- about ---- */
+  .about {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 2rem 6rem;
+  }
+  .about-slate { color: var(--bone-dim); margin-bottom: 1.6rem; }
+  .about-text {
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    line-height: 1.35;
+    max-width: 56rem;
+  }
+  .about-text strong { color: var(--acid); font-weight: 500; }
+
+  @media (max-width: 640px) {
+    .card { flex-direction: column; gap: 0.6rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track, .hero-scroll { animation: none; }
+  }
+</style>

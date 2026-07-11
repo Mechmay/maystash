@@ -1,0 +1,195 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = post.data.date
+  .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+  .toUpperCase();
+const mins = Math.max(1, Math.round((post.body ?? '').split(/\s+/).length / 220));
+---
+<Layout title={`${post.data.title} — maystash`} description={post.data.tagline}>
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="bar"></div></div>
+
+  <!-- TITLE CARD -->
+  <header class="title-card">
+    <div class="tc-slate mono">
+      <span>CH.{post.data.chapter}</span>
+      <span>{fmt}</span>
+      <span>{mins} MIN</span>
+    </div>
+    <h1 class="tc-title">{post.data.title}</h1>
+    <p class="tc-tagline">{post.data.tagline}</p>
+    <div class="tc-open mono">— COLD OPEN —</div>
+  </header>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <div class="post-end">
+    <div class="mono end-slate">CUT TO BLACK.</div>
+    <a href="/" class="mono back">← BACK TO THE LOBBY</a>
+  </div>
+
+  <script>
+    const bar = document.getElementById('bar');
+    addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+      if (bar) bar.style.transform = `scaleX(${p})`;
+    }, { passive: true });
+  </script>
+</Layout>
+
+<style>
+  .progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 200;
+    background: transparent;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--acid);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+  }
+
+  .title-card {
+    min-height: 82svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 7rem 1.5rem 3rem;
+  }
+  .tc-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 2rem; flex-wrap: wrap; justify-content: center; }
+  .tc-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.2rem, 6.5vw, 5.5rem);
+    line-height: 1.02;
+    text-transform: uppercase;
+    max-width: 22ch;
+    color: var(--bone);
+    text-shadow: 0.03em 0.03em 0 var(--klein);
+  }
+  .tc-tagline {
+    margin-top: 1.8rem;
+    max-width: 42rem;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--bone-dim);
+  }
+  .tc-open { margin-top: 3.5rem; color: var(--acid); }
+
+  .post-end { text-align: center; padding: 5rem 1rem 6rem; }
+  .end-slate { color: var(--bone-dim); margin-bottom: 1.6rem; }
+  .back { color: var(--acid); text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+</style>
+
+<style is:global>
+  .prose {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    font-size: 1.22rem;
+    line-height: 1.72;
+    font-weight: 380;
+  }
+  .prose h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 4.2rem 0 1.4rem;
+    color: var(--bone);
+  }
+  .prose h2::before {
+    content: '— SCENE —';
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--acid);
+    margin-bottom: 0.9rem;
+  }
+  .prose h3 {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 2.8rem 0 1rem;
+    color: var(--acid);
+  }
+  .prose p { margin: 1.15rem 0; }
+  .prose strong { color: var(--bone); font-weight: 640; }
+  .prose em { color: var(--bone); }
+  .prose a { color: var(--acid); text-underline-offset: 3px; }
+  .prose ul, .prose ol { margin: 1.2rem 0 1.2rem 1.4rem; }
+  .prose li { margin: 0.55rem 0; }
+  .prose blockquote {
+    border-left: 3px solid var(--klein);
+    padding: 0.4rem 0 0.4rem 1.4rem;
+    margin: 1.8rem 0;
+    font-style: italic;
+    color: var(--bone-dim);
+  }
+  .prose hr {
+    border: none;
+    margin: 3.5rem auto;
+    text-align: center;
+  }
+  .prose hr::after {
+    content: '· · ·';
+    font-family: var(--font-mono);
+    color: var(--bone-dim);
+    letter-spacing: 0.6em;
+  }
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: #1b1b20;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    color: var(--acid);
+  }
+  .prose pre {
+    background: #101014 !important;
+    border: 1px solid #26262b;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    overflow-x: auto;
+    margin: 1.6rem 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+  .prose pre code { background: none; padding: 0; color: inherit; }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.8rem 0;
+    font-size: 0.95rem;
+  }
+  .prose th, .prose td {
+    border: 1px solid #26262b;
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+  }
+  .prose th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-dim); }
+</style>

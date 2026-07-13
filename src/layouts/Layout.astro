@@ -58,7 +58,12 @@ const baseLd = {
 
     <nav class="site-nav" id="site-nav">
       <a href="/" class="nav-logo">maystash<span class="blink">▮</span></a>
-      <div class="nav-slate mono">EST. 2026 &nbsp;·&nbsp; REEL 001</div>
+      <div class="nav-right">
+        <span class="nav-slate mono">EST. 2026 &nbsp;·&nbsp; REEL 001</span>
+        <a href="https://x.com/checkthehash" class="nav-x" target="_blank" rel="me noopener" aria-label="May on X">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.6l5.24 6.93 6.06-6.93Zm-1.29 19.5h2.04L6.48 3.24H4.29L17.61 20.65Z"/></svg>
+        </a>
+      </div>
     </nav>
 
     <slot />
@@ -68,6 +73,14 @@ const baseLd = {
         <div class="credit-row"><span>WRITTEN &amp; DIRECTED BY</span><span>MAY</span></div>
         <div class="credit-row"><span>SHOT ON</span><span>PLAIN TEXT FILES</span></div>
         <div class="credit-row"><span>NO KNOWLEDGE WAS HARMED</span><span>© 2026 MAYSTASH.XYZ</span></div>
+      </div>
+      <div class="footer-social">
+        <a href="https://x.com/checkthehash" target="_blank" rel="me noopener" class="x-link mono" aria-label="Follow May on X">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          <span>@checkthehash</span>
+        </a>
       </div>
       <div class="footer-end mono">FIN.</div>
     </footer>
@@ -186,6 +199,14 @@ const baseLd = {
   .nav-slate { color: var(--bone-dim); transition: opacity 0.3s ease; }
   @media (max-width: 640px) { .nav-slate { display: none; } }
 
+  .nav-right { display: flex; align-items: center; gap: 1.3rem; }
+  .nav-x {
+    display: inline-flex;
+    color: var(--bone);
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .nav-x:hover { color: var(--acid); transform: translateY(-1px); }
+
   /* ---- reveal ---- */
   .reveal {
     opacity: 0;
@@ -209,6 +230,23 @@ const baseLd = {
     padding: 0.55rem 0;
     border-bottom: 1px dotted #2c2c33;
   }
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+  .x-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--bone-dim);
+    text-decoration: none;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid #2c2c33;
+    border-radius: 999px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .x-link:hover { color: var(--acid); border-color: var(--acid); }
   .footer-end {
     text-align: center;
     margin-top: 3.5rem;

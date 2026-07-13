@@ -100,13 +100,14 @@ for (const f of readdirSync(postsDir).filter((f) => f.endsWith('.md'))) {
   const fm = raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
   const title = fm.match(/^title:\s*["']?(.*?)["']?\s*$/m)?.[1] ?? f;
   const chapter = fm.match(/^chapter:\s*["']?(\w+)["']?\s*$/m)?.[1] ?? '';
+  const section = fm.match(/^section:\s*["']?(\w+)["']?\s*$/m)?.[1] ?? 'feature';
   const id = f.replace(/\.md$/, '');
   render(
     ogCard({
       slate: `MAYSTASH — CH.${chapter}`,
       title,
       footerLeft: 'MAYSTASH.XYZ',
-      footerRight: 'A FEATURE PRESENTATION',
+      footerRight: section === 'matinee' ? 'A MATINEE SCREENING' : 'A FEATURE PRESENTATION',
       titleSize: 76,
     }),
     join(root, `public/og/${id}.png`),

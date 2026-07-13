@@ -2,9 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+const all = (await getCollection('posts', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
+const posts = all.filter((p) => p.data.section === 'feature');
+const matinee = all.filter((p) => p.data.section === 'matinee');
 
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
@@ -55,6 +57,28 @@ const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).leng
       </a>
     ))}
 
+    {matinee.length > 0 && (
+      <>
+        <div class="reel-header mono reveal matinee-header">
+          MATINEE SCREENINGS — NO JARGON, EVERYONE WELCOME
+        </div>
+        {matinee.map((post) => (
+          <a href={`/posts/${post.id}/`} class="card reveal">
+            <div class="card-ch mono">CH.{post.data.chapter}</div>
+            <div class="card-body">
+              <h2 class="card-title">{post.data.title}</h2>
+              <p class="card-tagline">{post.data.tagline}</p>
+              <div class="card-meta mono">
+                <span>{fmt(post.data.date)}</span>
+                <span>{readMins(post.body ?? '')} MIN READ</span>
+                <span class="card-cta">WATCH →</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </>
+    )}
+
     <!-- COMING SOON -->
     <div class="soon reveal">
       <div class="soon-label mono">COMING SOON TO THIS THEATRE</div>
@@ -62,6 +86,7 @@ const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).leng
         <li><span class="mono">CH.02</span> Build logs — shipping products in public, scars included</li>
         <li><span class="mono">CH.03</span> Security field notes — how things break, told like heists</li>
         <li><span class="mono">CH.04</span> Agent experiments — loops, dreams, and controlled chaos</li>
+        <li><span class="mono">MATINEE</span> Plain-language screenings — tech questions everyone asks, answered without the jargon</li>
       </ul>
     </div>
   </main>
@@ -140,6 +165,7 @@ const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).leng
   /* ---- reel / cards ---- */
   .reel { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
   .reel-header { color: var(--bone-dim); margin-bottom: 2.2rem; }
+  .matinee-header { margin-top: 4.5rem; color: var(--acid); }
 
   .card {
     display: flex;

@@ -12,6 +12,16 @@
   retrieval, verified/guess tagging, rule distillation, git as memory versioning, a weekly
   "dreaming" consolidation pass, memory-poisoning defenses, and a copy-paste starter kit.
 
+- [Your Burger Drinks More Than Your Chatbot. So Why Are the Wells Running Dry?](https://maystash.xyz/posts/thirsty-machines/):
+  Plain-language one-stop guide to AI and water. What an AI prompt actually costs (a few
+  drops to a shot glass, depending which "fence" you measure), how it compares to burgers
+  (~2,500 L), jeans, coffee, and golf (US golf out-drinks all US data centers ~30x); the
+  three measurement boundaries that explain why estimates vary 2,000x; per-model disclosure
+  scoreboard (Gemini and Mistral disclose, OpenAI barely, Anthropic/Meta/xAI/DeepSeek not
+  at all); what Microsoft/Google/AWS/Meta/xAI are doing to mitigate; and why data-center
+  neighbors (The Dalles, West Des Moines, Newton County, Memphis, Tucson) are right to worry
+  even though nationally AI water use is a rounding error. First post in the Matinee section.
+
 ## Feeds
 
 - [RSS](https://maystash.xyz/rss.xml)

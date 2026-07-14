@@ -5,7 +5,7 @@ date: 2026-07-13
 chapter: "M1"
 section: "matinee"
 tags: ["ai", "water", "data-centers", "environment", "explainers"]
-draft: false
+draft: true
 ---
 
 INT. A BACKYARD BARBECUE — SATURDAY AFTERNOON.

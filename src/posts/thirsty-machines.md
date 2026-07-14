@@ -72,6 +72,12 @@ A data center is thousands of computers in a warehouse, and computers turn elect
 
 That's the whole physics. There is no zero-water option — only choices about *whose* water, *where*. Even the nuclear-powered data centers now being planned solve carbon, not water: nuclear plants are themselves heavy water users. The honest fix is pairing efficient cooling with wind and solar, which need almost no water at all.
 
+## The word "consumed" is doing a lot of work
+
+Here's the part that quietly reframes the whole panic: **the water isn't destroyed. It's moved.** Nothing a data center does deletes an H₂O molecule. Water that "sweats" out of a cooling tower rises as vapor and falls again as rain — somewhere. The catch is that "somewhere" is almost never the same town. Evaporative cooling [consumptively removes 70–90% of the water it withdraws from the local watershed](https://arxiv.org/pdf/2606.21760) — pulled from a specific lake, river, or aquifer (often the very one that supplies drinking water), then handed to the sky to fall who-knows-where. That is all "consumed" means on a water bill: not gone from Earth, gone from *here*.
+
+And the portion that *doesn't* evaporate isn't thrown away. In a typical setup the same water is [cycled through the cooling system 2 to 5 times, then sent back to the local treatment plant and released into the watershed](https://local.microsoft.com/blog/understanding-water-use-at-microsoft-datacenters/) it came from. So the accurate sentence isn't "AI is drinking the planet dry." It's: *AI relocates a town's water into the atmosphere, and whether that town gets it back is left to the weather.* Less scary, more precise — and it points straight at the real fix, which is to stop evaporating the water in the first place.
+
 ## The scoreboard nobody will publish
 
 Here's what each AI company has actually told the world about what one use of their product costs in water:
@@ -102,7 +108,17 @@ More than critics admit; less than the press releases imply. The current state o
 - **OpenAI's** flagship sites use the sealed-loop design. **xAI** promised Memphis an $80M recycling plant so its supercomputer stops drinking from the city's drinking-water aquifer — then [paused construction to build more computers first](https://www.eenews.net/articles/xai-sidelines-major-water-reuse-project-as-ipo-looms/), now promising completion by 2027. Make of that ordering what you will.
 - **Anthropic** has made no water commitments at all; its models run inside Amazon's and Google's clouds, so its footprint hides inside their reports.
 
-The fine print that applies to every bullet above: "water positive" math counts *funded restoration projects* against *direct operational use only* — the water embedded in their electricity doesn't count, and almost none of the claims are independently audited. Directionally real. Precisely unverifiable.
+Under those pledges sit a few actual techniques — the engineering, not the PR. Worth knowing them, because this is where the real progress is:
+
+- **Recycle the same water 2–5 times** before discharging it, instead of once-through. Standard practice now, and the reason a data center's *consumption* is far below its *withdrawal*. ([Microsoft](https://local.microsoft.com/blog/understanding-water-use-at-microsoft-datacenters/))
+- **Drink water nobody else wants.** Treated sewage (reclaimed water) and industrial greywater instead of drinking water — [closed-loop systems can cut freshwater use up to 70%](https://www.eesi.org/articles/view/data-centers-and-water-consumption). Microsoft's Quincy, Washington site [cut potable-water use 97% and returns 1.5 million cubic meters a year back to the community for drinking](https://local.microsoft.com/blog/understanding-water-use-at-microsoft-datacenters/).
+- **Catch the rain.** On-site rainwater harvesting now feeds cooling at [Microsoft sites in the Netherlands and Ireland](https://local.microsoft.com/blog/understanding-water-use-at-microsoft-datacenters/), expanding to a dozen more countries.
+- **Hand the leftovers to farmers.** In Oregon, AWS gives up to 96% of its used cooling water to local growers for irrigation (above).
+- **Close the loop completely** with direct-to-chip liquid cooling — fill once, recirculate forever, zero evaporation (the Microsoft and Stargate designs above).
+
+Now the comparison the barbecue never makes. A hamburger's water can't be recycled — once it's soaked into the corn and the cow, it's locked in the food and gone. A cotton t-shirt's ~2,700 liters mostly evaporate off a field with no pipe to catch it. Farms and golf courses *can* mitigate — [reclaimed water and subsurface drip irrigation that waters roots without evaporating are established practice](https://link.springer.com/chapter/10.1007/978-3-031-88396-5_5) — but agriculture, the thing using ~70% of all freshwater, still has no loop to close on most of it. A data center is, oddly, one of the few giant water users that can send most of its water *straight back to the tap*. That doesn't make the industry saintly — the sites that don't bother, or that hide their meter, have earned every protest. But the ceiling for doing better is genuinely higher for a data center than for your dinner, and that's a point almost nobody makes because it cuts against both sides' talking points at once.
+
+The fine print that applies to every pledge above: "water positive" math counts *funded restoration projects* against *direct operational use only* — the water embedded in their electricity doesn't count, and almost none of the claims are independently audited. Directionally real. Precisely unverifiable.
 
 ## Why the neighbors are still right
 

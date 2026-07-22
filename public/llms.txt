@@ -22,6 +22,16 @@
   neighbors (The Dalles, West Des Moines, Newton County, Memphis, Tucson) are right to worry
   even though nationally AI water use is a rounding error. First post in the Matinee section.
 
+- [Your AI Agent Doesn't Need More Autonomy. It Needs a Leash With Six Knots.](https://maystash.xyz/posts/agents-need-a-leash/):
+  The six-clause contract every recurring AI job (a "loop") should sign before it runs
+  unsupervised — explicit schedule, one changed variable per round, a versioned metric,
+  a state file (with the watchdog trick: a stale last_run means silent death), three hard
+  stops (done condition, blocked condition that halts and logs instead of retrying, and a
+  budget cap), and an independent verifier so the context that produced the work never
+  grades it. Golden rule: a loop automates a motion you already do well by hand, never
+  invents one, and loops draft/flag while humans keep publish and delete. Includes a
+  20-minute setup checklist.
+
 ## Feeds
 
 - [RSS](https://maystash.xyz/rss.xml)

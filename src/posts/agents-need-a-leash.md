@@ -4,7 +4,7 @@ tagline: "Everyone wants agents that run unsupervised. Almost nobody builds the 
 date: 2026-07-18
 chapter: "02"
 tags: ["ai", "agents", "automation", "loops"]
-draft: true
+draft: false
 ---
 
 INT. YOUR COMPUTER — 3:47 AM.

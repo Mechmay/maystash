@@ -32,6 +32,19 @@
   invents one, and loops draft/flag while humans keep publish and delete. Includes a
   20-minute setup checklist.
 
+- [One of Our Players Never Lost. That Wasn't Skill — It Was Our Bug.](https://maystash.xyz/posts/player-who-never-lost/):
+  Plain-language case study of two cheats against a daily number-puzzle game (Dinjure) and
+  the fixes. Cheat one: the daily secret was derived by client-side code shipped to every
+  browser, so anyone reading the page source could compute the answer and "solve" in one
+  guess — fixed by moving secret generation and answer-checking to the server so the client
+  never holds the answer. Cheat two: unlimited free anonymous accounts plus an end-of-game
+  answer reveal let a player scout the code on a throwaway account, then solve on their real
+  one — caught by timestamp patterns (the clincher: the throwaway lost and the real account
+  still solved perfectly), fixed server-side by excluding the affected scores from ranking
+  rather than banning. Detection logic deliberately unpublished. Lessons: anything sent to
+  the client is readable, frictionless free access is also free abuse surface, cheating is
+  usually unwatched rather than invisible, and demoting beats punishing. Matinee section.
+
 ## Feeds
 
 - [RSS](https://maystash.xyz/rss.xml)

@@ -1,113 +1,101 @@
 # X Article — we-gave-him-a-different-puzzle (follow-up to player-who-never-lost)
 
-Post via X's Article composer (long-form), not a thread. Same body works as-is for LinkedIn — this is the follow-up to the CH.M2 piece already posted there, and it opens by quoting it, so post it as a reply/comment link on that original LinkedIn post too. Cover image: `public/og/we-gave-him-a-different-puzzle.png`. Canonical link at bottom.
+Post via X's Article composer (long-form), not a thread. Same body works as-is for LinkedIn — it's the sequel to the CH.M2 piece already posted there and opens by quoting it, so drop it as a follow-up on that original LinkedIn post. Cover image: `public/og/we-gave-him-a-different-puzzle.png`. Canonical link at bottom.
 
 **Do not** add detail about how the detection actually works — no timing windows, no account-shape conditions, no network/IP signals, no strike counts. See `SecondBrain/memory/projects/dinjure.md`. The warm-up round itself is public and labelled in-app, so describing *that* is fine.
 
 ---
 
-## We Stopped Trying to Catch the Cheater. We Gave Him a Different Puzzle.
+## We Stopped Chasing the Cheater. We Gave Him a Different Puzzle.
 
-Three days ago I published the story of a player on our daily puzzle game who never lost — and how that turned out to be our bug, not his talent. It ended like this:
+Three days ago I published the story of a player on our daily puzzle game who never lost — and how that was our bug, not his talent. It ended like this:
 
 > "The scoreboard's clean again. For now — which is the only version of 'clean' anyone ever actually gets."
 
-I meant that as a wry sign-off. It turned out to be a schedule. *For now* lasted about a day.
+I meant it as a wry sign-off. It was a schedule. *For now* lasted about a day.
 
-This is the sequel, and it has a better ending — because we finally stopped playing detective.
+### The trap of catching people
 
-### Previously, in two sentences
+Quick catch-up: everyone in the world gets the same secret code each day. He'd found a way to see it early, and our answer was to spot the pattern and quietly stop counting his score.
 
-Our daily puzzle gives everyone in the world the same secret code. First we accidentally shipped the recipe for that code inside the game itself, so one player could read the answer key off his own screen. We fixed that; he came back with a second trick — burn through the puzzle on a throwaway account, read the answer off the ending screen, then go solve it "properly" on his real account.
+That worked. Every day. Which sounds like winning.
 
-### He came back. Then he came back again.
+It isn't. Here's what nobody tells you: every time you catch someone, you teach them. He'd adjust. We'd catch the adjustment. He'd adjust again. Each round our rule got longer, and each round he learned the shape of the net by feeling where it wasn't.
 
-Our answer to trick two was to notice the pattern and quietly stop counting scores that showed it. That worked. It kept working, day after day, which sounds like a win.
+That's not security. That's a subscription — and he sets the billing cycle.
 
-It isn't. Here's the thing nobody tells you about catching cheaters: every time you catch someone, you teach them. He'd adjust. We'd catch the adjustment. He'd adjust again. Each round our rule got longer and more specific, and each round he learned a little more about the shape of the net by feeling where it wasn't.
+### The morning the game lied to him
 
-That's not security. That's a subscription. You pay it forever, in attention, and the other person sets the billing cycle.
-
-### The day the game lied to him
-
-Then something funny happened. He tried a version of the trick that skipped signing in altogether — no account at all, not even a throwaway.
+Then he tried a version of the trick with no account at all. Not even a throwaway. Just an anonymous browser window.
 
 And the game handed him a wrong number.
 
-Not on purpose. It was a leftover: the part of our game that works offline still used the old way of making a code, from before we moved the real answer onto our own machines. So a player who never signs in never touches the real puzzle. He grades himself against a ghost.
+Not on purpose. Leftover plumbing: the part of our game that works offline still made codes the old way, from before we moved the real answer onto our own machines. Nobody signed in ever touches the real puzzle. They're graded against a ghost.
 
-He spent that morning solving a code that wasn't the code, then carried it back to his real account and posted his worst result in ten days.
+So he spent that morning cracking a code that wasn't the code, carried it triumphantly back to his real account, and posted his worst result in ten days.
 
-We hadn't built a trap. We'd left one lying around. And staring at it, the actual fix got obvious.
+We hadn't built a trap. We'd left one lying around. And staring at it, the fix finally got obvious.
 
-### What we resorted to: a real puzzle, just not *the* puzzle
+### What we resorted to
 
-Stop asking *how do we spot him.* Ask *what is he actually taking?*
+Stop asking *how do we spot him*. Ask *what is he taking?*
 
-He was taking the ending. The reveal. Every route he found — the answer key, the throwaway account, the signed-out session — was a different way to reach the last screen of today's puzzle before doing it honestly.
+He was taking the ending. Every route he'd found — the answer key, the throwaway account, the anonymous window — was just a cheaper way to reach today's last screen before earning it.
 
-So we stopped defending the ending and removed it from the places he could cheaply reach.
+So we stopped guarding the ending and removed it from everywhere cheap.
 
-As of this week, if you're not signed in, you play a warm-up round. It's a genuine puzzle — same rules, same feedback, same feel. It just isn't today's ranked one. Everyone signed out gets the same warm-up code, and it has nothing to do with the real answer.
+Now, if you're not signed in, you play a warm-up round. A real puzzle. Same rules, same feel. Just not today's ranked one. Scout it all you like, burn ten throwaway accounts on it — at the end you're holding a number that was never the answer to anything.
 
-Scout it all you want. Burn ten throwaway accounts on it. At the end you're holding a number that was never the answer to anything that counts.
+The ranked daily needs an account you keep. Which is precisely what a disposable identity can't be.
 
-The ranked daily now requires an account — one you keep, that keeps your streak and your history and your name. Exactly the thing a disposable identity can't be.
+Detection is rent. This was a purchase.
 
-That's the whole switch: from catching people after, to there being nothing worth stealing. Detection is rent. This was a purchase.
+### Why we put it on the screen
 
-### We labelled it instead of hiding it
+The obvious version is a silent decoy: quietly serve suspicious players a fake puzzle, let them waste the morning. We deliberately didn't. It says "warm-up round," in plain words, to everyone.
 
-The obvious version of this idea is a silent decoy — quietly hand suspicious players a fake puzzle and let them waste their morning without knowing.
+Partly honesty — our game shows a receipt at the end proving the answer wasn't rigged, and showing that receipt to someone secretly playing a different code makes it a lie.
 
-We deliberately didn't. It's called a warm-up round, on screen, in plain words.
+Mostly arithmetic: a labelled decoy leaks exactly as much as a secret one, which is nothing. Knowing "this isn't the real one" tells you zero about the real one. Secrecy bought us nothing; honesty was free. When you find one of those, take it.
 
-The honest reason: our game shows a "provably fair" receipt at the end so you can verify the answer wasn't rigged after the fact. Showing that receipt to someone secretly playing a different code would make it a lie — and that receipt is the entire reason anyone trusts a daily puzzle.
+### The fix found worse than the cheat
 
-The practical reason: a labelled decoy leaks exactly as much as a secret one — which is nothing. Knowing "this warm-up isn't the real one" tells you zero about the real one. Secrecy bought us nothing and honesty was free. When you find one of those, take it.
+Sorting *real puzzle* from *warm-up* meant checking every place in the game that treats a game as real. Six of them were still counting warm-ups as genuine — including the one that posts the day's best score publicly. We'd have been announcing practice runs as records.
 
-### Building the fix found worse things than the cheat
+Worse: one spot saved your in-progress guesses by grading them against the real answer, even mid-warm-up. That's not a scoreboard bug. That's the exact leak the warm-up round exists to close, sitting quietly in another room. Nobody was exploiting it. Nobody had noticed.
 
-Once we started sorting *real puzzle* from *warm-up puzzle*, we had to check every place in the game that treats a game as real. Six more of them were still counting warm-up games as the genuine article — including one that posts the day's best score to our public account. We'd have been tweeting practice results as records.
+And a stray one, unrelated to cheating: a badly-timed network hiccup could decide you weren't logged in and hand you a blank new identity. Real accounts, wiped mid-session, occasionally, for months.
 
-Worse, we found a spot where the game saved your in-progress guesses by grading them against the real answer — even during a warm-up. That's not a scoreboard bug. That's the exact leak the entire warm-up round exists to close, sitting quietly in a different room. Nobody was exploiting it. Nobody had noticed it. It had been there the whole time.
+None of that took cleverness. It took listing every place that answers one question and reading them all.
 
-Separately, a bug fell out that had nothing to do with cheating: if the network hiccuped at the wrong moment, the game would decide you weren't really logged in and hand you a blank new identity. Real people, real accounts, occasionally wiped mid-session — quietly, for months, with no complaint loud enough to spot in the data.
+### Then we emailed it to him
 
-None of this was found by being clever. It was found by making a list of every place that answers one question, and reading them all. That's the whole technique.
+Last move: we told our players what the warm-up round is and why it exists.
 
-### Then we told everyone. Including him.
+The player this was all built for is on that mailing list. He signed up in July.
 
-The last move was emailing our players to explain the warm-up round in plain language — what it is, why it exists, what changed.
+He got the email too, and that's the point. A countermeasure nobody knows about can only catch people. One everybody knows about ends the game. Telling a scout the route is dead beats watching that route forever, and it beats a ban. He can still play every day. He just can't shop for the answer, because the shelf is empty.
 
-Our mailing list is people who ticked a box asking to hear when things change. The player this was all built for is on it. He signed up in July.
+### Three things worth stealing
 
-So he got the email too, and that's not an accident. A countermeasure nobody knows about can only catch people. A countermeasure everybody knows about ends the game. Telling a scout the route is dead is cheaper than watching the route forever, and kinder than a ban. He can still play every day. He just can't shop for the answer anymore, because there's nothing on that shelf.
+**Ask what's being taken, not who's taking it.** Every hour spent on *who* bought a rule with a shelf life. One hour on *what* bought a fix without one.
 
-### Five things worth stealing from this
+**Anything free and unlimited gets used at scale by exactly one person you didn't picture.** Ours was free accounts, offered as a kindness to first-timers. It stayed a kindness. It also became a supply line.
 
-**Ask what's being taken, not who's taking it.** Every hour spent on *who* produced a rule with a shelf life. The one hour spent on *what* produced a fix with none.
-
-**Every detection rule you ship is a lesson you give away.** If the only thing between someone and the prize is your ability to notice, you've signed up for a permanent job.
-
-**Anything free and unlimited will eventually be used at scale by exactly one person you didn't have in mind.** Ours was free accounts, offered as a kindness to first-timers. It stayed a kindness. It also became a supply line.
-
-**A secret defense is only worth building if the secret buys something.** Ours bought nothing, so we put it on screen in plain words and got trust for free.
-
-**The audit is worth more than the fix.** The cheat cost us a scoreboard. Going looking for every place that could leak the same thing cost an afternoon and turned up a live hole nobody was even using — plus a bug that had been silently logging real people out for months.
+**The audit beats the fix.** The cheat cost us a scoreboard. Going looking for everywhere else the same thing could leak cost an afternoon — and turned up a live hole nobody was even using.
 
 ### Is it over?
 
-No, and I'd rather say so than write another confident closing line and have it expire in twenty-four hours.
+No, and I'd rather say so than write another confident last line and watch it expire in a day.
 
-There's still a route we know about: someone determined enough can make a throwaway account, with a real email, in about twenty seconds. We could close it. We've chosen not to yet, because it would also punish every genuine new player on their first day, and there are far more of those than there are of him. That's not a technical call, it's a trade, and we made it on purpose.
+One route survives: a determined person can make a throwaway account with a real email in twenty seconds. We could close it. We haven't, because it would punish every genuine new player on day one, and there are far more of them than of him. That's a trade, not an oversight.
 
-So: the scoreboard is clean. Not "for now" this time — clean along the routes we removed. A smaller claim, and a truer one.
+So the scoreboard is clean — not "for now" this time, but along the routes we removed. Smaller claim. Truer one.
 
-If it breaks again, you'll get part three.
+If it breaks again, you get part three.
 
 ---
 
 Part one, if you missed it: https://maystash.xyz/posts/player-who-never-lost/
 
-Full write-up of this one: https://maystash.xyz/posts/we-gave-him-a-different-puzzle/
+Full write-up: https://maystash.xyz/posts/we-gave-him-a-different-puzzle/

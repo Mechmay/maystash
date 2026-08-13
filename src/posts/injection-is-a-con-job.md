@@ -4,7 +4,7 @@ tagline: "No exploit, no malware, no broken crypto. Just a well-dressed sentence
 date: 2026-07-25
 chapter: "03"
 tags: ["security", "ai", "prompt-injection", "agents"]
-draft: true
+draft: false
 ---
 
 INT. A GRAND HOTEL LOBBY — DAY.

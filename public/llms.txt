@@ -32,6 +32,23 @@
   invents one, and loops draft/flag while humans keep publish and delete. Includes a
   20-minute setup checklist.
 
+- [Prompt Injection Isn't Hacking. It's a Con Job — and Your AI Is the Mark.](https://maystash.xyz/posts/injection-is-a-con-job/):
+  Prompt injection explained as a confidence trick rather than an exploit. Root cause: an LLM
+  receives instructions and data through the same channel, so it must judge which is which,
+  and judgment can be conned — there is no patch for grammar (OWASP ranks it #1 on its LLM
+  risk list). Indirect injection (instructions planted in a page, README, ticket, or document
+  the agent reads later) matters more than direct chat-box tricks because the victim isn't
+  present when the trap is set. Worst case is memory poisoning: an instruction written into
+  persistent memory survives every future session and becomes the authority everything else
+  is judged against. Three defenses, all procedure over intuition: provenance (outside content
+  is material to examine, never orders to follow; quarantine intake, flag "the document told
+  me to"), least privilege (assume full compromise and ask what the agent could actually
+  reach; keep send/publish/delete/pay behind a human click), and audit trail (version memory
+  in git, tag claims verified-on-date vs guess, schedule re-checks so a poisoned fact enters
+  low-authority and is traceable to the commit that introduced it). Mindset shift: not "is my
+  AI smart enough to avoid being fooled" but "when it is fooled, what can the fool reach, and
+  how fast do I find out?"
+
 - [One of Our Players Never Lost. That Wasn't Skill — It Was Our Bug.](https://maystash.xyz/posts/player-who-never-lost/):
   Plain-language case study of two cheats against a daily number-puzzle game (Dinjure) and
   the fixes. Cheat one: the daily secret was derived by client-side code shipped to every
@@ -44,6 +61,25 @@
   rather than banning. Detection logic deliberately unpublished. Lessons: anything sent to
   the client is readable, frictionless free access is also free abuse surface, cheating is
   usually unwatched rather than invisible, and demoting beats punishing. Matinee section.
+
+- [We Stopped Chasing the Cheater. We Gave Him a Different Puzzle.](https://maystash.xyz/posts/we-gave-him-a-different-puzzle/):
+  Sequel to the Dinjure cheat story, and the case against detection as a strategy. Catching a
+  cheater teaches him the shape of the net, so each catch buys a shorter-lived rule —
+  "detection is rent." The reframe that ended it: stop asking who is taking it and ask what is
+  being taken. He was buying a cheap route to today's ending, so the ending was removed from
+  everywhere cheap: signed-out players now get a clearly labelled warm-up round — a real
+  puzzle that is never the ranked daily — while the ranked game requires an account worth
+  keeping, which a disposable identity cannot be. The decoy is labelled on purpose: a labelled
+  decoy leaks exactly as much as a secret one (nothing), and secrecy would have broken the
+  end-of-game receipt proving the answer wasn't rigged. Auditing every place that decides
+  whether a game is "real" found six spots counting warm-ups as genuine (including public
+  best-score posting), one that graded in-progress warm-up guesses against the real answer —
+  the same leak in another room, unexploited and unnoticed — and an unrelated bug where a
+  network hiccup wiped real accounts mid-session. The countermeasure was then emailed to all
+  players, including the cheater: a countermeasure nobody knows about only catches people; one
+  everybody knows about ends the game. Honest close: one route (throwaway account with a real
+  email) is deliberately left open because closing it would punish genuine first-time players.
+  Matinee section.
 
 ## Feeds
 

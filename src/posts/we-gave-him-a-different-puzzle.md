@@ -5,7 +5,7 @@ date: 2026-08-04
 chapter: "M3"
 section: "matinee"
 tags: ["games", "security", "cheating", "dinjure", "explainers"]
-draft: true
+draft: false
 ---
 
 INT. THE SAME LEADERBOARD — THREE DAYS LATER.

@@ -81,6 +81,19 @@
   email) is deliberately left open because closing it would punish genuine first-time players.
   Matinee section.
 
+- [We Stopped Chasing the Cheater. We Gave Him a Different Puzzle.](https://maystash.xyz/posts/we-gave-him-a-different-puzzle/):
+  Sequel to "One of Our Players Never Lost." Why detection loses to prevention in an
+  anti-cheat arms race: every catch teaches the cheater, so the rule grows while he learns
+  the shape of the net. The pivot — stop asking who is taking it, ask what is being taken —
+  led to a labelled "warm-up round" served to anyone not signed in: a real puzzle that
+  simply isn't the ranked daily, so scouting it returns nothing. Covers why the decoy is
+  labelled rather than secret (a labelled decoy leaks exactly as much as a hidden one:
+  nothing), the audit that found six more surfaces still counting practice games as real
+  plus a live leak nobody was exploiting, announcing the countermeasure by email to the
+  cheater himself, and the cost: an auth bug made a legitimate player look signed-out and
+  silently demoted them to the warm-up — the day being unrecognised becomes a punishment,
+  every failure to recognise someone becomes one too.
+
 ## Feeds
 
 - [RSS](https://maystash.xyz/rss.xml)

@@ -169,6 +169,13 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    /* On a short screen the hero is taller than the viewport, and plain
+       centring overflows it past BOTH edges — which is how the speech bubble
+       ended up on top of the corner links. `safe` centres only while it fits
+       and falls back to the start edge once it doesn't, so the bubble always
+       stays below the padding. Older engines ignore the line and keep the
+       plain `center` above it. */
+    justify-content: safe center;
     padding: 5rem 1.5rem 4rem;
     overflow: hidden;
   }
@@ -243,6 +250,11 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .avatar-wrap {
     position: relative;
     display: inline-block;
+    /* The bubble is absolutely positioned above the avatar, so it contributes
+       nothing to layout height. This margin reserves its space in flow —
+       without it the centring has no idea the bubble is there and lets it
+       ride up over the corner links on short screens. */
+    margin-top: 4.5rem;
     margin-bottom: 1.5rem;
     background: none;
     border: none;
@@ -419,24 +431,19 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   @keyframes bob { 50% { transform: translateY(6px); } }
 
   @media (max-width: 620px) {
-    .corners {
-      position: absolute;
-      top: 1.2rem; left: 0; right: 0;
-      display: flex;
-      flex-wrap: nowrap;          /* one row, so its height is predictable */
-      justify-content: center;
-      gap: 1.1rem;
-      padding: 0 0.8rem;
-    }
+    /* Keep the four-corner layout on phones too — the links stay pinned to the
+       corners, just smaller and tighter in. They sit outside the centre column,
+       so the bubble never has to share vertical space with them. */
     .corner {
-      position: static;
-      font-size: 0.66rem;
+      font-size: 0.64rem;
       letter-spacing: 0.06em;
       white-space: nowrap;
-      padding: 0.4rem 0;
     }
-    /* nav row (~2.8rem incl. offset) + two bubble lines + tail, with slack */
-    .launch { padding-top: 9rem; }
+    .tl { top: 1.1rem; left: 1.1rem; }
+    .tr { top: 1.1rem; right: 1.1rem; }
+    .bl { bottom: 1.1rem; left: 1.1rem; }
+    .br { bottom: 1.1rem; right: 1.1rem; }
+    .launch { padding: 4.5rem 1.1rem 4rem; }
   }
 
   /* ---- marquee ---- */

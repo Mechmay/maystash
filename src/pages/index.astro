@@ -38,7 +38,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
       </nav>
 
       <div class="stage">
-        <button class="avatar-wrap" id="avatar" type="button" aria-label="Talk to May — click for the next line">
+        <button class="avatar-wrap" id="avatar" type="button" aria-label="Chat with May — ask about him, his projects and his writing">
           <div class="bubble mono" id="bubble">Hey, I'm May 👋</div>
           <div class="av" id="av" data-set={AVATAR_SET}>
             {POSES.map((pose, n) => (
@@ -54,7 +54,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
               />
             ))}
           </div>
-          <span class="avatar-hint mono">CLICK TO TALK</span>
+          <span class="avatar-hint mono">↑ CLICK TO CHAT WITH ME</span>
         </button>
 
         <!-- CHAT PANEL -->
@@ -304,16 +304,19 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
                        silently letterboxes the frame inside a 768px-tall box */
   }
 
+  /* Always visible — hiding this until hover meant nobody on a phone ever
+     learned the avatar was clickable. #8a867c only made 3.1:1 against the
+     paper, under the 4.5:1 small-text minimum, so it darkens to 4.8:1. */
   .avatar-hint {
     display: block;
     margin-top: 0.9rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    color: #8a867c;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    color: #6b675d;
+    transition: color 0.2s ease;
   }
-  .avatar-wrap:hover .avatar-hint { opacity: 1; }
+  .avatar-wrap:hover .avatar-hint,
+  .avatar-wrap:focus-visible .avatar-hint { color: var(--klein); }
 
   /* ---- motion: the memoji itself is the art, CSS adds life ---- */
   .av { animation: sway 12s ease-in-out infinite; transform-origin: 50% 85%; }

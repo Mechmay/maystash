@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from '../../lib/knowledge';
-import { recordRequest } from '../../lib/usage';
+import { recordRequest, logQuestion } from '../../lib/usage';
 
 export const prerender = false;
 
@@ -81,7 +81,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     });
 
     if (response.stop_reason === 'refusal') {
-      return json({ reply: "I'd rather not answer that one. Ask me about May's work instead." });
+      const declined = "I'd rather not answer that one. Ask me about May's work instead.";
+      logQuestion(question, declined, 'refusal');
+      return json({ reply: declined });
     }
 
     const reply = response.content
@@ -90,9 +92,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       .join('')
       .trim();
 
-    return json({ reply: reply || "I didn't catch that — try asking another way." });
+    const answer = reply || "I didn't catch that — try asking another way.";
+    logQuestion(question, answer, reply ? undefined : 'empty');
+    return json({ reply: answer });
   } catch (err) {
     console.error('[ask] request failed:', err);
+    logQuestion(question, '', 'error');
     return json({ reply: 'Something broke on my end. Try again in a moment.' }, 502);
   }
 };

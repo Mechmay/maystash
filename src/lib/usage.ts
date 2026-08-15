@@ -92,3 +92,29 @@ export async function recordRequest(
     return localCheck(ip, dayCap, ipCap, windowMs);
   }
 }
+
+/**
+ * Records the question and the answer so May can see what visitors ask and
+ * where the knowledge base falls short. Stores no IP or session identifier.
+ *
+ * Fire-and-forget: logging must never delay or fail an answer, so this is not
+ * awaited by the caller and swallows its own errors.
+ */
+export function logQuestion(question: string, reply: string, outcome?: string): void {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return;
+
+  void fetch(`${SUPABASE_URL}/rest/v1/rpc/maystash_log_chat_question`, {
+    method: 'POST',
+    signal: AbortSignal.timeout(2500),
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+    },
+    body: JSON.stringify({
+      p_question: question,
+      p_reply: reply,
+      p_outcome: outcome ?? null,
+    }),
+  }).catch((err) => console.error('[usage] question log failed:', err));
+}

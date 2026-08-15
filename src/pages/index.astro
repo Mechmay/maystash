@@ -372,6 +372,15 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .msg.bot { align-self: flex-start; background: var(--paper-2); color: var(--paper-ink); }
   .msg.err { align-self: flex-start; background: #ffe9e4; color: #7a2718; }
   .msg.think { color: #8a867c; font-style: italic; }
+  .msg.bot a {
+    color: var(--klein);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    overflow-wrap: break-word;
+  }
+  .msg.bot a:hover { background: var(--klein); color: #fff; border-bottom-color: transparent; }
+  .msg.bot strong { font-weight: 700; }
+
   .chat-suggest { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 0.9rem 0.7rem; }
   .chat-suggest[hidden] { display: none; }
   .chat-suggest button {
@@ -648,14 +657,111 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 
   const bubbleSay = (text: string, restPose = 'idle') => speak(text, restPose);
 
+  // ---- rendering a reply ----
+  // Things the bot names often enough to be worth clicking. Order matters:
+  // the email has to match before the bare domain inside it does. Only routes
+  // that actually exist are listed — there are no per-project pages.
+  const LINKS: { pattern: string; href: string }[] = [
+    { pattern: 'hello@maystash\\.xyz', href: 'mailto:hello@maystash.xyz' },
+    { pattern: 'github\\.com/Mechmay', href: 'https://github.com/Mechmay' },
+    { pattern: 'dinjure\\.com', href: 'https://dinjure.com' },
+    { pattern: 'maystash\\.xyz', href: '/' },
+    { pattern: '\\bDinjure\\b', href: '/projects' },
+    { pattern: '\\bHash\\b', href: '/projects' },
+  ];
+  // One capture group per link, plus a final group for **bold** — the model
+  // replies in light markdown and the asterisks were showing through raw.
+  const RICH = new RegExp(
+    `${LINKS.map((l) => `(${l.pattern})`).join('|')}|\\*\\*([^*]+)\\*\\*`,
+    'g'
+  );
+
+  // Builds real DOM nodes rather than assigning innerHTML, so nothing the model
+  // returns can inject markup no matter what it says.
+  const renderReply = (text: string): DocumentFragment => {
+    const frag = document.createDocumentFragment();
+    let last = 0;
+    let m: RegExpExecArray | null;
+    RICH.lastIndex = 0;
+
+    while ((m = RICH.exec(text)) !== null) {
+      if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+
+      const boldText = m[LINKS.length + 1];
+      if (boldText !== undefined) {
+        const strong = document.createElement('strong');
+        strong.textContent = boldText;
+        frag.appendChild(strong);
+      } else {
+        const idx = m.slice(1, LINKS.length + 1).findIndex((g) => g !== undefined);
+        const a = document.createElement('a');
+        a.href = LINKS[idx].href;
+        a.textContent = m[0];
+        if (LINKS[idx].href.startsWith('http')) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        }
+        frag.appendChild(a);
+      }
+      last = m.index + m[0].length;
+    }
+
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  };
+
   const addMsg = (text: string, cls: string) => {
     if (!log) return null;
     const el = document.createElement('div');
     el.className = `msg ${cls}`;
-    el.textContent = text;
+    // Only the bot's own replies get links; anything the visitor typed stays
+    // plain text.
+    if (cls.startsWith('bot') && !cls.includes('think')) {
+      el.appendChild(renderReply(text));
+    } else {
+      el.textContent = text;
+    }
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
     return el;
+  };
+
+  // ---- follow-up suggestions ----
+  // Picked from a curated pool by what the answer mentioned, rather than asking
+  // the model to invent them: no extra tokens, no latency, and the questions
+  // are ones the knowledge base can actually answer well.
+  const FOLLOWUPS: { when: RegExp; asks: string[] }[] = [
+    { when: /dinjure|guessing game/i, asks: ["How does Dinjure work?", "Did anyone cheat at Dinjure?"] },
+    { when: /\bhash\b|agent|telegram/i, asks: ["What can Hash actually do?", "How are his agents kept safe?"] },
+    { when: /water|burger|data cent/i, asks: ["How much water does a burger use?", "Which AI labs publish water data?"] },
+    { when: /wrote|writing|article|blog|post/i, asks: ["What should I read first?", "What's the matinee section?"] },
+    { when: /email|reach|hire|contact/i, asks: ["What work does May take on?", "What is he building now?"] },
+    { when: /security|web3|prompt injection/i, asks: ["What's May's background?", "What is prompt injection?"] },
+  ];
+  const DEFAULT_ASKS = ["What is May building now?", "What should I read first?", "How do I reach him?"];
+  const asked = new Set<string>();
+
+  const showSuggestions = (reply: string) => {
+    if (!suggest) return;
+    const pool: string[] = [];
+    for (const { when, asks } of FOLLOWUPS) {
+      if (when.test(reply)) pool.push(...asks);
+    }
+    pool.push(...DEFAULT_ASKS);
+
+    const picks = pool.filter((q) => !asked.has(q.toLowerCase())).slice(0, 3);
+    suggest.textContent = '';
+    if (!picks.length) {
+      suggest.setAttribute('hidden', '');
+      return;
+    }
+    for (const q of picks) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = q;
+      suggest.appendChild(b);
+    }
+    suggest.removeAttribute('hidden');
   };
 
   const openChat = () => {
@@ -675,6 +781,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   const ask = async (question: string) => {
     if (busy || !question.trim()) return;
     busy = true;
+    asked.add(question.trim().toLowerCase());
     suggest?.setAttribute('hidden', '');
     addMsg(question, 'you');
     const pending = addMsg('thinking…', 'bot think');
@@ -693,7 +800,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
       pending?.remove();
       addMsg(reply, res.ok ? 'bot' : 'bot err');
       history.push({ role: 'user', content: question }, { role: 'assistant', content: reply });
-      bubbleSay(reply.length > 46 ? reply.slice(0, 44).trimEnd() + '…' : reply);
+      // The bubble is plain text, so drop the markdown the chat log renders.
+      const spoken = reply.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim();
+      bubbleSay(spoken.length > 46 ? spoken.slice(0, 44).trimEnd() + '…' : spoken);
+      if (res.ok) showSuggestions(reply);
     } catch {
       pending?.remove();
       addMsg("Couldn't reach the server. Check your connection and try again.", 'bot err');

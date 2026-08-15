@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from '../../lib/knowledge';
+import { recordRequest } from '../../lib/usage';
 
 export const prerender = false;
 
@@ -12,33 +13,12 @@ const MAX_HISTORY_TURNS = 8;      // cap context growth per conversation
 const MAX_OUTPUT_TOKENS = 400;    // cap cost per answer
 const RATE_PER_IP = 12;           // requests…
 const RATE_WINDOW_MS = 60_000;    // …per minute, per IP
-const DAILY_CAP = 1500;           // total answers/day across all visitors
+// Total answers/day across all visitors, counted in Postgres so the cap holds
+// across serverless instances rather than per-instance. At Haiku 4.5 rates this
+// bounds a full day at roughly $3–7. See src/lib/usage.ts.
+const DAILY_CAP = 1500;
 
 const MODEL = 'claude-haiku-4-5';
-
-// In-memory counters. Serverless instances recycle, so this is a speed bump for
-// casual abuse, not a hard guarantee — the daily cap is the real backstop.
-const hits = new Map<string, number[]>();
-let dayKey = new Date().toISOString().slice(0, 10);
-let dayCount = 0;
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  if (hits.size > 5000) hits.clear(); // keep memory bounded
-  return recent.length > RATE_PER_IP;
-}
-
-function overDailyCap(): boolean {
-  const today = new Date().toISOString().slice(0, 10);
-  if (today !== dayKey) {
-    dayKey = today;
-    dayCount = 0;
-  }
-  return ++dayCount > DAILY_CAP;
-}
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -65,10 +45,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return json({ reply: 'That is a bit long for me — try asking it in a sentence or two.' });
   }
 
-  if (rateLimited(clientAddress ?? 'unknown')) {
+  // One round trip covers both the per-IP window and the shared daily cap.
+  const usage = await recordRequest(
+    clientAddress ?? 'unknown',
+    DAILY_CAP,
+    RATE_PER_IP,
+    RATE_WINDOW_MS
+  );
+  if (!usage.ipOk) {
     return json({ reply: 'Easy — too many questions at once. Give it a minute.' }, 429);
   }
-  if (overDailyCap()) {
+  if (!usage.dayOk) {
     return json({ reply: "I've hit my limit of answers for today. Try tomorrow, or email hello@maystash.xyz." }, 429);
   }
 

@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const bodies = await Promise.all(projects.map((p) => render(p)));
+
+const statusLabel: Record<string, string> = {
+  live: 'NOW PLAYING',
+  building: 'IN PRODUCTION',
+  archived: 'IN THE VAULT',
+};
+---
+<Layout title="Projects — maystash" description="Things May builds — games, AI agents, and 0→1 products. Shipped and in production.">
+  <header class="page-head">
+    <div class="ph-slate mono"><span>REEL 002</span><span>THE PRODUCTIONS</span></div>
+    <h1 class="ph-title">IN<br />PRODUCTION</h1>
+    <p class="ph-tagline">Things I've built and shipped — games, agents, and products that start at <em>zero</em> and get pushed live.</p>
+  </header>
+
+  <main class="slate-list">
+    {projects.map((p, i) => {
+      const { Content } = bodies[i];
+      return (
+        <article class="prod reveal">
+          <div class="prod-index mono">{String(i + 1).padStart(2, '0')}</div>
+          <div class="prod-body">
+            <div class="prod-status mono" data-status={p.data.status}>
+              <span class="dot"></span>{statusLabel[p.data.status]} · {p.data.year}
+            </div>
+            <h2 class="prod-title">{p.data.title}</h2>
+            <p class="prod-tagline">{p.data.tagline}</p>
+            <div class="prod-copy"><Content /></div>
+            <div class="prod-foot">
+              <div class="prod-tags mono">{p.data.tags.map((t) => <span>{t}</span>)}</div>
+              <div class="prod-links mono">
+                {p.data.url && <a href={p.data.url} target={p.data.url.startsWith('http') ? '_blank' : undefined} rel="noopener">VISIT →</a>}
+                {p.data.repo && <a href={p.data.repo} target="_blank" rel="noopener">CODE →</a>}
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+
+    <div class="soon reveal">
+      <div class="soon-label mono">ALSO IN THE PIPELINE</div>
+      <p class="soon-text">More productions in various states of shipped — quietly cooking. Check back, or <a href="/#contact">ask what's next</a>.</p>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .page-head { max-width: 1100px; margin: 0 auto; padding: 9rem 2rem 1rem; }
+  .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
+  .ph-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 13vw, 10rem);
+    line-height: 0.9;
+    color: var(--bone);
+    text-shadow: 0.03em 0.03em 0 var(--klein);
+  }
+  .ph-tagline { max-width: 40rem; margin-top: 1.8rem; font-size: 1.25rem; color: var(--bone-dim); }
+  .ph-tagline em { color: var(--acid); font-style: italic; }
+
+  .slate-list { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .prod {
+    display: flex;
+    gap: 2rem;
+    padding: 3rem 0;
+    border-top: 1px solid #26262b;
+  }
+  .prod-index { color: var(--acid); padding-top: 0.4rem; min-width: 3rem; font-size: 0.9rem; }
+  .prod-body { flex: 1; }
+  .prod-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--bone-dim);
+    margin-bottom: 1rem;
+  }
+  .prod-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bone-dim); }
+  .prod-status[data-status="live"] .dot { background: var(--acid); box-shadow: 0 0 8px var(--acid); }
+  .prod-status[data-status="building"] .dot { background: var(--klein-hot); box-shadow: 0 0 8px var(--klein-hot); }
+  .prod-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    line-height: 1;
+    color: var(--bone);
+    text-transform: uppercase;
+  }
+  .prod-tagline { margin-top: 1rem; font-size: 1.3rem; font-style: italic; color: var(--acid); max-width: 46rem; }
+  .prod-copy { margin-top: 1.4rem; color: var(--bone-dim); max-width: 46rem; }
+  .prod-copy :global(p) { margin: 0.9rem 0; line-height: 1.7; }
+  .prod-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.8rem;
+    flex-wrap: wrap;
+  }
+  .prod-tags { display: flex; gap: 1rem; flex-wrap: wrap; color: #55555e; }
+  .prod-links { display: flex; gap: 1.5rem; }
+  .prod-links a { color: var(--acid); text-decoration: none; }
+  .prod-links a:hover { text-decoration: underline; }
+
+  .soon { border-top: 1px solid #26262b; padding: 3rem 0; }
+  .soon-label { color: var(--bone-dim); margin-bottom: 1rem; }
+  .soon-text { color: var(--bone-dim); font-style: italic; font-size: 1.15rem; }
+  .soon-text a { color: var(--acid); }
+
+  @media (max-width: 640px) { .prod { flex-direction: column; gap: 0.8rem; } }
+</style>

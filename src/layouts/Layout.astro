@@ -5,6 +5,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   jsonLd?: object;
+  bareNav?: boolean;
 }
 const {
   title,
@@ -12,6 +13,7 @@ const {
   image = '/og/default.png',
   type = 'website',
   jsonLd,
+  bareNav = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imageAbs = new URL(image, Astro.site);
@@ -56,15 +58,20 @@ const baseLd = {
   <body>
     <div class="grain" aria-hidden="true"></div>
 
+    {!bareNav && (
     <nav class="site-nav" id="site-nav">
       <a href="/" class="nav-logo">maystash<span class="blink">▮</span></a>
+      <div class="nav-links mono">
+        <a href="/writing">WRITING</a>
+        <a href="/projects">PROJECTS</a>
+        <a href="/about">ABOUT</a>
+        <a href="/#contact">CONTACT</a>
+      </div>
       <div class="nav-right">
-        <span class="nav-slate mono">EST. 2026 &nbsp;·&nbsp; REEL 001</span>
-        <a href="https://x.com/checkthehash" class="nav-x" target="_blank" rel="me noopener" aria-label="May on X">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.6l5.24 6.93 6.06-6.93Zm-1.29 19.5h2.04L6.48 3.24H4.29L17.61 20.65Z"/></svg>
-        </a>
+        <span class="nav-slate mono">EST. 2026</span>
       </div>
     </nav>
+    )}
 
     <slot />
 
@@ -75,11 +82,8 @@ const baseLd = {
         <div class="credit-row"><span>NO KNOWLEDGE WAS HARMED</span><span>© 2026 MAYSTASH.XYZ</span></div>
       </div>
       <div class="footer-social">
-        <a href="https://x.com/checkthehash" target="_blank" rel="me noopener" class="x-link mono" aria-label="Follow May on X">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-          <span>@checkthehash</span>
+        <a href="mailto:hello@maystash.xyz" class="x-link mono">
+          <span>hello@maystash.xyz</span>
         </a>
       </div>
       <div class="footer-end mono">FIN.</div>
@@ -197,7 +201,33 @@ const baseLd = {
   .blink { animation: blink 1.1s steps(1) infinite; color: var(--acid); }
   @keyframes blink { 50% { opacity: 0; } }
   .nav-slate { color: var(--bone-dim); transition: opacity 0.3s ease; }
-  @media (max-width: 640px) { .nav-slate { display: none; } }
+  @media (max-width: 720px) { .nav-slate { display: none; } }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .nav-links a {
+    color: var(--bone);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s ease;
+  }
+  .nav-links a:hover { color: var(--acid); }
+  @media (max-width: 720px) {
+    .nav-links {
+      position: static;
+      transform: none;
+      gap: 0.9rem;
+      font-size: 0.6rem;
+    }
+    .nav-links a { letter-spacing: 0.04em; }
+  }
+  @media (max-width: 400px) { .nav-links { gap: 0.6rem; } }
 
   .nav-right { display: flex; align-items: center; gap: 1.3rem; }
   .nav-x {
@@ -233,6 +263,8 @@ const baseLd = {
   .footer-social {
     display: flex;
     justify-content: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
     margin-top: 2.5rem;
   }
   .x-link {

@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="About — maystash" description="May — building across cybersecurity, web3, applied AI, and 0→1 products.">
+  <header class="page-head">
+    <div class="ph-slate mono"><span>REEL 003</span><span>CAST &amp; CREW</span></div>
+    <h1 class="ph-title">THIS<br />ONE</h1>
+  </header>
+
+  <main class="about-main">
+    <section class="about-block reveal">
+      <p class="lead">I'm <strong>May</strong> — a builder who lives at the messy intersection of <em>cybersecurity, web3, applied AI, and 0→1 products</em>. I make things, break things, and write down whatever refuses to leave my head.</p>
+    </section>
+
+    <section class="about-block reveal">
+      <h2 class="ab-head mono">— WHAT I DO —</h2>
+      <p>Most of my time goes into shipping: games that live on the social feed, AI agents that do real work instead of demos, and the quiet infrastructure that keeps them running. I like the part of a project where nothing exists yet and the part where it finally survives contact with real users. The middle is just work.</p>
+    </section>
+
+    <section class="about-block reveal">
+      <h2 class="ab-head mono">— WHY THIS SITE —</h2>
+      <p>maystash is where the useful stuff gets written down properly — long-form, no fluff, everything reproducible. If I figured something out the hard way, it ends up here as a blueprint so the next person doesn't have to. Plain text, no paywall, no gating.</p>
+    </section>
+
+    <section class="about-block reveal">
+      <h2 class="ab-head mono">— THE THROUGH-LINE —</h2>
+      <p>Security taught me to assume everything can be conned. Web3 taught me to build like nobody's coming to save you. AI taught me to automate the boring parts and stay suspicious of the magic. It all points the same way: build the thing, keep the receipts, tell the truth about what actually works.</p>
+    </section>
+
+    <section class="about-cta reveal">
+      <a href="/projects" class="cta-link mono">SEE THE WORK →</a>
+      <a href="/#contact" class="cta-link mono">GET IN TOUCH →</a>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .page-head { max-width: 900px; margin: 0 auto; padding: 9rem 2rem 1rem; }
+  .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
+  .ph-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 13vw, 10rem);
+    line-height: 0.9;
+    color: var(--bone);
+    text-shadow: 0.03em 0.03em 0 var(--klein);
+  }
+
+  .about-main { max-width: 720px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .about-block { margin: 2.6rem 0; }
+  .lead { font-size: 1.6rem; line-height: 1.5; color: var(--bone); }
+  .lead strong { color: var(--acid); font-weight: 600; }
+  .lead em { color: var(--bone); font-style: italic; }
+  .ab-head { color: var(--acid); margin-bottom: 0.9rem; }
+  .about-block p { font-size: 1.2rem; line-height: 1.75; color: var(--bone-dim); }
+
+  .about-cta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid #26262b;
+    flex-wrap: wrap;
+  }
+  .cta-link { color: var(--acid); text-decoration: none; padding: 0.7rem 1.2rem; border: 1px solid #2c2c33; border-radius: 999px; transition: border-color 0.2s ease; }
+  .cta-link:hover { border-color: var(--acid); }
+</style>

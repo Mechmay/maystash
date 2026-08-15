@@ -1,0 +1,35 @@
+<svg width="360" height="360" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated portrait of May">
+  <defs>
+    <clipPath id="disc"><circle cx="180" cy="180" r="170"/></clipPath>
+  </defs>
+  <!-- backdrop disc -->
+  <circle cx="180" cy="180" r="170" fill="#2823f0"/>
+  <g clip-path="url(#disc)">
+    <!-- shoulders / shirt -->
+    <path d="M60 360 C60 280 110 250 180 250 C250 250 300 280 300 360 Z" fill="#d8ff3e"/>
+    <path d="M150 250 L180 300 L210 250 Z" fill="#0c0c0e" opacity="0.12"/>
+    <!-- neck -->
+    <rect x="158" y="212" width="44" height="52" rx="18" fill="#8a5a3c"/>
+    <!-- head -->
+    <ellipse cx="180" cy="158" rx="72" ry="78" fill="#a56a44"/>
+    <!-- hair -->
+    <path d="M108 150 C104 96 150 70 180 70 C210 70 256 96 252 150 C252 128 236 112 216 110 C214 96 198 90 180 90 C162 90 146 96 144 110 C124 112 108 128 108 150 Z" fill="#161318"/>
+    <path d="M108 150 C108 132 120 120 132 118 L132 150 Z" fill="#161318"/>
+    <path d="M252 150 C252 132 240 120 228 118 L228 150 Z" fill="#161318"/>
+    <!-- brows -->
+    <rect x="140" y="150" width="30" height="7" rx="3.5" fill="#161318"/>
+    <rect x="190" y="150" width="30" height="7" rx="3.5" fill="#161318"/>
+    <!-- eyes -->
+    <circle cx="155" cy="168" r="8" fill="#0c0c0e"/>
+    <circle cx="205" cy="168" r="8" fill="#0c0c0e"/>
+    <circle cx="157.5" cy="165.5" r="2.4" fill="#ece7dd"/>
+    <circle cx="207.5" cy="165.5" r="2.4" fill="#ece7dd"/>
+    <!-- nose -->
+    <path d="M180 172 L174 194 C176 200 184 200 186 194 Z" fill="#8a5a3c"/>
+    <!-- smile -->
+    <path d="M156 206 C168 222 192 222 204 206" fill="none" stroke="#0c0c0e" stroke-width="6" stroke-linecap="round"/>
+    <!-- beard hint -->
+    <path d="M140 196 C146 232 164 244 180 244 C196 244 214 232 220 196 C214 214 198 220 180 220 C162 220 146 214 140 196 Z" fill="#161318" opacity="0.9"/>
+  </g>
+  <circle cx="180" cy="180" r="170" fill="none" stroke="#0c0c0e" stroke-width="3"/>
+</svg>

@@ -2,243 +2,719 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const all = (await getCollection('posts', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
-const posts = all.filter((p) => p.data.section === 'feature');
-const matinee = all.filter((p) => p.data.section === 'matinee');
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
 
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
 
-const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).length / 220));
+const statusLabel: Record<string, string> = {
+  live: 'NOW PLAYING',
+  building: 'IN PRODUCTION',
+  archived: 'IN THE VAULT',
+};
+
+// Which avatar frame set the launcher uses. Both live under public/ and hold
+// the same six frame names, so switching is a one-word rollback.
+//   'avatar'    — the original Apple Memoji cut-outs (head only)
+//   'avatar-v2' — AInfluencer-generated 3D character (head + shoulders)
+const AVATAR_SET = 'avatar-v2';
+const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 ---
-<Layout title="maystash — a stash of tech, brains & builds">
-  <!-- HERO -->
-  <header class="hero">
-    <div class="hero-slate mono">
-      <span>SCENE 001</span>
-      <span>INT. INTERNET — NIGHT</span>
-      <span>TAKE ∞</span>
-    </div>
-    <h1 class="hero-title">MAY<br />STASH</h1>
-    <p class="hero-tagline">
-      A stash of things I build, break, and figure out —
-      <em>AI, second brains, security, and whatever refuses to leave my head.</em>
-    </p>
-    <div class="hero-scroll mono">↓ ROLL FILM</div>
-  </header>
+<Layout title="maystash — May builds, breaks, and writes it down" bareNav={true}>
+  <div class="home">
+    <!-- LAUNCHER HERO -->
+    <header class="launch">
+      <nav class="corners mono">
+        <a href="/writing" class="corner tl">WRITING</a>
+        <a href="/projects" class="corner tr">PROJECTS</a>
+        <a href="/about" class="corner bl">ABOUT</a>
+        <a href="#contact" class="corner br">CONTACT</a>
+      </nav>
 
-  <!-- MARQUEE -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track mono">
-      {Array(2).fill(0).map(() => (
-        <span>SECOND BRAINS · AI AGENTS · SECURITY · WEB3 · SHIPPING 0→1 · PLAIN TEXT SUPREMACY · SECOND BRAINS · AI AGENTS · SECURITY · WEB3 · SHIPPING 0→1 · PLAIN TEXT SUPREMACY · </span>
-      ))}
-    </div>
-  </div>
-
-  <!-- FEATURE PRESENTATION -->
-  <main class="reel">
-    <div class="reel-header mono reveal">NOW SHOWING — FEATURE PRESENTATION</div>
-
-    {posts.map((post, i) => (
-      <a href={`/posts/${post.id}/`} class="card reveal">
-        <div class="card-ch mono">CH.{post.data.chapter}</div>
-        <div class="card-body">
-          <h2 class="card-title">{post.data.title}</h2>
-          <p class="card-tagline">{post.data.tagline}</p>
-          <div class="card-meta mono">
-            <span>{fmt(post.data.date)}</span>
-            <span>{readMins(post.body ?? '')} MIN READ</span>
-            <span class="card-cta">WATCH →</span>
+      <div class="stage">
+        <button class="avatar-wrap" id="avatar" type="button" aria-label="Talk to May — click for the next line">
+          <div class="bubble mono" id="bubble">Hey, I'm May 👋</div>
+          <div class="av" id="av" data-set={AVATAR_SET}>
+            {POSES.map((pose, n) => (
+              <img
+                class={n === 0 ? 'pose is-on' : 'pose'}
+                data-pose={pose}
+                src={`/${AVATAR_SET}/${pose}.webp`}
+                alt={n === 0 ? 'May' : ''}
+                aria-hidden={n === 0 ? undefined : 'true'}
+                fetchpriority={n === 0 ? 'high' : undefined}
+                width="768"
+                height="768"
+              />
+            ))}
           </div>
-        </div>
-      </a>
-    ))}
+          <span class="avatar-hint mono">CLICK TO TALK</span>
+        </button>
 
-    {matinee.length > 0 && (
-      <>
-        <div class="reel-header mono reveal matinee-header">
-          MATINEE SCREENINGS — NO JARGON, EVERYONE WELCOME
+        <!-- CHAT PANEL -->
+        <div class="chat" id="chat" hidden>
+          <div class="chat-head mono">
+            <span>ASK ABOUT MAY</span>
+            <button type="button" class="chat-close" id="chat-close" aria-label="Close chat">✕</button>
+          </div>
+          <div class="chat-log" id="chat-log" aria-live="polite"></div>
+          <div class="chat-suggest mono" id="chat-suggest">
+            <button type="button">What is May building?</button>
+            <button type="button">What's Dinjure?</button>
+            <button type="button">How do I hire him?</button>
+          </div>
+          <form class="chat-form" id="chat-form">
+            <input
+              id="chat-input"
+              type="text"
+              maxlength="500"
+              autocomplete="off"
+              placeholder="Ask me anything about May…"
+              aria-label="Ask a question about May"
+            />
+            <button type="submit" class="mono" aria-label="Send">→</button>
+          </form>
         </div>
-        {matinee.map((post) => (
-          <a href={`/posts/${post.id}/`} class="card reveal">
-            <div class="card-ch mono">CH.{post.data.chapter}</div>
-            <div class="card-body">
-              <h2 class="card-title">{post.data.title}</h2>
-              <p class="card-tagline">{post.data.tagline}</p>
-              <div class="card-meta mono">
-                <span>{fmt(post.data.date)}</span>
-                <span>{readMins(post.body ?? '')} MIN READ</span>
-                <span class="card-cta">WATCH →</span>
-              </div>
-            </div>
+        <h1 class="stage-name">MAYSTASH</h1>
+        <p class="stage-tag">I build, break, and write down the useful parts — <em>security, web3, applied AI, and products that start at zero.</em></p>
+        <div class="stage-social mono">
+          <a href="mailto:hello@maystash.xyz" class="lead-link">HELLO@MAYSTASH.XYZ</a>
+          <a href="https://github.com/Mechmay" target="_blank" rel="me noopener">GITHUB</a>
+        </div>
+      </div>
+      <div class="roll mono">↓ ROLL FILM</div>
+    </header>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track mono">
+        {Array(2).fill(0).map(() => (
+          <span>SECOND BRAINS · AI AGENTS · SECURITY · WEB3 · SHIPPING 0→1 · PLAIN TEXT SUPREMACY · SECOND BRAINS · AI AGENTS · SECURITY · WEB3 · SHIPPING 0→1 · PLAIN TEXT SUPREMACY · </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- WRITING ARM (paper) -->
+    <section id="writing" class="arm paper">
+      <div class="arm-head reveal">
+        <div class="arm-slate mono">NOW SHOWING — THE WRITING</div>
+        <a href="/writing" class="arm-all mono">ALL WRITING →</a>
+      </div>
+      {posts.map((post) => (
+        <a href={`/posts/${post.id}/`} class="pcard reveal">
+          <div class="pcard-ch mono">CH.{post.data.chapter}</div>
+          <div class="pcard-body">
+            <h2 class="pcard-title">{post.data.title}</h2>
+            <p class="pcard-tag">{post.data.tagline}</p>
+            <div class="pcard-meta mono"><span>{fmt(post.data.date)}</span><span class="cta">WATCH →</span></div>
+          </div>
+        </a>
+      ))}
+    </section>
+
+    <!-- PROJECTS ARM (klein block) -->
+    <section id="projects" class="arm block-klein">
+      <div class="arm-head reveal">
+        <div class="arm-slate mono light">IN PRODUCTION — THE WORK</div>
+        <a href="/projects" class="arm-all mono light">ALL PROJECTS →</a>
+      </div>
+      <div class="prod-grid">
+        {projects.map((p) => (
+          <a href={p.data.url ?? '/projects'} class="prod-card reveal" target={p.data.url?.startsWith('http') ? '_blank' : undefined} rel="noopener">
+            <div class="pc-status mono" data-status={p.data.status}><span class="dot"></span>{statusLabel[p.data.status]}</div>
+            <h3 class="pc-title">{p.data.title}</h3>
+            <p class="pc-tag">{p.data.tagline}</p>
+            <div class="pc-tags mono">{p.data.tags.slice(0, 3).map((t) => <span>{t}</span>)}</div>
           </a>
         ))}
-      </>
-    )}
+      </div>
+    </section>
 
-    <!-- COMING SOON -->
-    <div class="soon reveal">
-      <div class="soon-label mono">COMING SOON TO THIS THEATRE</div>
-      <ul class="soon-list">
-        <li><span class="mono">CH.03</span> Security field notes — how things break, told like heists</li>
-        <li><span class="mono">CH.04</span> Agent experiments — loops, dreams, and controlled chaos</li>
-        <li><span class="mono">MATINEE</span> Plain-language screenings — tech questions everyone asks, answered without the jargon</li>
-      </ul>
-    </div>
-  </main>
+    <!-- ABOUT ARM (acid block) -->
+    <section class="arm block-acid reveal">
+      <div class="arm-slate mono dark">CAST &amp; CREW — ONE PERSON, MANY HATS</div>
+      <p class="about-text">One builder across cybersecurity, web3, applied AI, and 0→1 products. This site is where the useful stuff gets written down properly — long-form, no fluff, everything reproducible.</p>
+      <a href="/about" class="arm-all mono dark">MORE ABOUT ME →</a>
+    </section>
 
-  <!-- ABOUT STRIP -->
-  <section class="about reveal">
-    <div class="about-slate mono">CAST &amp; CREW — ONE PERSON, MANY HATS</div>
-    <p class="about-text">
-      I'm <strong>May</strong>. I work across cybersecurity, web3, applied AI, and 0→1 products.
-      This site is where the useful stuff gets written down properly —
-      long-form, no fluff, everything reproducible.
-    </p>
-  </section>
+    <!-- CONTACT (dark) -->
+    <section id="contact" class="contact reveal">
+      <div class="arm-slate mono">— GET IN TOUCH —</div>
+      <h2 class="contact-title">LET'S<br />TALK</h2>
+      <p class="contact-text">Building something, want to collaborate, or just have a good argument about AI and water? One inbox, always open.</p>
+      <div class="contact-links">
+        <a href="mailto:hello@maystash.xyz" class="c-link mono primary">HELLO@MAYSTASH.XYZ</a>
+        <a href="https://github.com/Mechmay" target="_blank" rel="me noopener" class="c-link mono">GITHUB — MECHMAY</a>
+      </div>
+    </section>
+  </div>
 </Layout>
 
 <style>
-  /* ---- hero ---- */
-  .hero {
+  .home { --paper: #f2ede3; --paper-2: #e7e0d2; --paper-ink: #17161c; }
+
+  /* ---- launcher hero ---- */
+  .launch {
+    position: relative;
     min-height: 100svh;
+    background: var(--paper);
+    color: var(--paper-ink);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 6rem 1.5rem 4rem;
-    position: relative;
-  }
-  .hero-slate {
-    display: flex;
-    gap: 2.5rem;
-    color: var(--bone-dim);
-    margin-bottom: 2.2rem;
-    flex-wrap: wrap;
     justify-content: center;
+    padding: 5rem 1.5rem 4rem;
+    overflow: hidden;
   }
-  .hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(5rem, 22vw, 19rem);
-    line-height: 0.86;
-    letter-spacing: 0.01em;
-    color: var(--bone);
-    text-shadow: 0.04em 0.04em 0 var(--klein);
-  }
-  .hero-tagline {
-    max-width: 34rem;
-    margin-top: 2.4rem;
-    font-size: 1.3rem;
-    color: var(--bone-dim);
-  }
-  .hero-tagline em { color: var(--bone); font-style: italic; }
-  .hero-scroll {
+  .corner {
     position: absolute;
-    bottom: 2rem;
-    color: var(--bone-dim);
-    animation: bob 2.2s ease-in-out infinite;
+    z-index: 3;
+    color: var(--paper-ink);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.14em;
+    padding: 0.5rem 0.2rem;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
   }
+  .corner:hover { border-color: var(--klein); color: var(--klein); }
+  .tl { top: 2rem; left: 2.2rem; }
+  .tr { top: 2rem; right: 2.2rem; }
+  .bl { bottom: 2rem; left: 2.2rem; }
+  .br { bottom: 2rem; right: 2.2rem; }
+
+  /* comic speech bubble — tail points down into the avatar */
+  .bubble {
+    position: absolute;
+    bottom: calc(100% - 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: var(--paper-ink);
+    border: 2.5px solid var(--paper-ink);
+    border-radius: 18px;
+    padding: 0.65rem 1.05rem;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    /* absolute + left:50% inside a narrow wrapper would shrink-to-fit to half
+       the avatar's width; max-content lets it use its real text width instead */
+    width: max-content;
+    max-width: min(24rem, 86vw);
+    box-shadow: 4px 4px 0 var(--klein);
+    z-index: 3;
+    transition: opacity 0.17s ease;
+  }
+  .bubble::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    margin-left: -8px;
+    width: 15px; height: 15px;
+    background: #fff;
+    border-right: 2.5px solid var(--paper-ink);
+    border-bottom: 2.5px solid var(--paper-ink);
+    transform: rotate(45deg);
+  }
+  /* Mobile: the bubble grows UPWARD out of the avatar, so a long line used to
+     climb into the corner nav. Keep it to at most two lines and give the hero
+     enough headroom that two lines still clear the links. */
+  @media (max-width: 620px) {
+    .bubble {
+      white-space: normal;
+      text-align: center;
+      bottom: calc(100% + 4px);
+      max-width: 82vw;
+      font-size: 0.66rem;
+      line-height: 1.45;
+      padding: 0.55rem 0.85rem;
+      overflow-wrap: break-word;
+    }
+  }
+
+  .stage { text-align: center; max-width: 40rem; }
+  .avatar-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .av {
+    position: relative;
+    width: clamp(170px, 34vw, 240px);
+    aspect-ratio: 1;
+    display: block;
+    border-radius: 50%;
+    background: var(--klein);
+    border: 3px solid var(--paper-ink);
+    /* clip the memoji INTO the disc — the circle does the cutting, so the
+       square edge at the bottom of the PNG never shows */
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 0.25s ease;
+  }
+  .avatar-wrap:hover .av { transform: scale(1.03) rotate(-1deg); }
+  .avatar-wrap:active .av { transform: scale(0.98); }
+
+  .pose {
+    position: absolute;
+    left: 50%;
+    bottom: -16%;
+    width: 128%;
+    transform: translateX(-50%);
+    object-fit: contain;
+    object-position: bottom center;
+    image-rendering: -webkit-optimize-contrast;
+    opacity: 0;
+    transition: opacity 0.34s ease;   /* slow cross-fade = morph, not snap */
+    pointer-events: none;
+  }
+  .pose.is-on { opacity: 1; }
+
+  /* v2 frames are rendered head-and-shoulders inside a square with the
+     background already cut out, so they fill the disc instead of hanging
+     off the bottom of it like the head-only memoji cut-outs do. */
+  .av[data-set='avatar-v2'] .pose {
+    bottom: -6%;
+    width: 112%;
+  }
+
+  .avatar-hint {
+    display: block;
+    margin-top: 0.9rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    color: #8a867c;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .avatar-wrap:hover .avatar-hint { opacity: 1; }
+
+  /* ---- motion: the memoji itself is the art, CSS adds life ---- */
+  .av { animation: sway 12s ease-in-out infinite; transform-origin: 50% 85%; }
+  .avatar-wrap.is-talking .av { animation: sway 12s ease-in-out infinite, nod 1.4s ease-in-out infinite; }
+  .avatar-wrap.is-react .av { animation: sway 12s ease-in-out infinite, pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @keyframes sway {
+    0%, 100% { rotate: -1.2deg; translate: 0 0; }
+    25%      { rotate: 0.3deg; translate: 0 -2px; }
+    50%      { rotate: 1.2deg;  translate: 0 0; }
+    75%      { rotate: 0.2deg; translate: 0 -1px; }
+  }
+  @keyframes nod { 0%, 100% { translate: 0 0; } 50% { translate: 0 2px; } }
+  @keyframes pop { 0% { scale: 1; } 40% { scale: 1.07; } 100% { scale: 1; } }
+
+  /* ---- chat panel ---- */
+  .chat {
+    width: min(30rem, 92vw);
+    margin: 1.6rem auto 0;
+    text-align: left;
+    background: #fff;
+    border: 2px solid var(--paper-ink);
+    border-radius: 16px;
+    box-shadow: 5px 5px 0 var(--klein);
+    overflow: hidden;
+  }
+  .chat[hidden] { display: none; }
+  .chat-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.9rem;
+    background: var(--paper-ink);
+    color: var(--paper);
+    letter-spacing: 0.14em;
+  }
+  .chat-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--paper); font-size: 0.9rem; line-height: 1; padding: 0.2rem;
+  }
+  .chat-close:hover { color: var(--acid); }
+  .chat-log {
+    max-height: 15rem;
+    overflow-y: auto;
+    padding: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .chat-log:empty { display: none; }
+  .msg { font-size: 0.95rem; line-height: 1.5; max-width: 85%; padding: 0.55rem 0.8rem; border-radius: 12px; }
+  .msg.you { align-self: flex-end; background: var(--klein); color: var(--bone); }
+  .msg.bot { align-self: flex-start; background: var(--paper-2); color: var(--paper-ink); }
+  .msg.err { align-self: flex-start; background: #ffe9e4; color: #7a2718; }
+  .msg.think { color: #8a867c; font-style: italic; }
+  .chat-suggest { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 0.9rem 0.7rem; }
+  .chat-suggest[hidden] { display: none; }
+  .chat-suggest button {
+    font: inherit;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: none;
+    border: 1px solid #d8d1c2;
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    color: #57534b;
+  }
+  .chat-suggest button:hover { border-color: var(--klein); color: var(--klein); }
+  .chat-form { display: flex; border-top: 1px solid #e2dbcc; }
+  .chat-form input {
+    flex: 1;
+    font: inherit;
+    font-size: 0.95rem;
+    border: none;
+    padding: 0.8rem 0.9rem;
+    background: none;
+    color: var(--paper-ink);
+  }
+  .chat-form input:focus { outline: none; background: #fbfaf6; }
+  .chat-form button {
+    border: none;
+    background: var(--acid);
+    color: var(--ink);
+    padding: 0 1.1rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  .chat-form button:hover { background: var(--klein); color: var(--bone); }
+
+
+  .stage-name {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 12vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: 0.01em;
+    color: var(--paper-ink);
+    text-shadow: 0.035em 0.035em 0 var(--klein);
+  }
+  .stage-tag { margin-top: 1.4rem; font-size: 1.2rem; color: #4a4740; }
+  .stage-tag em { color: var(--klein); font-style: italic; font-weight: 600; }
+  .stage-social { display: flex; gap: 1.6rem; justify-content: center; margin-top: 1.8rem; }
+  .stage-social a {
+    color: var(--paper-ink);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .stage-social a:hover { color: var(--klein); border-color: var(--klein); }
+  .stage-social .lead-link { color: var(--klein); font-weight: 700; border-bottom-color: var(--klein); }
+  .roll { position: absolute; bottom: 2rem; color: #8a867c; animation: bob 2.2s ease-in-out infinite; }
   @keyframes bob { 50% { transform: translateY(6px); } }
 
+  @media (max-width: 620px) {
+    .corners {
+      position: absolute;
+      top: 1.2rem; left: 0; right: 0;
+      display: flex;
+      flex-wrap: nowrap;          /* one row, so its height is predictable */
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 0 0.8rem;
+    }
+    .corner {
+      position: static;
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      padding: 0.4rem 0;
+    }
+    /* nav row (~2.8rem incl. offset) + two bubble lines + tail, with slack */
+    .launch { padding-top: 9rem; }
+  }
+
   /* ---- marquee ---- */
-  .marquee {
-    border-top: 1px solid #26262b;
-    border-bottom: 1px solid #26262b;
-    overflow: hidden;
-    padding: 0.8rem 0;
-    background: var(--klein);
-  }
-  .marquee-track {
-    display: inline-block;
-    white-space: nowrap;
-    animation: marquee 30s linear infinite;
-    color: var(--bone);
-    font-size: 0.78rem;
-  }
+  .marquee { border-top: 1px solid var(--klein); border-bottom: 1px solid var(--klein); overflow: hidden; padding: 0.8rem 0; background: var(--klein); }
+  .marquee-track { display: inline-block; white-space: nowrap; animation: marquee 30s linear infinite; color: var(--bone); font-size: 0.78rem; }
   @keyframes marquee { to { transform: translateX(-50%); } }
 
-  /* ---- reel / cards ---- */
-  .reel { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
-  .reel-header { color: var(--bone-dim); margin-bottom: 2.2rem; }
-  .matinee-header { margin-top: 4.5rem; color: var(--acid); }
+  /* ---- arms ---- */
+  .arm { padding: 5rem 2rem; }
+  .arm > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .arm-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .arm-all { text-decoration: none; }
+  .arm-all:hover { text-decoration: underline; }
 
-  .card {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    padding: 2.4rem 1.6rem;
-    border-top: 1px solid #26262b;
-    text-decoration: none;
-    color: inherit;
-    transition: background 0.25s ease;
-    position: relative;
-  }
-  .card:hover { background: var(--klein); }
-  .card:hover .card-ch, .card:hover .card-meta { color: var(--bone); }
-  .card-ch { color: var(--acid); padding-top: 0.6rem; min-width: 4.5rem; }
-  .card-title {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(1.6rem, 4vw, 3.2rem);
-    line-height: 1.05;
-    letter-spacing: 0.005em;
-    color: var(--bone);
-    text-transform: uppercase;
-  }
-  .card-tagline {
-    margin-top: 0.9rem;
-    font-size: 1.15rem;
-    font-style: italic;
-    color: var(--bone-dim);
-    max-width: 52rem;
-  }
-  .card:hover .card-tagline { color: var(--bone); }
-  .card-meta {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1.3rem;
-    color: var(--bone-dim);
-    flex-wrap: wrap;
-  }
-  .card-cta { color: var(--acid); }
+  /* paper arm */
+  .paper { background: var(--paper); color: var(--paper-ink); }
+  .paper .arm-slate { color: #6a655c; }
+  .paper .arm-all { color: var(--klein); }
+  .pcard { display: flex; gap: 2rem; align-items: flex-start; padding: 2rem 1.4rem; border-top: 1px solid #d8d1c2; text-decoration: none; color: inherit; transition: background 0.2s ease; }
+  .pcard:hover { background: var(--paper-2); }
+  .pcard-ch { color: var(--klein); padding-top: 0.5rem; min-width: 4.5rem; }
+  .pcard-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem, 3.4vw, 2.6rem); line-height: 1.06; color: var(--paper-ink); text-transform: uppercase; }
+  .pcard-tag { margin-top: 0.7rem; font-size: 1.08rem; font-style: italic; color: #57534b; max-width: 52rem; }
+  .pcard-meta { display: flex; gap: 2rem; margin-top: 1rem; color: #8a867c; }
+  .pcard-meta .cta { color: var(--klein); }
 
-  /* ---- coming soon ---- */
-  .soon { border-top: 1px solid #26262b; padding: 3rem 1.6rem; }
-  .soon-label { color: var(--bone-dim); margin-bottom: 1.4rem; }
-  .soon-list { list-style: none; }
-  .soon-list li {
-    padding: 0.7rem 0;
-    color: var(--bone-dim);
-    font-size: 1.1rem;
-    font-style: italic;
-    display: flex;
-    gap: 1.4rem;
-    align-items: baseline;
-  }
-  .soon-list .mono { color: #55555e; font-style: normal; }
+  /* klein block */
+  .block-klein { background: var(--klein); color: var(--bone); }
+  .block-klein .arm-slate.light, .block-klein .arm-all.light { color: var(--bone); }
+  .block-klein .arm-all.light { opacity: 0.85; }
+  .prod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; max-width: 1200px; margin: 0 auto; }
+  .prod-card { display: flex; flex-direction: column; padding: 1.8rem 1.6rem; border: 1px solid rgba(236,231,221,0.28); border-radius: 10px; text-decoration: none; color: var(--bone); transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease; }
+  .prod-card:hover { border-color: var(--acid); transform: translateY(-3px); background: rgba(0,0,0,0.14); }
+  .pc-status { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(236,231,221,0.72); margin-bottom: 1rem; }
+  .pc-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bone); }
+  .pc-status[data-status="live"] .dot { background: var(--acid); box-shadow: 0 0 8px var(--acid); }
+  .pc-title { font-family: var(--font-display); font-weight: 400; font-size: 2rem; text-transform: uppercase; line-height: 1; }
+  .pc-tag { margin-top: 0.7rem; font-size: 1rem; font-style: italic; color: rgba(236,231,221,0.82); flex: 1; }
+  .pc-tags { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.3rem; color: var(--acid); }
 
-  /* ---- about ---- */
-  .about {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 2rem 6rem;
-  }
-  .about-slate { color: var(--bone-dim); margin-bottom: 1.6rem; }
-  .about-text {
-    font-size: clamp(1.5rem, 3vw, 2.3rem);
-    line-height: 1.35;
-    max-width: 56rem;
-  }
-  .about-text strong { color: var(--acid); font-weight: 500; }
+  /* acid block */
+  .block-acid { background: var(--acid); color: var(--ink); text-align: left; }
+  .block-acid .arm-slate.dark, .block-acid .arm-all.dark { color: #2a3200; }
+  .about-text { font-size: clamp(1.5rem, 3.4vw, 2.4rem); line-height: 1.35; max-width: 52rem; margin: 1.2rem 0 1.6rem; font-family: var(--font-display); font-weight: 400; letter-spacing: 0.01em; }
+  .block-acid .arm-all.dark { display: inline-block; border-bottom: 2px solid #2a3200; text-decoration: none; }
 
-  @media (max-width: 640px) {
-    .card { flex-direction: column; gap: 0.6rem; }
-  }
+  /* contact (dark) */
+  .contact { background: var(--ink); color: var(--bone); padding: 5rem 2rem 6rem; }
+  .contact > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .contact .arm-slate { color: var(--bone-dim); }
+  .contact-title { font-family: var(--font-display); font-size: clamp(3rem, 11vw, 8rem); line-height: 0.9; color: var(--bone); text-shadow: 0.03em 0.03em 0 var(--klein); margin: 1.2rem auto; }
+  .contact-text { max-width: 36rem; font-size: 1.25rem; color: var(--bone-dim); margin-bottom: 2.2rem; }
+  .contact-links { display: flex; flex-direction: column; gap: 0.9rem; align-items: flex-start; }
+  .c-link { color: var(--bone); text-decoration: none; padding: 0.8rem 1.3rem; border: 1px solid #2c2c33; border-radius: 999px; transition: color 0.2s ease, border-color 0.2s ease; }
+  .c-link:hover { color: var(--acid); border-color: var(--acid); }
+  .c-link.primary { background: var(--acid); color: var(--ink); border-color: var(--acid); font-weight: 700; }
+  .c-link.primary:hover { background: transparent; color: var(--acid); }
+
+  @media (max-width: 640px) { .pcard { flex-direction: column; gap: 0.5rem; } }
+
   @media (prefers-reduced-motion: reduce) {
-    .marquee-track, .hero-scroll { animation: none; }
+    .av, .avatar-wrap.is-talking .av, .avatar-wrap.is-react .av { animation: none; }
+    .pose { transition: none; }
+    .roll { animation: none; }
+  }
   }
 </style>
+
+<script>
+  const lines = [
+    "Hey, I'm May 👋",
+    "I build things from zero.",
+    "Security. Web3. AI. Pick one.",
+    "Currently shipping something new.",
+    "I wrote about AI & water ↓",
+    "Plain text beats databases.",
+    "Dinjure's live — go lose a round.",
+    "Full chat with me? Coming soon.",
+    "Still awake. Still building.",
+    "Ship, then breathe. Then ship again.",
+  ];
+  const bubble = document.getElementById('bubble');
+  const av = document.getElementById('av');
+  const btn = document.getElementById('avatar');
+  let i = 0;
+
+  // ---- pose engine: cross-fade between the real memoji frames ----
+  const frames = new Map<string, HTMLElement>();
+  document.querySelectorAll<HTMLElement>('.pose').forEach((el) => {
+    frames.set(el.dataset.pose ?? '', el);
+  });
+  let current = 'idle';
+  const setPose = (name: string) => {
+    if (!frames.has(name) || name === current) return;
+    frames.get(current)?.classList.remove('is-on');
+    frames.get(name)?.classList.add('is-on');
+    current = name;
+  };
+
+  // ---- speech ----
+  // The whole sentence appears at once (a quick fade, not a typewriter), then
+  // the mouth moves gently for about as long as the line takes to say, then
+  // settles. Only talk-open / talk-o ever alternate — they are identical apart
+  // from the mouth, so the face never jumps.
+  const PACE = {
+    mouthMs: 1400,     // how long each mouth shape holds
+    maxMouths: 3,      // hard cap on mouth changes per line
+    perWord: 360,      // rough speaking time per word
+    baseMs: 800,       // floor on top of that
+    minLine: 2200,
+    maxLine: 5200,
+    fadeMs: 170,       // bubble swap
+    holdEnd: 5200,     // line sits still, face at rest, before the next one
+  };
+
+  const wait = (ms: number) => new Promise((r) => window.setTimeout(r, ms));
+  let speakToken = 0;
+  let mouthTimer: number | undefined;
+
+  const stopMouth = () => {
+    window.clearInterval(mouthTimer);
+    mouthTimer = undefined;
+    btn?.classList.remove('is-talking');
+  };
+  const stopSpeaking = () => { speakToken++; stopMouth(); };
+
+  // The mouth moves a few times at the top of a line, then stops and the face
+  // rests for the remainder — a nod at the sentence, not a lip-sync of it.
+  const startMouth = (budget: number) => {
+    stopMouth();
+    btn?.classList.add('is-talking');
+    let open = true;
+    let left = Math.min(PACE.maxMouths, Math.max(1, Math.floor(budget / PACE.mouthMs)));
+    setPose('talk-open');
+    mouthTimer = window.setInterval(() => {
+      open = !open;
+      setPose(open ? 'talk-open' : 'talk-o');
+      if (--left <= 0) stopMouth();
+    }, PACE.mouthMs);
+  };
+
+  const speak = async (text: string, restPose = 'idle') => {
+    if (!bubble) return;
+    const token = ++speakToken;
+
+    bubble.style.opacity = '0';
+    await wait(PACE.fadeMs);
+    if (token !== speakToken) return;
+
+    bubble.textContent = text;              // full sentence, all at once
+    bubble.style.opacity = '1';
+
+    const words = text.trim().split(/\s+/).length;
+    const spoken = Math.min(PACE.maxLine, Math.max(PACE.minLine, words * PACE.perWord + PACE.baseMs));
+    startMouth(spoken);
+    await wait(spoken);
+    if (token !== speakToken) return;
+
+    stopMouth();
+    setPose(restPose);
+  };
+
+  const react = () => {
+    btn?.classList.remove('is-react');
+    void btn?.getBoundingClientRect();
+    btn?.classList.add('is-react');
+    window.setTimeout(() => btn?.classList.remove('is-react'), 520);
+  };
+
+  // Resting face per line — hand-picked and mostly just his normal face.
+  // No guessing from the words; that was doing too much.
+  const restFor = (idx: number) => (idx === 0 ? 'greet' : idx === lines.length - 1 ? 'zen' : 'idle');
+
+  // Rotation waits for each line to finish speaking, so nothing overlaps.
+  let rotating = false;
+  const startRotation = async () => {
+    if (rotating) return;
+    rotating = true;
+    while (rotating) {
+      const line = lines[i];
+      await speak(line, restFor(i));
+      if (!rotating) break;
+      await wait(PACE.holdEnd);
+      i = (i + 1) % lines.length;
+    }
+  };
+  const stopRotation = () => { rotating = false; stopSpeaking(); };
+  startRotation();
+
+  // ---- chat ----
+  const chat = document.getElementById('chat');
+  const log = document.getElementById('chat-log');
+  const form = document.getElementById('chat-form') as HTMLFormElement | null;
+  const input = document.getElementById('chat-input') as HTMLInputElement | null;
+  const suggest = document.getElementById('chat-suggest');
+  const closeBtn = document.getElementById('chat-close');
+  const history: { role: 'user' | 'assistant'; content: string }[] = [];
+  let busy = false;
+
+  const bubbleSay = (text: string, restPose = 'idle') => speak(text, restPose);
+
+  const addMsg = (text: string, cls: string) => {
+    if (!log) return null;
+    const el = document.createElement('div');
+    el.className = `msg ${cls}`;
+    el.textContent = text;
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  };
+
+  const openChat = () => {
+    if (!chat) return;
+    stopRotation();
+    chat.hidden = false;
+    bubbleSay('Ask me anything.', 'greet');
+    input?.focus();
+  };
+
+  const closeChat = () => {
+    if (!chat) return;
+    chat.hidden = true;
+    startRotation();
+  };
+
+  const ask = async (question: string) => {
+    if (busy || !question.trim()) return;
+    busy = true;
+    suggest?.setAttribute('hidden', '');
+    addMsg(question, 'you');
+    const pending = addMsg('thinking…', 'bot think');
+    stopSpeaking();
+    setPose('think');
+    if (bubble) { bubble.textContent = 'Thinking…'; bubble.style.opacity = '1'; }
+
+    try {
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, history }),
+      });
+      const data = await res.json().catch(() => ({}));
+      const reply = data.reply ?? 'Something went wrong. Try again.';
+      pending?.remove();
+      addMsg(reply, res.ok ? 'bot' : 'bot err');
+      history.push({ role: 'user', content: question }, { role: 'assistant', content: reply });
+      bubbleSay(reply.length > 46 ? reply.slice(0, 44).trimEnd() + '…' : reply);
+    } catch {
+      pending?.remove();
+      addMsg("Couldn't reach the server. Check your connection and try again.", 'bot err');
+      setPose('no');
+    } finally {
+      busy = false;
+    }
+  };
+
+  btn?.addEventListener('click', () => {
+    if (chat?.hidden) { openChat(); return; }
+    stopSpeaking();
+    i = (i + 1) % lines.length;
+    react();
+    speak(lines[i], restFor(i));
+  });
+
+  closeBtn?.addEventListener('click', closeChat);
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!input) return;
+    const q = input.value;
+    input.value = '';
+    ask(q);
+  });
+
+  suggest?.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'BUTTON') ask(target.textContent ?? '');
+  });
+
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && chat && !chat.hidden) closeChat();
+  });
+</script>

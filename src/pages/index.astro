@@ -288,6 +288,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .av[data-set='avatar-v2'] .pose {
     bottom: -6%;
     width: 112%;
+    height: auto;   /* without this the height attribute wins and object-fit
+                       silently letterboxes the frame inside a 768px-tall box */
   }
 
   .avatar-hint {

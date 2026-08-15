@@ -661,11 +661,29 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   // Things the bot names often enough to be worth clicking. Order matters:
   // the email has to match before the bare domain inside it does. Only routes
   // that actually exist are listed — there are no per-project pages.
+  // Article paths come first: the bot is told to cite the full URL, and
+  // "maystash.xyz/posts/<slug>/" must win over the bare-domain rule below it.
+  const S = '(?:https?://)?';
+  const POST_SLUGS = [
+    'brain-that-sleeps',
+    'injection-is-a-con-job',
+    'agents-need-a-leash',
+    'thirsty-machines',
+    'player-who-never-lost',
+    'we-gave-him-a-different-puzzle',
+  ];
   const LINKS: { pattern: string; href: string }[] = [
+    // `S` swallows an optional scheme so "https://" is never left stranded
+    // outside the link text.
+    ...POST_SLUGS.map((slug) => ({
+      pattern: `${S}(?:maystash\\.xyz)?/?posts/${slug}/?`,
+      href: `/posts/${slug}/`,
+    })),
     { pattern: 'hello@maystash\\.xyz', href: 'mailto:hello@maystash.xyz' },
-    { pattern: 'github\\.com/Mechmay', href: 'https://github.com/Mechmay' },
-    { pattern: 'dinjure\\.com', href: 'https://dinjure.com' },
-    { pattern: 'maystash\\.xyz', href: '/' },
+    { pattern: `${S}github\\.com/Mechmay`, href: 'https://github.com/Mechmay' },
+    { pattern: `${S}dinjure\\.com`, href: 'https://dinjure.com' },
+    { pattern: `${S}maystash\\.xyz/writing`, href: '/writing' },
+    { pattern: `${S}maystash\\.xyz`, href: '/' },
     { pattern: '\\bDinjure\\b', href: '/projects' },
     { pattern: '\\bHash\\b', href: '/projects' },
   ];

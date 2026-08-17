@@ -6,6 +6,10 @@ chapter: "M3"
 section: "matinee"
 tags: ["games", "security", "cheating", "dinjure", "explainers"]
 draft: false
+botNotes: >-
+  The sequel: the scoreboard stayed clean for exactly a day. The game
+  accidentally lied to the cheater, that accident became the fix, and the
+  fix then bit an innocent player.
 ---
 
 INT. THE SAME LEADERBOARD — TWO WEEKS LATER.

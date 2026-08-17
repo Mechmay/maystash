@@ -5,6 +5,11 @@ date: 2026-07-18
 chapter: "02"
 tags: ["ai", "agents", "automation", "loops"]
 draft: false
+botNotes: >-
+  Everyone wants agents that run unsupervised; almost nobody builds the
+  discipline that makes unsupervised safe. The loop contract that keeps
+  automated AI work from quietly going feral: six constraints on what an
+  agent may touch, how long it may run, and what it must write down.
 ---
 
 INT. YOUR COMPUTER — 3:47 AM.

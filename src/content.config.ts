@@ -11,6 +11,10 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     section: z.enum(['feature', 'matinee']).default('feature'),
     draft: z.boolean().default(false),
+    // Optional. Facts for the site's chat assistant that the post's own opening
+    // doesn't carry — the payoff numbers, the actual definition. Left out, the
+    // generator summarises from the opening paragraphs instead.
+    botNotes: z.string().optional(),
   }),
 });
 

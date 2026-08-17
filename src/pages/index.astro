@@ -525,17 +525,23 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 </style>
 
 <script>
+  // Kept short on purpose: the bubble is white-space:nowrap, so anything much
+  // past ~42 characters runs off the edge on a narrow phone.
   const lines = [
     "Hey, I'm May 👋",
-    "I build things from zero.",
-    "Security. Web3. AI. Pick one.",
-    "Currently shipping something new.",
-    "I wrote about AI & water ↓",
-    "Plain text beats databases.",
+    'I build things from zero.',
+    'Security. Web3. AI. Pick one.',
+    'Ask me anything — I mean it.',
+    'Someone cheated at my game for weeks.',
+    'Your burger drinks more than AI does.',
+    'This whole site is just text files.',
+    'The hard-won stuff is written down.',
     "Dinjure's live — go lose a round.",
-    "Click me — ask me anything.",
-    "Still awake. Still building.",
-    "Ship, then breathe. Then ship again.",
+    'My AI lives in a group chat.',
+    'I like the part before anything exists.',
+    'Currently shipping something new.',
+    'Still awake. Still building.',
+    'Ship, then breathe. Then ship again.',
   ];
   const bubble = document.getElementById('bubble');
   const av = document.getElementById('av');
@@ -664,14 +670,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   // Article paths come first: the bot is told to cite the full URL, and
   // "maystash.xyz/posts/<slug>/" must win over the bare-domain rule below it.
   const S = '(?:https?://)?';
-  const POST_SLUGS = [
-    'brain-that-sleeps',
-    'injection-is-a-con-job',
-    'agents-need-a-leash',
-    'thirsty-machines',
-    'player-who-never-lost',
-    'we-gave-him-a-different-puzzle',
-  ];
+  // Generated from src/posts by scripts/knowledge.mjs, so a new post becomes
+  // clickable without anyone remembering to add it here. Drafts are excluded —
+  // linking one would send visitors to a 404.
+  import { POST_SLUGS } from '../lib/content.generated';
   const LINKS: { pattern: string; href: string }[] = [
     // `S` swallows an optional scheme so "https://" is never left stranded
     // outside the link text.

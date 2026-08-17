@@ -5,6 +5,15 @@ date: 2026-07-25
 chapter: "03"
 tags: ["security", "ai", "prompt-injection", "agents"]
 draft: false
+botNotes: >-
+  Prompt injection is when instructions are smuggled inside data the model
+  reads — a web page, a document, an email — and the model follows them as
+  if the user had asked. It resists patching because a model takes
+  instructions and data through the same channel and cannot tell them apart.
+  Three habits break it: provenance (data is never instructions), least
+  privilege (the agent can only reach what the task needs), and an audit
+  trail. It's a con played on the model, not a vulnerability in it — which
+  is why filters and blocklists keep losing.
 ---
 
 INT. A GRAND HOTEL LOBBY — DAY.

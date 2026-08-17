@@ -6,6 +6,17 @@ chapter: "M1"
 section: "matinee"
 tags: ["ai", "water", "data-centers", "environment", "explainers"]
 draft: false
+botNotes: >-
+  A plain-language guide to AI and water. One chatbot answer costs a few
+  drops to a shot glass; a hamburger costs ~2,500 litres. US golf courses
+  out-drink every US data center roughly 30x. Estimates vary 2000x because
+  people measure different boundaries (on-site cooling vs. water used
+  generating the electricity vs. training amortised in). Water isn't
+  destroyed, it's displaced — 70-90% of what a data center draws leaves the
+  local watershed. Only one AI lab, Mistral, has published a full
+  independently audited water bill. The real problem isn't the volume, it's
+  that it's unaudited and locally concentrated: a data center can be 0.02%
+  of a country's water and still a quarter of one town's.
 ---
 
 INT. A BACKYARD BARBECUE — SATURDAY AFTERNOON.

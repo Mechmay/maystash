@@ -102,7 +102,11 @@ async function callAnthropic(
   const response = await client.messages.create({
     model: ANTHROPIC_MODEL,
     max_tokens: maxTokens,
-    system: [{ type: 'text', text: system }],
+    // Haiku 4.5 won't cache a prefix under 4096 tokens, and the knowledge base
+    // is still short of that, so this is currently a no-op. It's left in
+    // because the base now grows on its own with every post published: the day
+    // it crosses the threshold, cached reads start billing at ~10%.
+    system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
     messages: turns,
   });
 

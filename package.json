@@ -4,9 +4,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
+    "dev": "node scripts/knowledge.mjs && astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "knowledge": "node scripts/knowledge.mjs",
+    "prebuild": "node scripts/knowledge.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.117.1",

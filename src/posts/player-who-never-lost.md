@@ -6,6 +6,10 @@ chapter: "M2"
 section: "matinee"
 tags: ["games", "security", "cheating", "dinjure", "explainers"]
 draft: false
+botNotes: >-
+  A player cracked Dinjure's daily puzzle in one guess, every day, for
+  weeks. Two cheats, two fixes, and the one detail deliberately not
+  published.
 ---
 
 INT. A LEADERBOARD, EARLY MORNING.

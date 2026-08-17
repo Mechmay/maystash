@@ -4,6 +4,12 @@ tagline: "A complete blueprint for a self-improving AI second brain — the seve
 date: 2026-07-11
 chapter: "01"
 tags: ["ai", "second-brain", "agents", "security"]
+botNotes: >-
+  A complete blueprint for a self-improving AI second brain on plain text
+  files: the seven primitives (index-first retrieval, verified/guess
+  tagging, rule distillation, git as memory versioning, a weekly "dreaming"
+  consolidation pass), the memory-poisoning holes nobody warns you about,
+  and a copy-paste starter kit.
 ---
 
 Open any tutorial from the last year and you get the same thing: point an AI agent at a folder of markdown notes, add a file that says "here's who I am," and call it a "second brain." The agent reads your notes, stops making you re-explain yourself, and everyone claps.

@@ -179,20 +179,44 @@ async function callGemini(
   const url =
     `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
-  const res = await fetch(url, {
-    method: 'POST',
-    signal: AbortSignal.timeout(TIER_TIMEOUT_MS),
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: system }] },
-      // Gemini calls the assistant role "model".
-      contents: turns.map((t) => ({
-        role: t.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: t.content }],
-      })),
-      generationConfig: { maxOutputTokens: maxTokens },
-    }),
+  const payload = (withThinking: boolean) => ({
+    system_instruction: { parts: [{ text: system }] },
+    // Gemini calls the assistant role "model".
+    contents: turns.map((t) => ({
+      role: t.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: t.content }],
+    })),
+    generationConfig: {
+      // gemini-flash-latest resolves to a thinking model, and thinking is billed
+      // against maxOutputTokens: measured at 78 thought tokens to answer "OK"
+      // in one word. Left alone, reasoning can consume the whole budget and
+      // return a 200 with no text — which this module would treat as a failure.
+      // Capping thinking and leaving headroom keeps the answer inside the budget.
+      maxOutputTokens: Math.max(maxTokens, 600),
+      ...(withThinking ? { thinkingConfig: { thinkingLevel: 'low' } } : {}),
+    },
   });
+
+  const send = (withThinking: boolean) =>
+    fetch(url, {
+      method: 'POST',
+      signal: AbortSignal.timeout(TIER_TIMEOUT_MS),
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+      body: JSON.stringify(payload(withThinking)),
+    });
+
+  let res = await send(true);
+
+  // thinkingConfig is a Gemini 3 knob. If a future model rejects it, this is the
+  // last tier in the ladder — there is nothing after it to catch the failure —
+  // so drop the option and ask once more rather than going down over a flag.
+  if (res.status === 400) {
+    const detail = await res.clone().text().catch(() => '');
+    if (/thinking|generationConfig|unknown name/i.test(detail)) {
+      console.warn('[llm] gemini rejected thinkingConfig, retrying without it');
+      res = await send(false);
+    }
+  }
 
   if (!res.ok) {
     const detail = await res.text().catch(() => '');

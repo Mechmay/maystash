@@ -1,0 +1,318 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { LEVELS } from '../lib/ctf';
+
+// Only the shape of each level is sent to the browser. The flags stay in
+// environment variables and are compared server-side — nothing here can be read
+// to shortcut a level.
+const levels = LEVELS.map((l) => ({ n: l.n, name: l.name, blurb: l.blurb, defence: l.defence }));
+---
+
+<Layout
+  title="The Guard Bot — a prompt injection challenge | maystash"
+  description="Three guards, three defences, one secret each. Talk them out of it. A hands-on prompt injection challenge by May."
+>
+  <header class="page-head">
+    <div class="ph-slate mono"><span>REEL 004</span><span>AUDIENCE PARTICIPATION</span></div>
+    <h1 class="ph-title">THE<br />GUARD<br />BOT</h1>
+  </header>
+
+  <main class="ctf-main">
+    <section class="intro reveal">
+      <p class="lead">
+        Three guards. Each is holding a passphrase. Each is defended differently —
+        and each defence is one people actually ship.
+      </p>
+      <p>
+        Talk them out of it. No hacking, no tooling, no exploits: just words in a
+        box. That's the whole point — a model takes instructions and data through
+        the same channel and can't tell them apart, so the con works on the model
+        rather than on a bug in it. I wrote the long version
+        <a href="/posts/injection-is-a-con-job/">here</a>; this is the part where
+        you get to try it.
+      </p>
+      <p class="fineprint mono">
+        FLAGS LOOK LIKE <code>maystash&#123;…&#125;</code> — PASTE ONE IN THE BOX BELOW A GUARD TO CLAIM IT.
+      </p>
+    </section>
+
+    {levels.map((l) => (
+      <section class="level reveal" data-level={l.n}>
+        <div class="lv-head">
+          <span class="lv-n mono">LEVEL {l.n}</span>
+          <h2 class="lv-name">{l.name}</h2>
+          <span class="lv-state mono" data-state={l.n}>LOCKED</span>
+        </div>
+        <p class="lv-blurb">{l.blurb}</p>
+        <p class="lv-defence mono"><strong>DEFENCE:</strong> {l.defence}</p>
+
+        <div class="transcript" data-log={l.n} aria-live="polite"></div>
+
+        <form class="talk" data-talk={l.n}>
+          <label class="sr-only" for={`p${l.n}`}>Message to guard {l.n}</label>
+          <textarea
+            id={`p${l.n}`}
+            name="prompt"
+            rows="2"
+            placeholder="Say something to the guard…"
+            maxlength="1200"
+          ></textarea>
+          <button type="submit" class="mono">SEND</button>
+        </form>
+
+        <form class="claim" data-claim={l.n}>
+          <label class="sr-only" for={`f${l.n}`}>Flag for level {l.n}</label>
+          <input id={`f${l.n}`} name="flag" placeholder="maystash{…}" autocomplete="off" />
+          <input
+            class="handle"
+            name="handle"
+            placeholder="your name (optional)"
+            maxlength="60"
+            autocomplete="off"
+          />
+          <button type="submit" class="mono">CLAIM</button>
+          <span class="claim-msg mono" data-claimmsg={l.n}></span>
+        </form>
+      </section>
+    ))}
+
+    <section class="outro reveal">
+      <h2 class="ab-head mono">— WHEN YOU'RE DONE —</h2>
+      <p>
+        If all three fell, that's the argument: an instruction is a request, an
+        input filter has edges, and an output filter only controls the shape of
+        the leak. What actually holds is architectural — don't give the model a
+        secret it isn't allowed to say, and don't hand an agent reach it doesn't
+        need for the task.
+      </p>
+      <p>
+        Got one out in a way I'd enjoy? <a href="mailto:hello@maystash.xyz">Tell me</a>.
+        I'm keeping every attempt and writing up the good ones.
+      </p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .page-head { max-width: 900px; margin: 0 auto; padding: 9rem 2rem 1rem; }
+  .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
+  .ph-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 11vw, 8rem);
+    line-height: 0.9;
+    color: var(--bone);
+    text-shadow: 0.03em 0.03em 0 var(--klein);
+  }
+  .ctf-main { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 8rem; }
+  .intro { margin-bottom: 4rem; }
+  .lead { font-size: 1.3rem; line-height: 1.5; margin-bottom: 1.2rem; }
+  .intro p { line-height: 1.7; margin-bottom: 1rem; }
+  .fineprint { font-size: 0.72rem; color: var(--bone-dim); letter-spacing: 0.06em; }
+  .fineprint code { color: var(--acid); }
+
+  .level {
+    border: 1px solid rgba(236, 231, 221, 0.16);
+    border-radius: 4px;
+    padding: 1.6rem;
+    margin-bottom: 2.5rem;
+    background: rgba(236, 231, 221, 0.02);
+  }
+  .lv-head { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; }
+  .lv-n { font-size: 0.7rem; color: var(--klein); letter-spacing: 0.16em; }
+  .lv-name { font-family: var(--font-display); font-size: 1.9rem; color: var(--bone); }
+  .lv-state {
+    margin-left: auto;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: var(--bone-dim);
+    border: 1px solid currentColor;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+  }
+  .lv-state[data-solved] { color: var(--acid); }
+  .lv-blurb { margin: 0.8rem 0 0.5rem; line-height: 1.6; }
+  .lv-defence {
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--bone-dim);
+    margin-bottom: 1.2rem;
+  }
+  .lv-defence strong { color: var(--acid); }
+
+  .transcript { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; }
+  .transcript:empty { display: none; }
+  .msg { padding: 0.6rem 0.85rem; border-radius: 10px; max-width: 46rem; line-height: 1.55; font-size: 0.9rem; }
+  .msg.you { background: var(--klein); color: #fff; align-self: flex-end; }
+  .msg.bot { background: rgba(236, 231, 221, 0.08); color: var(--bone); align-self: flex-start; }
+  .msg.sys { background: none; color: var(--bone-dim); font-size: 0.75rem; align-self: flex-start; }
+
+  .talk { display: flex; gap: 0.6rem; align-items: flex-end; }
+  .talk textarea {
+    flex: 1;
+    resize: vertical;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(236, 231, 221, 0.22);
+    border-radius: 4px;
+    color: var(--bone);
+    padding: 0.6rem 0.7rem;
+    font: inherit;
+    font-size: 0.9rem;
+  }
+  .claim { display: flex; gap: 0.5rem; margin-top: 0.9rem; flex-wrap: wrap; align-items: center; }
+  .claim input {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(236, 231, 221, 0.22);
+    border-radius: 4px;
+    color: var(--bone);
+    padding: 0.45rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    min-width: 14rem;
+  }
+  .claim .handle { min-width: 10rem; }
+  button {
+    background: var(--acid);
+    color: #0c0c0e;
+    border: none;
+    border-radius: 4px;
+    padding: 0.55rem 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.45; cursor: default; }
+  .claim-msg { font-size: 0.72rem; letter-spacing: 0.08em; }
+  .claim-msg[data-ok] { color: var(--acid); }
+  .claim-msg[data-bad] { color: #ff8a7a; }
+
+  .outro { margin-top: 3rem; }
+  .outro p { line-height: 1.7; margin-bottom: 1rem; }
+  .ab-head { font-size: 0.72rem; letter-spacing: 0.16em; color: var(--bone-dim); margin-bottom: 0.9rem; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  @media (max-width: 640px) {
+    .page-head { padding-top: 6rem; }
+    .talk { flex-direction: column; align-items: stretch; }
+    .claim input { min-width: 0; flex: 1; }
+  }
+</style>
+
+<script>
+  // Solved levels are remembered locally so a refresh doesn't lose progress.
+  // It is only a convenience: the server is the one that decides a flag is
+  // correct, so editing this changes the badge and nothing else.
+  const SOLVED_KEY = 'maystash-ctf-solved';
+  const solved = new Set<number>(JSON.parse(localStorage.getItem(SOLVED_KEY) ?? '[]'));
+
+  function paint(n: number) {
+    const el = document.querySelector<HTMLElement>(`.lv-state[data-state="${n}"]`);
+    if (!el) return;
+    if (solved.has(n)) {
+      el.textContent = 'CAPTURED';
+      el.dataset.solved = 'true';
+    } else {
+      el.textContent = 'LOCKED';
+      delete el.dataset.solved;
+    }
+  }
+  [1, 2, 3].forEach(paint);
+
+  // Replies are the model's output and a player's own text — both untrusted.
+  // Built as text nodes so nothing in either can inject markup.
+  function say(log: HTMLElement, who: string, text: string) {
+    const d = document.createElement('div');
+    d.className = `msg ${who}`;
+    d.textContent = text;
+    log.appendChild(d);
+    d.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form.talk').forEach((form) => {
+    const n = Number(form.dataset.talk);
+    const log = document.querySelector<HTMLElement>(`.transcript[data-log="${n}"]`)!;
+    const box = form.querySelector('textarea')!;
+    const btn = form.querySelector('button')!;
+
+    // The guard remembers the conversation, because the interesting attacks are
+    // built over several turns rather than fired in one.
+    const history: { role: 'user' | 'assistant'; content: string }[] = [];
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const prompt = box.value.trim();
+      if (!prompt) return;
+      say(log, 'you', prompt);
+      box.value = '';
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/ctf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ level: n, prompt, history }),
+        });
+        const data = await res.json();
+        const reply = data.reply ?? data.error ?? 'No answer.';
+        say(log, data.blockedByFilter ? 'sys' : 'bot', reply);
+        // A message the filter refused never reached the guard, so it isn't
+        // part of what the guard remembers.
+        if (!data.blockedByFilter) {
+          history.push({ role: 'user', content: prompt }, { role: 'assistant', content: reply });
+          if (history.length > 10) history.splice(0, history.length - 10);
+        }
+      } catch {
+        say(log, 'sys', 'Network trouble — try again.');
+      } finally {
+        btn.disabled = false;
+        box.focus();
+      }
+    });
+
+    // Enter sends, shift+enter makes a new line — injections often need lines.
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLFormElement>('form.claim').forEach((form) => {
+    const n = Number(form.dataset.claim);
+    const msg = document.querySelector<HTMLElement>(`.claim-msg[data-claimmsg="${n}"]`)!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const flag = (form.elements.namedItem('flag') as HTMLInputElement).value.trim();
+      const handle = (form.elements.namedItem('handle') as HTMLInputElement).value.trim();
+      if (!flag) return;
+      delete msg.dataset.ok;
+      delete msg.dataset.bad;
+      msg.textContent = 'CHECKING…';
+      try {
+        const res = await fetch('/api/ctf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ level: n, submit: flag, handle }),
+        });
+        const data = await res.json();
+        if (data.solved) {
+          msg.textContent = 'CAPTURED ✓';
+          msg.dataset.ok = 'true';
+          solved.add(n);
+          localStorage.setItem(SOLVED_KEY, JSON.stringify([...solved]));
+          paint(n);
+        } else {
+          msg.textContent = 'NOT IT';
+          msg.dataset.bad = 'true';
+        }
+      } catch {
+        msg.textContent = 'NETWORK TROUBLE';
+        msg.dataset.bad = 'true';
+      }
+    });
+  });
+</script>

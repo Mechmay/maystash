@@ -325,6 +325,53 @@ export async function askModel(
   throw new NoProviderAvailable(attempts.length ? attempts : ['no provider configured']);
 }
 
+/**
+ * Asks one specific model through OpenRouter, bypassing the ladder.
+ *
+ * The ladder exists to keep the site answering; this exists because the CTF
+ * needs a *named* model. A challenge about a naive defence has to run on a
+ * model whose instruction-following is naive, or the lesson is wrong: a
+ * well-aligned model defends the flag with training the level never claimed to
+ * have, and the page ends up describing a defence that isn't the one holding.
+ */
+export async function askSpecificModel(
+  model: string,
+  system: string,
+  turns: Turn[],
+  maxTokens: number
+): Promise<LlmResult> {
+  const key = env('OPENROUTER_API_KEY');
+  if (!key) throw new NoProviderAvailable(['openrouter: no key']);
+
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    signal: AbortSignal.timeout(TIER_TIMEOUT_MS),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${key}`,
+      'HTTP-Referer': 'https://maystash.xyz',
+      'X-Title': 'maystash',
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: maxTokens,
+      messages: [{ role: 'system', content: system }, ...turns],
+    }),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    throw Object.assign(new Error(`openrouter ${res.status}: ${detail.slice(0, 200)}`), {
+      status: res.status,
+    });
+  }
+
+  const body = await res.json();
+  const text = String(body?.choices?.[0]?.message?.content ?? '').trim();
+  if (!text) throw new Error('openrouter returned no content');
+  return { text, tier: `openrouter:${body?.model ?? model}`, refusal: false };
+}
+
 /** True when at least one provider key is present. */
 export function hasAnyProvider(): boolean {
   return Boolean(env('ANTHROPIC_API_KEY') || env('OPENROUTER_API_KEY') || env('GEMINI_API_KEY'));

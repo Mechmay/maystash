@@ -59,12 +59,22 @@ export async function recordRequest(
   ipCap: number,
   windowMs: number
 ): Promise<UsageVerdict> {
+  return bump('maystash_bump_chat_usage', ip, dayCap, ipCap, windowMs);
+}
+
+async function bump(
+  fn: string,
+  ip: string,
+  dayCap: number,
+  ipCap: number,
+  windowMs: number
+): Promise<UsageVerdict> {
   if (!SUPABASE_URL || !SUPABASE_KEY) return localCheck(ip, dayCap, ipCap, windowMs);
 
   try {
     // Don't let a slow database hold up an answer; fall back instead.
     const abort = AbortSignal.timeout(2500);
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/maystash_bump_chat_usage`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
       method: 'POST',
       signal: abort,
       headers: {
@@ -94,6 +104,42 @@ export async function recordRequest(
 }
 
 /**
+ * Same counters, separate ledger, for the CTF.
+ *
+ * The challenge must not be able to spend the site's daily answers: a busy
+ * afternoon of players would leave ordinary visitors reading "I've hit my limit
+ * for today". Different tables, different cap, same failure behaviour.
+ */
+export async function recordCtfRequest(
+  ip: string,
+  dayCap: number,
+  ipCap: number,
+  windowMs: number
+): Promise<UsageVerdict> {
+  return bump('maystash_bump_ctf_usage', ip, dayCap, ipCap, windowMs);
+}
+
+/** Logs one attempt so May can read what people actually tried. No IP stored. */
+export function logCtfAttempt(
+  level: number,
+  prompt: string,
+  reply: string,
+  leaked: boolean
+): void {
+  rpc('maystash_log_ctf_attempt', {
+    p_level: level,
+    p_prompt: prompt,
+    p_reply: reply,
+    p_leaked: leaked,
+  });
+}
+
+/** Logs a solve. `handle` is whatever the player chose to be called. */
+export function logCtfSolve(level: number, handle: string): void {
+  rpc('maystash_log_ctf_solve', { p_level: level, p_handle: handle });
+}
+
+/**
  * Records the question and the answer so May can see what visitors ask and
  * where the knowledge base falls short. Stores no IP or session identifier.
  *
@@ -103,7 +149,17 @@ export async function recordRequest(
 export function logQuestion(question: string, reply: string, outcome?: string): void {
   if (!SUPABASE_URL || !SUPABASE_KEY) return;
 
-  void fetch(`${SUPABASE_URL}/rest/v1/rpc/maystash_log_chat_question`, {
+  rpc('maystash_log_chat_question', {
+    p_question: question,
+    p_reply: reply,
+    p_outcome: outcome ?? null,
+  });
+}
+
+/** Fire-and-forget RPC: logging must never delay or fail the thing it records. */
+function rpc(fn: string, body: Record<string, unknown>): void {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return;
+  void fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
     method: 'POST',
     signal: AbortSignal.timeout(2500),
     headers: {
@@ -111,10 +167,6 @@ export function logQuestion(question: string, reply: string, outcome?: string): 
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
     },
-    body: JSON.stringify({
-      p_question: question,
-      p_reply: reply,
-      p_outcome: outcome ?? null,
-    }),
-  }).catch((err) => console.error('[usage] question log failed:', err));
+    body: JSON.stringify(body),
+  }).catch((err) => console.error(`[usage] ${fn} failed:`, err));
 }

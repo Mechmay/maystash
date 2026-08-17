@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
-import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from '../../lib/knowledge';
 import { recordRequest, logQuestion } from '../../lib/usage';
+import { askModel, scrubModelIdentity, hasAnyProvider } from '../../lib/llm';
 
 export const prerender = false;
 
@@ -18,8 +18,6 @@ const RATE_WINDOW_MS = 60_000;    // …per minute, per IP
 // bounds a full day at roughly $3–7. See src/lib/usage.ts.
 const DAILY_CAP = 1500;
 
-const MODEL = 'claude-haiku-4-5';
-
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
@@ -27,8 +25,7 @@ const json = (body: unknown, status = 200) =>
   });
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const apiKey = import.meta.env.ANTHROPIC_API_KEY ?? process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
+  if (!hasAnyProvider()) {
     return json({ reply: "The chat isn't switched on yet — May still has to add the key." }, 503);
   }
 
@@ -70,33 +67,39 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_QUESTION_CHARS) }));
 
   try {
-    const client = new Anthropic({ apiKey });
-    const response = await client.messages.create({
-      model: MODEL,
-      max_tokens: MAX_OUTPUT_TOKENS,
-      // The knowledge base is stable across every request, so cache it: cached
-      // tokens bill at ~10% of normal.
-      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
-      messages: [...priorTurns, { role: 'user', content: question }],
-    });
+    // Walks Anthropic → OpenRouter → Google, skipping unconfigured providers, so
+    // one provider's outage doesn't take the chat down. See src/lib/llm.ts.
+    const result = await askModel(
+      SYSTEM_PROMPT,
+      [...priorTurns, { role: 'user', content: question }],
+      MAX_OUTPUT_TOKENS
+    );
 
-    if (response.stop_reason === 'refusal') {
+    if (result.refusal) {
       const declined = "I'd rather not answer that one. Ask me about May's work instead.";
       logQuestion(question, declined, 'refusal');
       return json({ reply: declined });
     }
 
-    const reply = response.content
-      .filter((b): b is Anthropic.TextBlock => b.type === 'text')
-      .map((b) => b.text)
-      .join('')
-      .trim();
+    // Backstop for the system prompt's "don't name the model" rule: prompt-level
+    // suppression is soft, so anything that names the lab is removed here.
+    const { text, scrubbed } = scrubModelIdentity(result.text);
+    const answer = text || "I didn't catch that — try asking another way.";
 
-    const answer = reply || "I didn't catch that — try asking another way.";
-    logQuestion(question, answer, reply ? undefined : 'empty');
+    // The outcome column is how failover becomes visible after the fact: a
+    // normal day logs nothing, an outage leaves a trail of fallback tiers.
+    const outcome = [
+      result.tier === 'anthropic' ? undefined : result.tier,
+      text ? undefined : 'empty',
+      scrubbed ? 'scrubbed' : undefined,
+    ]
+      .filter(Boolean)
+      .join('+');
+
+    logQuestion(question, answer, outcome || undefined);
     return json({ reply: answer });
   } catch (err) {
-    console.error('[ask] request failed:', err);
+    console.error('[ask] every provider failed:', err);
     logQuestion(question, '', 'error');
     return json({ reply: 'Something broke on my end. Try again in a moment.' }, 502);
   }

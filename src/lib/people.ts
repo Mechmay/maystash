@@ -17,6 +17,17 @@
 // assistant greeting a stranger by a name they merely guessed, and stops the
 // roster being extractable in one go: what isn't in the prompt can't be leaked
 // from it.
+//
+// KNOWN LIMIT, and the reason triggers must be specific: retrieval stops the
+// roster being dumped at once, but it does not stop it being *enumerated*.
+// Someone patient can ask "do you know Sarah?", then Mike, then Priya, and learn
+// from the answers which names exist. So a trigger must never be a bare common
+// first name. Use a full name, or a name plus something only the right person
+// would say — two words that have to appear together. Then a guess has to be
+// right about two things at once, and idle fishing gets nothing.
+//
+// The list being empty is not a placeholder. It is the safe default, and the
+// feature is fully working while it stays that way.
 
 export type Person = {
   /** How the assistant refers to them. Use whatever they'd want printed. */

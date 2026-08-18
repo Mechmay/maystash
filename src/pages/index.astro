@@ -35,6 +35,12 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
         <a href="/projects" class="corner tr">PROJECTS</a>
         <a href="/about" class="corner bl">ABOUT</a>
         <a href="#contact" class="corner br">CONTACT</a>
+        <!-- Fifth link, top-centre: the four corners are spoken for, and this
+             mirrors "ROLL FILM" at the bottom. Accent-coloured because it is the
+             one link that proves something rather than describing it. -->
+        <a href="/ctf" class="corner tc">
+          <span class="tc-long">⚑ GUARD BOT</span><span class="tc-short">⚑ CTF</span>
+        </a>
       </nav>
 
       <div class="stage">
@@ -191,6 +197,17 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     transition: border-color 0.2s ease, color 0.2s ease;
   }
   .corner:hover { border-color: var(--klein); color: var(--klein); }
+
+  /* Top-centre, opposite the bottom-centre scroll cue. */
+  .corner.tc {
+    top: 1.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--paper-ink);
+    border-color: rgba(12, 12, 14, 0.35);
+  }
+  .corner.tc:hover { border-color: var(--klein); color: var(--klein); }
+  .tc-short { display: none; }
   .tl { top: 2rem; left: 2.2rem; }
   .tr { top: 2rem; right: 2.2rem; }
   .bl { bottom: 2rem; left: 2.2rem; }
@@ -443,6 +460,11 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   @keyframes bob { 50% { transform: translateY(6px); } }
 
   @media (max-width: 620px) {
+    /* The full label would crowd WRITING and PROJECTS on a narrow screen. */
+    .corner.tc { top: 1.1rem; }
+    .tc-long { display: none; }
+    .tc-short { display: inline; }
+
     /* Keep the four-corner layout on phones too — the links stay pinned to the
        corners, just smaller and tighter in. They sit outside the centre column,
        so the bubble never has to share vertical space with them. */

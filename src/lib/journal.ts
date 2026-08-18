@@ -64,13 +64,23 @@ export async function journalLines(): Promise<string[]> {
  * which would hand May's relationship graph to anyone who guessed a first name.
  */
 export function peopleFor(message: string): Person[] {
-  const haystack = ` ${message.toLowerCase()} `;
-  return PEOPLE.filter((p) =>
-    p.triggers.some((t) => haystack.includes(` ${t.toLowerCase()} `) ||
-      haystack.includes(` ${t.toLowerCase()},`) ||
-      haystack.includes(` ${t.toLowerCase()}.`) ||
-      haystack.includes(` ${t.toLowerCase()}'`))
-  ).slice(0, 2);
+  // Match on word boundaries rather than surrounding spaces. Checking for
+  // " ada " and a couple of hand-picked punctuation marks missed the most
+  // common phrasing there is — "do you know Ada?" — and a trigger that fails to
+  // fire on a question mark makes the whole feature look broken. Normalising to
+  // words also stops "ada" matching inside "adamant".
+  const words = new Set(
+    message
+      .toLowerCase()
+      .split(/[^a-z0-9'’-]+/i)
+      .filter(Boolean)
+  );
+  const said = (trigger: string) => {
+    const parts = trigger.toLowerCase().split(/\s+/).filter(Boolean);
+    // A multi-word trigger ("ada l") needs every word present.
+    return parts.every((w) => words.has(w));
+  };
+  return PEOPLE.filter((p) => p.triggers.some(said)).slice(0, 2);
 }
 
 /** Formats the extra context appended to the system prompt for one request. */

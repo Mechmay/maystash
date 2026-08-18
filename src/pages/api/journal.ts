@@ -80,7 +80,15 @@ export const POST: APIRoute = async ({ request }) => {
       apikey: anon,
       Authorization: `Bearer ${anon}`,
     },
-    body: JSON.stringify({ p_raw: raw || null, p_shared: shared || null, p_days: days }),
+    body: JSON.stringify({
+      // Without this the function refuses: the publishable key alone is not
+      // authorisation, since it is served publicly by another site on the same
+      // Supabase project.
+      p_secret: env('SUPABASE_WRITE_SECRET'),
+      p_raw: raw || null,
+      p_shared: shared || null,
+      p_days: days,
+    }),
   });
 
   if (!res.ok) {

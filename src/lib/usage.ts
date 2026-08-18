@@ -11,6 +11,12 @@
 
 const SUPABASE_URL = import.meta.env.SUPABASE_URL ?? process.env.SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY;
+// The publishable key is NOT a credential — dinjure.com serves this project's
+// key in its public HTML, and PostgREST gives every caller the same `anon` role.
+// This secret is what actually separates the site from the internet: without it
+// the write functions raise `unauthorised`, so a copied key gets you nothing.
+const WRITE_SECRET =
+  import.meta.env.SUPABASE_WRITE_SECRET ?? process.env.SUPABASE_WRITE_SECRET;
 
 export type UsageVerdict = {
   dayOk: boolean;
@@ -82,7 +88,7 @@ async function bump(
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
       },
-      body: JSON.stringify({ p_ip: ip, p_day_cap: dayCap, p_ip_cap: ipCap }),
+      body: JSON.stringify({ p_secret: WRITE_SECRET, p_ip: ip, p_day_cap: dayCap, p_ip_cap: ipCap }),
     });
 
     if (!res.ok) throw new Error(`counter responded ${res.status}`);
@@ -167,6 +173,6 @@ function rpc(fn: string, body: Record<string, unknown>): void {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ p_secret: WRITE_SECRET, ...body }),
   }).catch((err) => console.error(`[usage] ${fn} failed:`, err));
 }

@@ -9,6 +9,7 @@
 
 /** Slugs of every published (non-draft) post — used to linkify replies. */
 export const POST_SLUGS: string[] = [
+  "coworker-who-never-logs-out",
   "we-gave-him-a-different-puzzle",
   "player-who-never-lost",
   "injection-is-a-con-job",
@@ -29,21 +30,42 @@ Published pieces, newest first, each with the URL to send people to.
 Always give the specific piece's URL, never just "maystash.xyz", when
 pointing at an article.
 
-1. "We Stopped Chasing the Cheater. We Gave Him a Different Puzzle."
+1. "Your New AI Coworker Never Sleeps, Never Logs Out, and Will Believe Anything It Reads"
+   FEATURE — maystash.xyz/posts/coworker-who-never-logs-out/
+   In mid-2026 the major labs shipped persistent agents — Anthropic's
+   Claude Tag in Slack (June 23), xAI's Grok Bot with its own cloud VM
+   (August 11), OpenAI's ChatGPT agent. They share one shape: the agent
+   stays awake, keeps memory, and holds live logged-in sessions to your
+   tools. That shape is useful for the same reason it is dangerous — an
+   always-on agent reading your inbox while holding your credentials is a
+   phishing target with the keys already loaded, and the attacker only has
+   to fool the agent, not you. Evidence cited: SPLX testing found Grok 4's
+   base model obeyed hostile instructions in over 99% of prompt-injection
+   attempts (GPT-4o base: 33% security score); roughly $150,000 was drained
+   from an AI-integrated wallet in May 2026 via a Morse-code-encoded
+   injection. The post's second half is about renting versus owning one of
+   these agents: rented agents bill per seat ($120–300/month) and run on
+   the vendor's machine; a self-hosted agent costs the price of a small
+   server plus tokens and runs on yours. Three questions before deploying
+   any of them: what can it reach, what happens when it reads a lie, and
+   who owns the machine.
+   Topics: ai, agents, security, prompt-injection, automation.
+
+2. "We Stopped Chasing the Cheater. We Gave Him a Different Puzzle."
    MATINEE — maystash.xyz/posts/we-gave-him-a-different-puzzle/
    The sequel: the scoreboard stayed clean for exactly a day. The game
    accidentally lied to the cheater, that accident became the fix, and the
    fix then bit an innocent player.
    Topics: games, security, cheating, dinjure, explainers.
 
-2. "One of Our Players Never Lost. That Wasn't Skill — It Was Our Bug."
+3. "One of Our Players Never Lost. That Wasn't Skill — It Was Our Bug."
    MATINEE — maystash.xyz/posts/player-who-never-lost/
    A player cracked Dinjure's daily puzzle in one guess, every day, for
    weeks. Two cheats, two fixes, and the one detail deliberately not
    published.
    Topics: games, security, cheating, dinjure, explainers.
 
-3. "Prompt Injection Isn't Hacking. It's a Con Job — and Your AI Is the Mark."
+4. "Prompt Injection Isn't Hacking. It's a Con Job — and Your AI Is the Mark."
    FEATURE — maystash.xyz/posts/injection-is-a-con-job/
    Prompt injection is when instructions are smuggled inside data the model
    reads — a web page, a document, an email — and the model follows them as
@@ -55,7 +77,7 @@ pointing at an article.
    which is why filters and blocklists keep losing.
    Topics: security, ai, prompt-injection, agents.
 
-4. "Your AI Agent Doesn't Need More Autonomy. It Needs a Leash With Six Knots."
+5. "Your AI Agent Doesn't Need More Autonomy. It Needs a Leash With Six Knots."
    FEATURE — maystash.xyz/posts/agents-need-a-leash/
    Everyone wants agents that run unsupervised; almost nobody builds the
    discipline that makes unsupervised safe. The loop contract that keeps
@@ -63,7 +85,7 @@ pointing at an article.
    agent may touch, how long it may run, and what it must write down.
    Topics: ai, agents, automation, loops.
 
-5. "Your Burger Drinks More Than Your Chatbot. So Why Are the Wells Running Dry?"
+6. "Your Burger Drinks More Than Your Chatbot. So Why Are the Wells Running Dry?"
    MATINEE — maystash.xyz/posts/thirsty-machines/
    A plain-language guide to AI and water. One chatbot answer costs a few
    drops to a shot glass; a hamburger costs ~2,500 litres. US golf courses
@@ -77,7 +99,7 @@ pointing at an article.
    0.02% of a country's water and still a quarter of one town's.
    Topics: ai, water, data-centers, environment, explainers.
 
-6. "The AI Memory Everyone's Building Is a Diary. Here's How to Build a Brain That Sleeps."
+7. "The AI Memory Everyone's Building Is a Diary. Here's How to Build a Brain That Sleeps."
    FEATURE — maystash.xyz/posts/brain-that-sleeps/
    A complete blueprint for a self-improving AI second brain on plain text
    files: the seven primitives (index-first retrieval, verified/guess

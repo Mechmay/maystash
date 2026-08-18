@@ -81,18 +81,24 @@
   email) is deliberately left open because closing it would punish genuine first-time players.
   Matinee section.
 
-- [We Stopped Chasing the Cheater. We Gave Him a Different Puzzle.](https://maystash.xyz/posts/we-gave-him-a-different-puzzle/):
-  Sequel to "One of Our Players Never Lost." Why detection loses to prevention in an
-  anti-cheat arms race: every catch teaches the cheater, so the rule grows while he learns
-  the shape of the net. The pivot — stop asking who is taking it, ask what is being taken —
-  led to a labelled "warm-up round" served to anyone not signed in: a real puzzle that
-  simply isn't the ranked daily, so scouting it returns nothing. Covers why the decoy is
-  labelled rather than secret (a labelled decoy leaks exactly as much as a hidden one:
-  nothing), the audit that found six more surfaces still counting practice games as real
-  plus a live leak nobody was exploiting, announcing the countermeasure by email to the
-  cheater himself, and the cost: an auth bug made a legitimate player look signed-out and
-  silently demoted them to the warm-up — the day being unrecognised becomes a punishment,
-  every failure to recognise someone becomes one too.
+- [Your New AI Coworker Never Sleeps, Never Logs Out, and Will Believe Anything It Reads](https://maystash.xyz/posts/coworker-who-never-logs-out/):
+  The mid-2026 persistent-agent launches read as one product: Anthropic's Claude Tag in Slack
+  (2026-06-23), xAI's Grok Bot with a per-bot cloud VM and GUI computer-use (2026-08-11),
+  OpenAI's ChatGPT agent. Persistence = memory plus authority, and the three properties that
+  make such an agent useful are the three that make it worth attacking: it stays awake (no
+  human watching at 3 AM), it stays logged in (a keyring that reads its own mail), and it
+  reads whatever arrives (instructions and data through one door). Evidence, not prediction:
+  SPLX testing found one base model obeyed hostile instructions in >99% of prompt-injection
+  attempts against a rival's 33% security score, and ~$150,000 was drained from an
+  AI-integrated wallet in May 2026 by a Morse-code-encoded injection that a word filter waved
+  through. A widely repeated claim that bots share one machine and one login pool is flagged
+  explicitly as unconfirmed rather than repeated. Second half is the commercial question
+  nobody frames correctly: renting a seat beside an agent ($120–300 per seat per month, on the
+  vendor's machine, priced per human) versus self-hosting one (small server, tokens only, your
+  disk, your model choice) — and the honest cost of owning it: no polish, no vendor on-call,
+  no GUI computer-use. Closes on three questions before any agent gets a login: what can it
+  reach if confused, what is within arm's reach when something lies to it, and who owns the
+  machine its memory lives on. Sequel in argument to "Prompt Injection Isn't Hacking."
 
 ## Feeds
 

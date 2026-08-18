@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { SYSTEM_PROMPT } from '../../lib/knowledge';
 import { recordRequest, logQuestion } from '../../lib/usage';
 import { askModel, scrubModelIdentity, hasAnyProvider } from '../../lib/llm';
+import { journalLines, peopleFor, liveContext } from '../../lib/journal';
 
 export const prerender = false;
 
@@ -66,11 +67,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     .slice(-MAX_HISTORY_TURNS)
     .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_QUESTION_CHARS) }));
 
+  // Recent status and, only if the visitor named someone, that one person's
+  // card. The roster is never preloaded — see src/lib/journal.ts.
+  const extra = liveContext(await journalLines(), peopleFor(question));
+  const system = extra ? `${SYSTEM_PROMPT}\n\n${extra}` : SYSTEM_PROMPT;
+
   try {
     // Walks Anthropic → OpenRouter → Google, skipping unconfigured providers, so
     // one provider's outage doesn't take the chat down. See src/lib/llm.ts.
     const result = await askModel(
-      SYSTEM_PROMPT,
+      system,
       [...priorTurns, { role: 'user', content: question }],
       MAX_OUTPUT_TOKENS
     );

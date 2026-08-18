@@ -113,9 +113,22 @@ export const getLevel = (n: unknown): Level | undefined =>
 /** The flag for a level, or undefined when it hasn't been configured. */
 export const flagFor = (n: number): string | undefined => env(`CTF_FLAG_${n}`);
 
-/** Constant-time-ish compare, trimmed and case-insensitive on the hex body. */
+/**
+ * Constant-time-ish compare, tolerant of how people actually paste things.
+ *
+ * Flags are word-phrases rather than hex, so players will retype them, capitalise
+ * them, or lose the wrapper on the way out of a poem. Normalising the shape and
+ * comparing only the words means a correct answer isn't rejected over a hyphen —
+ * the puzzle is talking the guard round, not transcription.
+ */
 export function flagMatches(submitted: string, actual: string): boolean {
-  const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, '');
+  const norm = (s: string) =>
+    s
+      .trim()
+      .toLowerCase()
+      .replace(/^maystash\s*\{?|\}$/g, '')  // wrapper optional
+      .replace(/[\s_-]+/g, '-')               // spaces, underscores, dashes alike
+      .replace(/[^a-z0-9-]/g, '');            // punctuation picked up en route
   const a = norm(submitted);
   const b = norm(actual);
   if (a.length !== b.length) return false;

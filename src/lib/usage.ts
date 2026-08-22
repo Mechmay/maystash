@@ -21,9 +21,12 @@ const WRITE_SECRET =
 export type UsageVerdict = {
   dayOk: boolean;
   ipOk: boolean;
-  dayCount: number;
-  /** true when the shared counter was unreachable and the local one was used */
-  degraded: boolean;
+};
+
+const HEADERS = {
+  'Content-Type': 'application/json',
+  apikey: SUPABASE_KEY,
+  Authorization: `Bearer ${SUPABASE_KEY}`,
 };
 
 // Fallback, used only when the shared counter can't be reached. Same behaviour
@@ -49,8 +52,6 @@ function localCheck(ip: string, dayCap: number, ipCap: number, windowMs: number)
   return {
     dayOk: localDayCount <= dayCap,
     ipOk: recent.length <= ipCap,
-    dayCount: localDayCount,
-    degraded: true,
   };
 }
 
@@ -83,11 +84,7 @@ async function bump(
     const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
       method: 'POST',
       signal: abort,
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-      },
+      headers: HEADERS,
       body: JSON.stringify({ p_secret: WRITE_SECRET, p_ip: ip, p_day_cap: dayCap, p_ip_cap: ipCap }),
     });
 
@@ -100,8 +97,6 @@ async function bump(
     return {
       dayOk: row.day_ok,
       ipOk: row.ip_ok,
-      dayCount: row.day_count ?? 0,
-      degraded: false,
     };
   } catch (err) {
     console.error('[usage] shared counter unavailable, using local fallback:', err);
@@ -153,8 +148,6 @@ export function logCtfSolve(level: number, handle: string): void {
  * awaited by the caller and swallows its own errors.
  */
 export function logQuestion(question: string, reply: string, outcome?: string): void {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return;
-
   rpc('maystash_log_chat_question', {
     p_question: question,
     p_reply: reply,
@@ -168,11 +161,7 @@ function rpc(fn: string, body: Record<string, unknown>): void {
   void fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
     method: 'POST',
     signal: AbortSignal.timeout(2500),
-    headers: {
-      'Content-Type': 'application/json',
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-    },
+    headers: HEADERS,
     body: JSON.stringify({ p_secret: WRITE_SECRET, ...body }),
   }).catch((err) => console.error(`[usage] ${fn} failed:`, err));
 }

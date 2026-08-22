@@ -6,3 +6,6 @@ dist
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Agent tooling install (impeccable skill + local settings), not project source
+.claude

@@ -100,17 +100,17 @@ const jsonLd = {
   .tc-title {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(2.2rem, 6.5vw, 5.5rem);
+    font-size: var(--type-post-title);
     line-height: 1.02;
     text-transform: uppercase;
     max-width: 22ch;
     color: var(--bone);
-    text-shadow: 0.03em 0.03em 0 var(--klein);
+    text-shadow: var(--shadow-print);
   }
   .tc-tagline {
     margin-top: 1.8rem;
     max-width: 42rem;
-    font-size: 1.25rem;
+    font-size: var(--step-lead);
     font-style: italic;
     color: var(--bone-dim);
   }
@@ -127,14 +127,14 @@ const jsonLd = {
     max-width: 44rem;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
-    font-size: 1.22rem;
+    font-size: var(--step-prose);
     line-height: 1.72;
     font-weight: 380;
   }
   .prose h2 {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    font-size: var(--type-section);
     line-height: 1.1;
     text-transform: uppercase;
     margin: 4.2rem 0 1.4rem;
@@ -144,14 +144,14 @@ const jsonLd = {
     content: '— SCENE —';
     display: block;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: var(--step-floor);
     letter-spacing: 0.14em;
     color: var(--acid);
     margin-bottom: 0.9rem;
   }
   .prose h3 {
     font-family: var(--font-mono);
-    font-size: 1rem;
+    font-size: var(--step-base);
     letter-spacing: 0.05em;
     text-transform: uppercase;
     margin: 2.8rem 0 1rem;
@@ -186,13 +186,13 @@ const jsonLd = {
     font-size: 0.86em;
     background: #1b1b20;
     padding: 0.15em 0.45em;
-    border-radius: 4px;
+    border-radius: var(--r-sm);
     color: var(--acid);
   }
   .prose pre {
     background: #101014 !important;
-    border: 1px solid #26262b;
-    border-radius: 8px;
+    border: 1px solid var(--rule-dim);
+    border-radius: var(--r-md);
     padding: 1.2rem 1.4rem;
     overflow-x: auto;
     margin: 1.6rem 0;
@@ -204,12 +204,12 @@ const jsonLd = {
     width: 100%;
     border-collapse: collapse;
     margin: 1.8rem 0;
-    font-size: 0.95rem;
+    font-size: var(--step-sm);
   }
   .prose th, .prose td {
-    border: 1px solid #26262b;
+    border: 1px solid var(--rule-dim);
     padding: 0.6rem 0.8rem;
     text-align: left;
   }
-  .prose th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-dim); }
+  .prose th { font-family: var(--font-mono); font-size: var(--step-label); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-dim); }
 </style>

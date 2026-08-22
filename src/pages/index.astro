@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
@@ -30,18 +31,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   <div class="home">
     <!-- LAUNCHER HERO -->
     <header class="launch">
-      <nav class="corners mono">
-        <a href="/writing" class="corner tl">WRITING</a>
-        <a href="/projects" class="corner tr">PROJECTS</a>
-        <a href="/about" class="corner bl">ABOUT</a>
-        <a href="#contact" class="corner br">CONTACT</a>
-        <!-- Fifth link, top-centre: the four corners are spoken for, and this
-             mirrors "ROLL FILM" at the bottom. Accent-coloured because it is the
-             one link that proves something rather than describing it. -->
-        <a href="/ctf" class="corner tc">
-          <span class="tc-long">⚑ GUARD BOT</span><span class="tc-short">⚑ CTF</span>
-        </a>
-      </nav>
+      <Nav variant="corners" />
 
       <div class="stage">
         <button class="avatar-wrap" id="avatar" type="button" aria-label="Chat with May — ask about him, his projects and his writing">
@@ -163,7 +153,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 </Layout>
 
 <style>
-  .home { --paper: #f2ede3; --paper-2: #e7e0d2; --paper-ink: #17161c; }
+  /* Paper tokens are global now — see src/styles/tokens.css. */
 
   /* ---- launcher hero ---- */
   .launch {
@@ -185,33 +175,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     padding: 5rem 1.5rem 4rem;
     overflow: hidden;
   }
-  .corner {
-    position: absolute;
-    z-index: 3;
-    color: var(--paper-ink);
-    text-decoration: none;
-    font-size: 0.9rem;
-    letter-spacing: 0.14em;
-    padding: 0.5rem 0.2rem;
-    border-bottom: 2px solid transparent;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-  .corner:hover { border-color: var(--klein); color: var(--klein); }
-
-  /* Top-centre, opposite the bottom-centre scroll cue. */
-  .corner.tc {
-    top: 1.6rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--paper-ink);
-    border-color: rgba(12, 12, 14, 0.35);
-  }
-  .corner.tc:hover { border-color: var(--klein); color: var(--klein); }
-  .tc-short { display: none; }
-  .tl { top: 2rem; left: 2.2rem; }
-  .tr { top: 2rem; right: 2.2rem; }
-  .bl { bottom: 2rem; left: 2.2rem; }
-  .br { bottom: 2rem; right: 2.2rem; }
+  /* Corner-nav styles live in src/components/Nav.astro. */
 
   /* comic speech bubble — tail points down into the avatar */
   .bubble {
@@ -219,19 +183,19 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     bottom: calc(100% - 10px);
     left: 50%;
     transform: translateX(-50%);
-    background: #fff;
+    background: var(--paper-hi);
     color: var(--paper-ink);
     border: 2.5px solid var(--paper-ink);
-    border-radius: 18px;
+    border-radius: var(--r-bubble);
     padding: 0.65rem 1.05rem;
-    font-size: 0.72rem;
+    font-size: var(--step-label);
     line-height: 1.5;
     white-space: nowrap;
     /* absolute + left:50% inside a narrow wrapper would shrink-to-fit to half
        the avatar's width; max-content lets it use its real text width instead */
     width: max-content;
     max-width: min(24rem, 86vw);
-    box-shadow: 4px 4px 0 var(--klein);
+    box-shadow: var(--offset-print-sm);
     z-index: 3;
     transition: opacity 0.17s ease;
   }
@@ -242,7 +206,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     bottom: -10px;
     margin-left: -8px;
     width: 15px; height: 15px;
-    background: #fff;
+    background: var(--paper-hi);
     border-right: 2.5px solid var(--paper-ink);
     border-bottom: 2.5px solid var(--paper-ink);
     transform: rotate(45deg);
@@ -256,7 +220,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
       text-align: center;
       bottom: calc(100% + 4px);
       max-width: 82vw;
-      font-size: 0.66rem;
+      font-size: var(--step-floor);
       line-height: 1.45;
       padding: 0.55rem 0.85rem;
       overflow-wrap: break-word;
@@ -284,7 +248,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     width: clamp(170px, 34vw, 240px);
     aspect-ratio: 1;
     display: block;
-    border-radius: 50%;
+    border-radius: var(--r-dot);
     background: var(--klein);
     border: 3px solid var(--paper-ink);
     /* clip the memoji INTO the disc — the circle does the cutting, so the
@@ -322,15 +286,18 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   }
 
   /* Always visible — hiding this until hover meant nobody on a phone ever
-     learned the avatar was clickable. #8a867c only made 3.1:1 against the
+     learned the avatar was clickable. var(--paper-dim) only made 3.1:1 against the
      paper, under the 4.5:1 small-text minimum, so it darkens to 4.8:1. */
   .avatar-hint {
     display: block;
     margin-top: 0.9rem;
-    font-size: 0.62rem;
+    /* Was 0.62rem = 9.92px. This is the only thing telling anyone the avatar is
+       clickable, and it was under the 11px floor on desktop. Contrast was already
+       fixed here; the size was the half that got left behind. */
+    font-size: var(--step-floor);
     letter-spacing: 0.16em;
     color: #6b675d;
-    transition: color 0.2s ease;
+    transition: color var(--dur-state) ease;
   }
   .avatar-wrap:hover .avatar-hint,
   .avatar-wrap:focus-visible .avatar-hint { color: var(--klein); }
@@ -354,10 +321,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     width: min(30rem, 92vw);
     margin: 1.6rem auto 0;
     text-align: left;
-    background: #fff;
+    background: var(--paper-hi);
     border: 2px solid var(--paper-ink);
-    border-radius: 16px;
-    box-shadow: 5px 5px 0 var(--klein);
+    border-radius: var(--r-panel);
+    box-shadow: var(--offset-print-lg);
     overflow: hidden;
   }
   .chat[hidden] { display: none; }
@@ -372,7 +339,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   }
   .chat-close {
     background: none; border: none; cursor: pointer;
-    color: var(--paper); font-size: 0.9rem; line-height: 1; padding: 0.2rem;
+    color: var(--paper); font-size: var(--step-meta); line-height: 1; padding: 0.2rem;
   }
   .chat-close:hover { color: var(--acid); }
   .chat-log {
@@ -384,60 +351,61 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     gap: 0.7rem;
   }
   .chat-log:empty { display: none; }
-  .msg { font-size: 0.95rem; line-height: 1.5; max-width: 85%; padding: 0.55rem 0.8rem; border-radius: 12px; }
+  .msg { font-size: var(--step-sm); line-height: 1.5; max-width: 85%; padding: 0.55rem 0.8rem; border-radius: var(--r-bubble-sm); }
   .msg.you { align-self: flex-end; background: var(--klein); color: var(--bone); }
   .msg.bot { align-self: flex-start; background: var(--paper-2); color: var(--paper-ink); }
   .msg.err { align-self: flex-start; background: #ffe9e4; color: #7a2718; }
-  .msg.think { color: #8a867c; font-style: italic; }
+  .msg.think { color: var(--paper-dim); font-style: italic; }
   .msg.bot a {
     color: var(--klein);
     text-decoration: none;
     border-bottom: 1px solid currentColor;
     overflow-wrap: break-word;
   }
-  .msg.bot a:hover { background: var(--klein); color: #fff; border-bottom-color: transparent; }
+  .msg.bot a:hover { background: var(--klein); color: var(--paper-hi); border-bottom-color: transparent; }
   .msg.bot strong { font-weight: 700; }
 
   .chat-suggest { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 0.9rem 0.7rem; }
   .chat-suggest[hidden] { display: none; }
   .chat-suggest button {
     font: inherit;
-    font-size: 0.6rem;
+    /* Was 0.6rem = 9.6px. These are real buttons; they sit at the floor. */
+    font-size: var(--step-floor);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
     background: none;
     border: 1px solid #d8d1c2;
-    border-radius: 999px;
+    border-radius: var(--r-pill);
     padding: 0.35rem 0.7rem;
-    color: #57534b;
+    color: var(--paper-mute);
   }
   .chat-suggest button:hover { border-color: var(--klein); color: var(--klein); }
   .chat-form { display: flex; border-top: 1px solid #e2dbcc; }
   .chat-form input {
     flex: 1;
     font: inherit;
-    font-size: 0.95rem;
+    font-size: var(--step-sm);
     border: none;
     padding: 0.8rem 0.9rem;
     background: none;
     color: var(--paper-ink);
   }
-  .chat-form input:focus { outline: none; background: #fbfaf6; }
+  .chat-form input:focus { outline: none; background: var(--paper-hi); }
   .chat-form button {
     border: none;
     background: var(--acid);
     color: var(--ink);
     padding: 0 1.1rem;
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: var(--step-sm);
   }
   .chat-form button:hover { background: var(--klein); color: var(--bone); }
 
 
   .stage-name {
     font-family: var(--font-display);
-    font-size: clamp(3rem, 12vw, 7rem);
+    font-size: var(--type-home-hero);
     line-height: 0.9;
     letter-spacing: 0.01em;
     color: var(--paper-ink);
@@ -452,31 +420,15 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     letter-spacing: 0.12em;
     border-bottom: 2px solid transparent;
     padding-bottom: 2px;
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition: border-color var(--dur-state) ease, color var(--dur-state) ease;
   }
   .stage-social a:hover { color: var(--klein); border-color: var(--klein); }
   .stage-social .lead-link { color: var(--klein); font-weight: 700; border-bottom-color: var(--klein); }
-  .roll { position: absolute; bottom: 2rem; color: #8a867c; animation: bob 2.2s ease-in-out infinite; }
+  .roll { position: absolute; bottom: 2rem; color: var(--paper-dim); animation: bob 2.2s ease-in-out infinite; }
   @keyframes bob { 50% { transform: translateY(6px); } }
 
   @media (max-width: 620px) {
-    /* The full label would crowd WRITING and PROJECTS on a narrow screen. */
-    .corner.tc { top: 1.1rem; }
-    .tc-long { display: none; }
-    .tc-short { display: inline; }
-
-    /* Keep the four-corner layout on phones too — the links stay pinned to the
-       corners, just smaller and tighter in. They sit outside the centre column,
-       so the bubble never has to share vertical space with them. */
-    .corner {
-      font-size: 0.64rem;
-      letter-spacing: 0.06em;
-      white-space: nowrap;
-    }
-    .tl { top: 1.1rem; left: 1.1rem; }
-    .tr { top: 1.1rem; right: 1.1rem; }
-    .bl { bottom: 1.1rem; left: 1.1rem; }
-    .br { bottom: 1.1rem; right: 1.1rem; }
+    /* The corner links themselves are Nav.astro's; the hero only owes them room. */
     .launch { padding: 4.5rem 1.1rem 4rem; }
   }
 
@@ -496,12 +448,12 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .paper { background: var(--paper); color: var(--paper-ink); }
   .paper .arm-slate { color: #6a655c; }
   .paper .arm-all { color: var(--klein); }
-  .pcard { display: flex; gap: 2rem; align-items: flex-start; padding: 2rem 1.4rem; border-top: 1px solid #d8d1c2; text-decoration: none; color: inherit; transition: background 0.2s ease; }
+  .pcard { display: flex; gap: 2rem; align-items: flex-start; padding: 2rem 1.4rem; border-top: 1px solid #d8d1c2; text-decoration: none; color: inherit; transition: background var(--dur-state) ease; }
   .pcard:hover { background: var(--paper-2); }
   .pcard-ch { color: var(--klein); padding-top: 0.5rem; min-width: 4.5rem; }
-  .pcard-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem, 3.4vw, 2.6rem); line-height: 1.06; color: var(--paper-ink); text-transform: uppercase; }
-  .pcard-tag { margin-top: 0.7rem; font-size: 1.08rem; font-style: italic; color: #57534b; max-width: 52rem; }
-  .pcard-meta { display: flex; gap: 2rem; margin-top: 1rem; color: #8a867c; }
+  .pcard-title { font-family: var(--font-display); font-weight: 400; font-size: var(--type-plate); line-height: 1.06; color: var(--paper-ink); text-transform: uppercase; }
+  .pcard-tag { margin-top: 0.7rem; font-size: 1.08rem; font-style: italic; color: var(--paper-mute); max-width: 52rem; }
+  .pcard-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--paper-dim); }
   .pcard-meta .cta { color: var(--klein); }
 
   /* klein block */
@@ -509,29 +461,30 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .block-klein .arm-slate.light, .block-klein .arm-all.light { color: var(--bone); }
   .block-klein .arm-all.light { opacity: 0.85; }
   .prod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; max-width: 1200px; margin: 0 auto; }
-  .prod-card { display: flex; flex-direction: column; padding: 1.8rem 1.6rem; border: 1px solid rgba(236,231,221,0.28); border-radius: 10px; text-decoration: none; color: var(--bone); transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease; }
+  .prod-card { display: flex; flex-direction: column; padding: 1.8rem 1.6rem; border: 1px solid var(--bone-a28); border-radius: var(--r-card); text-decoration: none; color: var(--bone); transition: border-color var(--dur-state) ease, transform var(--dur-state) ease, background var(--dur-state) ease; }
   .prod-card:hover { border-color: var(--acid); transform: translateY(-3px); background: rgba(0,0,0,0.14); }
-  .pc-status { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(236,231,221,0.72); margin-bottom: 1rem; }
-  .pc-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bone); }
-  .pc-status[data-status="live"] .dot { background: var(--acid); box-shadow: 0 0 8px var(--acid); }
+  .pc-status { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--bone-a72); margin-bottom: 1rem; }
+  .pc-status .dot { width: 7px; height: 7px; border-radius: var(--r-dot); background: var(--bone); }
+  /* impeccable-disable-next-line dark-glow -- tally light: sanctioned live-status glow, DESIGN.md Elevation */
+  .pc-status[data-status="live"] .dot { background: var(--acid); box-shadow: var(--glow-tally); }
   .pc-title { font-family: var(--font-display); font-weight: 400; font-size: 2rem; text-transform: uppercase; line-height: 1; }
-  .pc-tag { margin-top: 0.7rem; font-size: 1rem; font-style: italic; color: rgba(236,231,221,0.82); flex: 1; }
+  .pc-tag { margin-top: 0.7rem; font-size: var(--step-base); font-style: italic; color: var(--bone-a82); flex: 1; }
   .pc-tags { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.3rem; color: var(--acid); }
 
   /* acid block */
   .block-acid { background: var(--acid); color: var(--ink); text-align: left; }
   .block-acid .arm-slate.dark, .block-acid .arm-all.dark { color: #2a3200; }
-  .about-text { font-size: clamp(1.5rem, 3.4vw, 2.4rem); line-height: 1.35; max-width: 52rem; margin: 1.2rem 0 1.6rem; font-family: var(--font-display); font-weight: 400; letter-spacing: 0.01em; }
+  .about-text { font-size: var(--type-statement); line-height: 1.35; max-width: 52rem; margin: 1.2rem 0 1.6rem; font-family: var(--font-display); font-weight: 400; letter-spacing: 0.01em; }
   .block-acid .arm-all.dark { display: inline-block; border-bottom: 2px solid #2a3200; text-decoration: none; }
 
   /* contact (dark) */
   .contact { background: var(--ink); color: var(--bone); padding: 5rem 2rem 6rem; }
   .contact > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
   .contact .arm-slate { color: var(--bone-dim); }
-  .contact-title { font-family: var(--font-display); font-size: clamp(3rem, 11vw, 8rem); line-height: 0.9; color: var(--bone); text-shadow: 0.03em 0.03em 0 var(--klein); margin: 1.2rem auto; }
-  .contact-text { max-width: 36rem; font-size: 1.25rem; color: var(--bone-dim); margin-bottom: 2.2rem; }
+  .contact-title { font-family: var(--font-display); font-size: var(--type-contact); line-height: 0.9; color: var(--bone); text-shadow: var(--shadow-print); margin: 1.2rem auto; }
+  .contact-text { max-width: 36rem; font-size: var(--step-lead); color: var(--bone-dim); margin-bottom: 2.2rem; }
   .contact-links { display: flex; flex-direction: column; gap: 0.9rem; align-items: flex-start; }
-  .c-link { color: var(--bone); text-decoration: none; padding: 0.8rem 1.3rem; border: 1px solid #2c2c33; border-radius: 999px; transition: color 0.2s ease, border-color 0.2s ease; }
+  .c-link { color: var(--bone); text-decoration: none; padding: 0.8rem 1.3rem; border: 1px solid var(--rule); border-radius: var(--r-pill); transition: color var(--dur-state) ease, border-color var(--dur-state) ease; }
   .c-link:hover { color: var(--acid); border-color: var(--acid); }
   .c-link.primary { background: var(--acid); color: var(--ink); border-color: var(--acid); font-weight: 700; }
   .c-link.primary:hover { background: transparent; color: var(--acid); }
@@ -542,7 +495,6 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     .av, .avatar-wrap.is-talking .av, .avatar-wrap.is-react .av { animation: none; }
     .pose { transition: none; }
     .roll { animation: none; }
-  }
   }
 </style>
 

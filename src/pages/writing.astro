@@ -74,12 +74,12 @@ const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).leng
   .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
   .ph-title {
     font-family: var(--font-display);
-    font-size: clamp(3.5rem, 13vw, 10rem);
+    font-size: var(--type-page-hero);
     line-height: 0.9;
     color: var(--bone);
-    text-shadow: 0.03em 0.03em 0 var(--klein);
+    text-shadow: var(--shadow-print);
   }
-  .ph-tagline { max-width: 40rem; margin-top: 1.8rem; font-size: 1.25rem; color: var(--bone-dim); }
+  .ph-tagline { max-width: 40rem; margin-top: 1.8rem; font-size: var(--step-lead); color: var(--bone-dim); }
   .ph-tagline em { color: var(--acid); font-style: italic; }
 
   .reel { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 5rem; }
@@ -91,13 +91,14 @@ const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).leng
     gap: 2rem;
     align-items: flex-start;
     padding: 2.4rem 1.6rem;
-    border-top: 1px solid #26262b;
+    border-top: 1px solid var(--rule-dim);
     text-decoration: none;
     color: inherit;
     transition: background 0.25s ease;
   }
-  .card:hover { background: var(--klein); }
-  .card:hover .card-ch, .card:hover .card-meta { color: var(--bone); }
+  .card:hover, .card:focus-visible { background: var(--klein); }
+  .card:hover .card-ch, .card:hover .card-meta,
+  .card:focus-visible .card-ch, .card:focus-visible .card-meta { color: var(--bone); }
   .card-ch { color: var(--acid); padding-top: 0.6rem; min-width: 4.5rem; }
   .card-title {
     font-family: var(--font-display);
@@ -108,15 +109,20 @@ const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).leng
     text-transform: uppercase;
   }
   .card-tagline { margin-top: 0.9rem; font-size: 1.15rem; font-style: italic; color: var(--bone-dim); max-width: 52rem; }
-  .card:hover .card-tagline { color: var(--bone); }
+  .card:hover .card-tagline, .card:focus-visible .card-tagline { color: var(--bone); }
   .card-meta { display: flex; gap: 2rem; margin-top: 1.3rem; color: var(--bone-dim); flex-wrap: wrap; }
+  /* Acid at rest, and it stays acid through the klein fill (7.07:1). The card
+     itself carries the hover response; the CTA is a constant marker.
+     Kept identical to /projects' VISIT — see DESIGN.md, The Twin Reels Rule. */
   .card-cta { color: var(--acid); }
+  .card:hover .card-meta .card-cta,
+  .card:focus-visible .card-meta .card-cta { color: var(--acid); }
 
-  .soon { border-top: 1px solid #26262b; padding: 3rem 1.6rem; }
+  .soon { border-top: 1px solid var(--rule-dim); padding: 3rem 1.6rem; }
   .soon-label { color: var(--bone-dim); margin-bottom: 1.4rem; }
   .soon-list { list-style: none; }
   .soon-list li { padding: 0.7rem 0; color: var(--bone-dim); font-size: 1.1rem; font-style: italic; display: flex; gap: 1.4rem; align-items: baseline; }
-  .soon-list .mono { color: #55555e; font-style: normal; }
+  .soon-list .mono { color: var(--bone-dim); font-style: normal; }
 
   @media (max-width: 640px) { .card { flex-direction: column; gap: 0.6rem; } }
 </style>

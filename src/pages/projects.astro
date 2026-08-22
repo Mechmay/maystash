@@ -23,8 +23,12 @@ const statusLabel: Record<string, string> = {
   <main class="slate-list">
     {projects.map((p, i) => {
       const { Content } = bodies[i];
+      // The row's primary destination. No destination -> no stretched link and
+      // no hover fill: a card that fills on hover is promising a click.
+      const href = p.data.url ?? p.data.repo ?? null;
+      const external = href?.startsWith('http');
       return (
-        <article class="prod reveal">
+        <article class:list={['prod', 'reveal', href && 'is-linked']}>
           <div class="prod-index mono">{String(i + 1).padStart(2, '0')}</div>
           <div class="prod-body">
             <div class="prod-status mono" data-status={p.data.status}>
@@ -36,7 +40,7 @@ const statusLabel: Record<string, string> = {
             <div class="prod-foot">
               <div class="prod-tags mono">{p.data.tags.map((t) => <span>{t}</span>)}</div>
               <div class="prod-links mono">
-                {p.data.url && <a href={p.data.url} target={p.data.url.startsWith('http') ? '_blank' : undefined} rel="noopener">VISIT →</a>}
+                {p.data.url && <a class="prod-primary" href={p.data.url} target={external ? '_blank' : undefined} rel="noopener">VISIT →</a>}
                 {p.data.repo && <a href={p.data.repo} target="_blank" rel="noopener">CODE →</a>}
               </div>
             </div>
@@ -57,22 +61,55 @@ const statusLabel: Record<string, string> = {
   .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
   .ph-title {
     font-family: var(--font-display);
-    font-size: clamp(3.5rem, 13vw, 10rem);
+    font-size: var(--type-page-hero);
     line-height: 0.9;
     color: var(--bone);
-    text-shadow: 0.03em 0.03em 0 var(--klein);
+    text-shadow: var(--shadow-print);
   }
-  .ph-tagline { max-width: 40rem; margin-top: 1.8rem; font-size: 1.25rem; color: var(--bone-dim); }
+  .ph-tagline { max-width: 40rem; margin-top: 1.8rem; font-size: var(--step-lead); color: var(--bone-dim); }
   .ph-tagline em { color: var(--acid); font-style: italic; }
 
   .slate-list { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 5rem; }
   .prod {
     display: flex;
     gap: 2rem;
-    padding: 3rem 0;
-    border-top: 1px solid #26262b;
+    /* Was `3rem 0`. The klein hover fill needs side padding or it bleeds to the
+       page edge; /writing's card already carries the same inset. */
+    padding: 3rem 1.6rem;
+    border-top: 1px solid var(--rule-dim);
+    transition: background var(--dur-state) ease;
   }
-  .prod-index { color: var(--acid); padding-top: 0.4rem; min-width: 3rem; font-size: 0.9rem; }
+  /* Stretched link: VISIT is the row's real anchor, expanded to cover the whole
+     row via ::after. One anchor, one destination, no nested <a> — the bodies
+     carry no links of their own, so nothing needs rescuing from underneath.
+     Tradeoff: the overlay blocks text selection across the row. Acceptable here
+     because the bodies are two short paragraphs, not an article. */
+  .prod.is-linked { position: relative; }
+  .prod.is-linked .prod-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  /* Any OTHER link stays clickable above the overlay. The primary must stay
+     position:static — giving it `relative` makes it the containing block for its
+     own ::after, so `inset: 0` would cover the link instead of the row. */
+  .prod-links a:not(.prod-primary),
+  .prod-copy a { position: relative; z-index: 2; }
+
+  /* Only a row that actually goes somewhere fills on hover. Rows without a
+     destination stay flat — a fill on an inert row is a promise it can't keep.
+     :focus-within so keyboard users get the same signal.
+     Every bone-dim child moves to bone on klein: bone-dim on klein is 3.27:1. */
+  .prod.is-linked:hover,
+  .prod.is-linked:focus-within { background: var(--klein); }
+  .prod.is-linked:hover .prod-status,
+  .prod.is-linked:hover .prod-copy,
+  .prod.is-linked:hover .prod-tags,
+  .prod.is-linked:focus-within .prod-status,
+  .prod.is-linked:focus-within .prod-copy,
+  .prod.is-linked:focus-within .prod-tags { color: var(--bone); }
+  .prod-index { color: var(--acid); padding-top: 0.4rem; min-width: 3rem; font-size: var(--step-meta); }
   .prod-body { flex: 1; }
   .prod-status {
     display: inline-flex;
@@ -81,18 +118,20 @@ const statusLabel: Record<string, string> = {
     color: var(--bone-dim);
     margin-bottom: 1rem;
   }
-  .prod-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bone-dim); }
-  .prod-status[data-status="live"] .dot { background: var(--acid); box-shadow: 0 0 8px var(--acid); }
-  .prod-status[data-status="building"] .dot { background: var(--klein-hot); box-shadow: 0 0 8px var(--klein-hot); }
+  .prod-status .dot { width: 7px; height: 7px; border-radius: var(--r-dot); background: var(--bone-dim); }
+  /* impeccable-disable-next-line dark-glow -- tally light: sanctioned live-status glow, DESIGN.md Elevation */
+  .prod-status[data-status="live"] .dot { background: var(--acid); box-shadow: var(--glow-tally); }
+  /* No glow: the tally light means "live right now". "Building" is a state, not a signal. */
+  .prod-status[data-status="building"] .dot { background: var(--klein-hot); }
   .prod-title {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-size: var(--type-card-title);
     line-height: 1;
     color: var(--bone);
     text-transform: uppercase;
   }
-  .prod-tagline { margin-top: 1rem; font-size: 1.3rem; font-style: italic; color: var(--acid); max-width: 46rem; }
+  .prod-tagline { margin-top: 1rem; font-size: 1.3rem; font-style: italic; color: var(--bone); max-width: 46rem; }
   .prod-copy { margin-top: 1.4rem; color: var(--bone-dim); max-width: 46rem; }
   .prod-copy :global(p) { margin: 0.9rem 0; line-height: 1.7; }
   .prod-foot {
@@ -103,15 +142,20 @@ const statusLabel: Record<string, string> = {
     margin-top: 1.8rem;
     flex-wrap: wrap;
   }
-  .prod-tags { display: flex; gap: 1rem; flex-wrap: wrap; color: #55555e; }
+  .prod-tags { display: flex; gap: 1rem; flex-wrap: wrap; color: var(--bone-dim); }
   .prod-links { display: flex; gap: 1.5rem; }
-  .prod-links a { color: var(--acid); text-decoration: none; }
-  .prod-links a:hover { text-decoration: underline; }
+  /* Acid at rest — May's call. It survives the klein fill at 7.07:1, so the CTA
+     reads the same whether or not the row is hovered. Underline carries hover. */
+  .prod-links a { color: var(--acid); text-decoration: none; transition: color var(--dur-state) ease; }
+  .prod-links a:hover,
+  .prod-links a:focus-visible { text-decoration: underline; }
 
-  .soon { border-top: 1px solid #26262b; padding: 3rem 0; }
+  .soon { border-top: 1px solid var(--rule-dim); padding: 3rem 0; }
   .soon-label { color: var(--bone-dim); margin-bottom: 1rem; }
   .soon-text { color: var(--bone-dim); font-style: italic; font-size: 1.15rem; }
-  .soon-text a { color: var(--acid); }
+  .soon-text a { color: var(--bone); transition: color var(--dur-state) ease; }
+  .soon-text a:hover,
+  .soon-text a:focus-visible { color: var(--acid); }
 
   @media (max-width: 640px) { .prod { flex-direction: column; gap: 0.8rem; } }
 </style>

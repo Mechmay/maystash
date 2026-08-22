@@ -1,4 +1,7 @@
 ---
+import '../styles/tokens.css';
+import Nav from '../components/Nav.astro';
+
 interface Props {
   title: string;
   description?: string;
@@ -58,20 +61,7 @@ const baseLd = {
   <body>
     <div class="grain" aria-hidden="true"></div>
 
-    {!bareNav && (
-    <nav class="site-nav" id="site-nav">
-      <a href="/" class="nav-logo">maystash<span class="blink">▮</span></a>
-      <div class="nav-links mono">
-        <a href="/writing">WRITING</a>
-        <a href="/projects">PROJECTS</a>
-        <a href="/about">ABOUT</a>
-        <a href="/#contact">CONTACT</a>
-      </div>
-      <div class="nav-right">
-        <span class="nav-slate mono">EST. 2026</span>
-      </div>
-    </nav>
-    )}
+    {!bareNav && <Nav variant="bar" />}
 
     <slot />
 
@@ -107,17 +97,7 @@ const baseLd = {
 </html>
 
 <style is:global>
-  :root {
-    --ink: #0c0c0e;
-    --bone: #ece7dd;
-    --bone-dim: #a9a49a;
-    --klein: #2823f0;
-    --klein-hot: #4a45ff;
-    --acid: #d8ff3e;
-    --font-display: 'Anton', sans-serif;
-    --font-body: 'Newsreader', Georgia, serif;
-    --font-mono: 'Space Mono', monospace;
-  }
+  /* Tokens live in src/styles/tokens.css, imported above. */
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -127,7 +107,7 @@ const baseLd = {
     background: var(--ink);
     color: var(--bone);
     font-family: var(--font-body);
-    font-size: 1.125rem;
+    font-size: var(--step-body);
     line-height: 1.6;
     overflow-x: hidden;
   }
@@ -136,7 +116,7 @@ const baseLd = {
 
   .mono {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: var(--step-label);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
@@ -159,95 +139,19 @@ const baseLd = {
     80% { transform: translate(3%, 3%); }
   }
 
-  /* ---- nav ---- */
-  /* Two states:
-     ghost  — mix-blend difference, invisible chrome; logo inverts over color plates (hero, marquee, cards).
-     slated — once prose scrolls underneath, logo snaps into an ink "slate chip" so it never mushes into text. */
-  .site-nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.1rem 2rem;
-    mix-blend-mode: difference;
-  }
-  .nav-logo {
-    font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: 1rem;
-    letter-spacing: 0.02em;
-    color: var(--bone);
-    text-decoration: none;
-    padding: 0.45rem 0.9rem;
-    margin-left: -0.9rem;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  .site-nav.slated {
-    mix-blend-mode: normal;
-  }
-  .site-nav.slated .nav-logo {
-    background: rgba(12, 12, 14, 0.82);
-    border-color: #2c2c33;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
-  }
-  .site-nav.slated .nav-logo:hover { border-color: var(--acid); }
-  .site-nav.slated .nav-slate { opacity: 0; }
-  .blink { animation: blink 1.1s steps(1) infinite; color: var(--acid); }
-  @keyframes blink { 50% { opacity: 0; } }
-  .nav-slate { color: var(--bone-dim); transition: opacity 0.3s ease; }
-  @media (max-width: 720px) { .nav-slate { display: none; } }
-
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .nav-links a {
-    color: var(--bone);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    transition: color 0.2s ease;
-  }
-  .nav-links a:hover { color: var(--acid); }
-  @media (max-width: 720px) {
-    .nav-links {
-      position: static;
-      transform: none;
-      gap: 0.9rem;
-      font-size: 0.6rem;
-    }
-    .nav-links a { letter-spacing: 0.04em; }
-  }
-  @media (max-width: 400px) { .nav-links { gap: 0.6rem; } }
-
-  .nav-right { display: flex; align-items: center; gap: 1.3rem; }
-  .nav-x {
-    display: inline-flex;
-    color: var(--bone);
-    transition: color 0.2s ease, transform 0.2s ease;
-  }
-  .nav-x:hover { color: var(--acid); transform: translateY(-1px); }
+  /* Nav styles live in src/components/Nav.astro, alongside their markup. */
 
   /* ---- reveal ---- */
   .reveal {
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity 0.7s cubic-bezier(0.2, 0.6, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.6, 0.2, 1);
+    transition: opacity var(--dur-reveal) var(--ease-reveal), transform var(--dur-reveal) var(--ease-reveal);
   }
   .reveal.in { opacity: 1; transform: none; }
 
   /* ---- footer ---- */
   .site-footer {
-    border-top: 1px solid #26262b;
+    border-top: 1px solid var(--rule-dim);
     padding: 4rem 2rem 3rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -258,7 +162,7 @@ const baseLd = {
     justify-content: space-between;
     gap: 2rem;
     padding: 0.55rem 0;
-    border-bottom: 1px dotted #2c2c33;
+    border-bottom: 1px dotted var(--rule);
   }
   .footer-social {
     display: flex;
@@ -274,9 +178,9 @@ const baseLd = {
     color: var(--bone-dim);
     text-decoration: none;
     padding: 0.6rem 1.1rem;
-    border: 1px solid #2c2c33;
-    border-radius: 999px;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-pill);
+    transition: color var(--dur-state) ease, border-color var(--dur-state) ease;
   }
   .x-link:hover { color: var(--acid); border-color: var(--acid); }
   .footer-end {

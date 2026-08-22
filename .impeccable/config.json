@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "dist/client/projects/**"
+        ],
+        "createdAt": "2026-08-22T07:26:43.597Z",
+        "reason": "Tally light: sanctioned live-status glow per DESIGN.md Elevation. Source carries impeccable-disable-line comments; this covers the built output where var() is resolved."
+      }
+    ]
+  }
+}

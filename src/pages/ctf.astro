@@ -98,41 +98,41 @@ const levels = LEVELS.map((l) => ({ n: l.n, name: l.name, blurb: l.blurb, defenc
   .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
   .ph-title {
     font-family: var(--font-display);
-    font-size: clamp(3rem, 11vw, 8rem);
+    font-size: var(--type-contact);
     line-height: 0.9;
     color: var(--bone);
-    text-shadow: 0.03em 0.03em 0 var(--klein);
+    text-shadow: var(--shadow-print);
   }
   .ctf-main { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 8rem; }
   .intro { margin-bottom: 4rem; }
   .lead { font-size: 1.3rem; line-height: 1.5; margin-bottom: 1.2rem; }
   .intro p { line-height: 1.7; margin-bottom: 1rem; }
-  .fineprint { font-size: 0.72rem; color: var(--bone-dim); letter-spacing: 0.06em; }
+  .fineprint { font-size: var(--step-label); color: var(--bone-dim); letter-spacing: 0.06em; }
   .fineprint code { color: var(--acid); }
 
   .level {
-    border: 1px solid rgba(236, 231, 221, 0.16);
-    border-radius: 4px;
+    border: 1px solid var(--bone-a16);
+    border-radius: var(--r-sm);
     padding: 1.6rem;
     margin-bottom: 2.5rem;
-    background: rgba(236, 231, 221, 0.02);
+    background: var(--bone-a02);
   }
   .lv-head { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; }
-  .lv-n { font-size: 0.7rem; color: var(--klein); letter-spacing: 0.16em; }
+  .lv-n { font-size: var(--step-floor); color: var(--klein); letter-spacing: 0.16em; }
   .lv-name { font-family: var(--font-display); font-size: 1.9rem; color: var(--bone); }
   .lv-state {
     margin-left: auto;
-    font-size: 0.66rem;
+    font-size: var(--step-floor);
     letter-spacing: 0.14em;
     color: var(--bone-dim);
     border: 1px solid currentColor;
     padding: 0.15rem 0.5rem;
-    border-radius: 2px;
+    border-radius: var(--r-hairline);
   }
   .lv-state[data-solved] { color: var(--acid); }
   .lv-blurb { margin: 0.8rem 0 0.5rem; line-height: 1.6; }
   .lv-defence {
-    font-size: 0.72rem;
+    font-size: var(--step-label);
     line-height: 1.6;
     color: var(--bone-dim);
     margin-bottom: 1.2rem;
@@ -141,9 +141,9 @@ const levels = LEVELS.map((l) => ({ n: l.n, name: l.name, blurb: l.blurb, defenc
 
   .transcript { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; }
   .transcript:empty { display: none; }
-  .msg { padding: 0.6rem 0.85rem; border-radius: 10px; max-width: 46rem; line-height: 1.55; font-size: 0.9rem; }
-  .msg.you { background: var(--klein); color: #fff; align-self: flex-end; }
-  .msg.bot { background: rgba(236, 231, 221, 0.08); color: var(--bone); align-self: flex-start; }
+  .msg { padding: 0.6rem 0.85rem; border-radius: var(--r-card); max-width: 46rem; line-height: 1.55; font-size: var(--step-meta); }
+  .msg.you { background: var(--klein); color: var(--paper-hi); align-self: flex-end; }
+  .msg.bot { background: var(--bone-a08); color: var(--bone); align-self: flex-start; }
   .msg.sys { background: none; color: var(--bone-dim); font-size: 0.75rem; align-self: flex-start; }
 
   .talk { display: flex; gap: 0.6rem; align-items: flex-end; }
@@ -151,18 +151,18 @@ const levels = LEVELS.map((l) => ({ n: l.n, name: l.name, blurb: l.blurb, defenc
     flex: 1;
     resize: vertical;
     background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(236, 231, 221, 0.22);
-    border-radius: 4px;
+    border: 1px solid var(--bone-a22);
+    border-radius: var(--r-sm);
     color: var(--bone);
     padding: 0.6rem 0.7rem;
     font: inherit;
-    font-size: 0.9rem;
+    font-size: var(--step-meta);
   }
   .claim { display: flex; gap: 0.5rem; margin-top: 0.9rem; flex-wrap: wrap; align-items: center; }
   .claim input {
     background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(236, 231, 221, 0.22);
-    border-radius: 4px;
+    border: 1px solid var(--bone-a22);
+    border-radius: var(--r-sm);
     color: var(--bone);
     padding: 0.45rem 0.6rem;
     font-family: var(--font-mono);
@@ -174,20 +174,20 @@ const levels = LEVELS.map((l) => ({ n: l.n, name: l.name, blurb: l.blurb, defenc
     background: var(--acid);
     color: #0c0c0e;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--r-sm);
     padding: 0.55rem 1rem;
-    font-size: 0.72rem;
+    font-size: var(--step-label);
     letter-spacing: 0.1em;
     cursor: pointer;
   }
   button:disabled { opacity: 0.45; cursor: default; }
-  .claim-msg { font-size: 0.72rem; letter-spacing: 0.08em; }
+  .claim-msg { font-size: var(--step-label); letter-spacing: 0.08em; }
   .claim-msg[data-ok] { color: var(--acid); }
   .claim-msg[data-bad] { color: #ff8a7a; }
 
   .outro { margin-top: 3rem; }
   .outro p { line-height: 1.7; margin-bottom: 1rem; }
-  .ab-head { font-size: 0.72rem; letter-spacing: 0.16em; color: var(--bone-dim); margin-bottom: 0.9rem; }
+  .ab-head { font-size: var(--step-label); letter-spacing: 0.16em; color: var(--bone-dim); margin-bottom: 0.9rem; }
 
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;

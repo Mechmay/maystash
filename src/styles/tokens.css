@@ -1,0 +1,102 @@
+/* maystash design tokens — the normative values layer.
+ *
+ * Single source of truth for colour, radius, type, and motion. Page-level
+ * <style> blocks consume these; they do not redeclare literals. See DESIGN.md
+ * for what each token means and the named rules that govern its use.
+ *
+ * Extracted 2026-08-22 from inline styles via /impeccable extract.
+ */
+
+:root {
+  /* ---- ground + foreground ---------------------------------------- */
+  --ink: #0c0c0e;          /* default ground. Never pure #000 */
+  --bone: #ece7dd;         /* default foreground on ink. Never pure #fff */
+  --bone-dim: #a9a49a;     /* metadata, secondary prose, labels (7.88:1 on ink) */
+
+  /* ---- accents ----------------------------------------------------- */
+  /* Which one responds is decided by the ground, not by preference.
+     See DESIGN.md → The Ground Decides Rule. */
+  --klein: #2823f0;        /* annotation hand. Responds on PAPER (6.95:1). Unusable on ink (2.41:1) */
+  --klein-hot: #4a45ff;    /* lifted klein. On ink: 3.34:1 — non-text marks only */
+  --acid: #d8ff3e;         /* the powered state. Responds on INK (17.02:1). Invisible on paper (1.02:1) */
+
+  /* ---- paper plates ------------------------------------------------ */
+  --paper: #f2ede3;        /* the notebook laid open */
+  --paper-2: #e7e0d2;      /* verso */
+  --paper-ink: #17161c;    /* foreground on paper (15.41:1) */
+  --paper-dim: #8a867c;    /* secondary text on paper */
+  --paper-mute: #57534b;   /* taglines and asides on paper */
+  --paper-hi: #fbfaf6;     /* raised surfaces on paper (bubbles). Never pure #fff */
+
+  /* ---- rules + dividers -------------------------------------------- */
+  --rule: #2c2c33;         /* pill borders, dotted credit rows */
+  --rule-dim: #26262b;     /* section hairlines — the most-used divider */
+
+  /* ---- bone alpha ramp --------------------------------------------- */
+  /* Translucent bone over ink, for borders and recessive text. */
+  --bone-a02: rgba(236, 231, 221, 0.02);
+  --bone-a08: rgba(236, 231, 221, 0.08);
+  --bone-a16: rgba(236, 231, 221, 0.16);
+  --bone-a22: rgba(236, 231, 221, 0.22);
+  --bone-a28: rgba(236, 231, 221, 0.28);
+  --bone-a72: rgba(236, 231, 221, 0.72);
+  --bone-a82: rgba(236, 231, 221, 0.82);
+
+  /* ---- ink alpha ---------------------------------------------------- */
+  --ink-a35: rgba(12, 12, 14, 0.35);
+  --ink-a82: rgba(12, 12, 14, 0.82);
+
+  /* ---- type families ------------------------------------------------ */
+  --font-display: 'Anton', sans-serif;              /* stamps */
+  --font-body: 'Newsreader', Georgia, serif;        /* writes */
+  --font-mono: 'Space Mono', monospace;             /* labels */
+
+  /* ---- type scale ---------------------------------------------------
+   * Role tokens first (what a size means), then the raw steps still in use.
+   * Every value here is observed in the codebase — this scale describes the
+   * site, it does not prescribe a new one. */
+  --type-page-hero: clamp(3.5rem, 13vw, 10rem);  /* /writing /projects /about hero */
+  --type-home-hero: clamp(3rem, 12vw, 7rem);     /* landing stage */
+  --type-contact:   clamp(3rem, 11vw, 8rem);
+  --type-post-title: clamp(2.2rem, 6.5vw, 5.5rem);
+  --type-card-title: clamp(2.2rem, 6vw, 4.5rem);
+  --type-section:    clamp(1.7rem, 4vw, 2.6rem);  /* in-prose h2 */
+  --type-plate:      clamp(1.5rem, 3.4vw, 2.6rem);
+  --type-statement:  clamp(1.5rem, 3.4vw, 2.4rem);
+
+  --step-label: 0.72rem;   /* mono micro-label — the connective tissue (x8) */
+  --step-floor: 0.7rem;    /* 11.2px — the smallest legal size for ANY functional
+                              text (links, buttons, labels, hints). Never go below. */
+  --step-meta: 0.9rem;     /* ordinals, kickers (x5) */
+  --step-sm: 0.95rem;      /* compact body (x4) */
+  --step-base: 1rem;       /* (x3) */
+  --step-body: 1.125rem;   /* reading default */
+  --step-prose: 1.22rem;   /* long-form post body */
+  --step-lead: 1.25rem;    /* standfirst (x4) */
+
+  /* ---- radius --------------------------------------------------------
+   * Named for what they sit on. Full-bleed sheets take no radius at all
+   * (DESIGN.md → The Sheet Rule). */
+  --r-hairline: 2px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-card: 10px;
+  --r-bubble-sm: 12px;
+  --r-panel: 16px;
+  --r-bubble: 18px;
+  --r-pill: 999px;
+  --r-dot: 50%;
+
+  /* ---- motion ---------------------------------------------------------
+   * No overshoot anywhere: real objects decelerate, they do not bounce. */
+  --ease-reveal: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --dur-state: 0.2s;
+  --dur-reveal: 0.7s;
+
+  /* ---- depth -----------------------------------------------------------
+   * The entire depth vocabulary. Adding a third entry needs a DESIGN.md edit. */
+  --glow-tally: 0 0 8px var(--acid);            /* live status only */
+  --shadow-print: 0.03em 0.03em 0 var(--klein);  /* text-shadow, display type */
+  --offset-print-sm: 4px 4px 0 var(--klein);     /* box variant, zero blur */
+  --offset-print-lg: 5px 5px 0 var(--klein);
+}

@@ -39,10 +39,10 @@ import Layout from '../layouts/Layout.astro';
   .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
   .ph-title {
     font-family: var(--font-display);
-    font-size: clamp(3.5rem, 13vw, 10rem);
+    font-size: var(--type-page-hero);
     line-height: 0.9;
     color: var(--bone);
-    text-shadow: 0.03em 0.03em 0 var(--klein);
+    text-shadow: var(--shadow-print);
   }
 
   .about-main { max-width: 720px; margin: 0 auto; padding: 3rem 2rem 5rem; }
@@ -58,9 +58,9 @@ import Layout from '../layouts/Layout.astro';
     gap: 2rem;
     margin-top: 4rem;
     padding-top: 2.5rem;
-    border-top: 1px solid #26262b;
+    border-top: 1px solid var(--rule-dim);
     flex-wrap: wrap;
   }
-  .cta-link { color: var(--acid); text-decoration: none; padding: 0.7rem 1.2rem; border: 1px solid #2c2c33; border-radius: 999px; transition: border-color 0.2s ease; }
+  .cta-link { color: var(--acid); text-decoration: none; padding: 0.7rem 1.2rem; border: 1px solid var(--rule); border-radius: var(--r-pill); transition: border-color var(--dur-state) ease; }
   .cta-link:hover { border-color: var(--acid); }
 </style>

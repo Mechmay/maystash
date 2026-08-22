@@ -1,0 +1,380 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-22T00:00:00Z",
+  "title": "Design System: maystash",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0c0c0e",
+        "tonalRamp": [
+          "#0c0c0e",
+          "#17171b",
+          "#232329",
+          "#33333b",
+          "#4d4d57",
+          "#7a7a86",
+          "#adadb6",
+          "#e2e2e6"
+        ]
+      },
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#ece7dd",
+        "tonalRamp": [
+          "#26231d",
+          "#3b372e",
+          "#55503f",
+          "#736c58",
+          "#948c76",
+          "#b6ae99",
+          "#d3cbb9",
+          "#ece7dd"
+        ]
+      },
+      "bone-dim": {
+        "role": "neutral",
+        "displayName": "Bone Dim",
+        "canonical": "#a9a49a",
+        "tonalRamp": [
+          "#1c1a17",
+          "#302d28",
+          "#48443c",
+          "#635e54",
+          "#807a6e",
+          "#9d968a",
+          "#a9a49a",
+          "#cfcbc3"
+        ]
+      },
+      "klein": {
+        "role": "primary",
+        "displayName": "Klein Annotation",
+        "canonical": "#2823f0",
+        "tonalRamp": [
+          "#0a0840",
+          "#120e6b",
+          "#1a1596",
+          "#2823f0",
+          "#4a45ff",
+          "#7b78ff",
+          "#aeacff",
+          "#dcdbff"
+        ]
+      },
+      "klein-hot": {
+        "role": "primary",
+        "displayName": "Klein Hot",
+        "canonical": "#4a45ff",
+        "tonalRamp": [
+          "#0d0b4d",
+          "#161283",
+          "#211cb8",
+          "#3630e0",
+          "#4a45ff",
+          "#8a86ff",
+          "#bab8ff",
+          "#e4e3ff"
+        ]
+      },
+      "acid": {
+        "role": "secondary",
+        "displayName": "Acid Tally",
+        "canonical": "#d8ff3e",
+        "tonalRamp": [
+          "#25300a",
+          "#3c4f10",
+          "#556f16",
+          "#71941c",
+          "#8fba22",
+          "#b2dd2c",
+          "#d8ff3e",
+          "#ecff9a"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f2ede3",
+        "tonalRamp": [
+          "#2a271f",
+          "#413d31",
+          "#5c5747",
+          "#7b7562",
+          "#9d9682",
+          "#c0b9a5",
+          "#dcd6c8",
+          "#f2ede3"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Paper Verso",
+        "canonical": "#e7e0d2",
+        "tonalRamp": [
+          "#26221a",
+          "#3b362a",
+          "#544e3d",
+          "#726b55",
+          "#948c72",
+          "#b7af94",
+          "#d3cbb5",
+          "#e7e0d2"
+        ]
+      },
+      "paper-ink": {
+        "role": "neutral",
+        "displayName": "Paper Ink",
+        "canonical": "#17161c",
+        "tonalRamp": [
+          "#17161c",
+          "#232229",
+          "#33323b",
+          "#474653",
+          "#63616f",
+          "#8b8996",
+          "#b5b3bd",
+          "#e0dfe4"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#2c2c33",
+        "tonalRamp": [
+          "#141418",
+          "#1e1e23",
+          "#2c2c33",
+          "#3e3e47",
+          "#5a5a66",
+          "#83838f",
+          "#b0b0b9",
+          "#e0e0e5"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page-owning statements only — hero and contact. Uppercase Anton, one per screen."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles, paper-plate card titles, in-prose h2. Uppercase Anton."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product-card titles at fixed 2rem. Uppercase Anton."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All long-form prose. Newsreader; italics carry taglines and asides."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Mono micro-labels — dates, kickers, table headers, nav, status. The connective tissue of the system."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tally-glow",
+        "value": "0 0 8px var(--acid)",
+        "purpose": "The on-air light. Status dots representing genuinely live, currently-changing state. Never on buttons, cards, inputs, or focus rings."
+      },
+      {
+        "name": "print-offset",
+        "value": "0.03em 0.03em 0 var(--klein)",
+        "purpose": "text-shadow on the contact title only. Two-colour registration misalignment, not a glow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-reveal",
+        "value": "cubic-bezier(0.2, 0.6, 0.2, 1)",
+        "purpose": "Scroll reveal — opacity and 28px rise over 0.7s. Decelerating, no overshoot."
+      },
+      {
+        "name": "ease-state",
+        "value": "ease",
+        "purpose": "Colour and border transitions on hover/focus, 0.2s."
+      },
+      {
+        "name": "grain-loop",
+        "value": "grain 0.9s steps(6) infinite",
+        "purpose": "Film grain at 5.5% opacity. Incidental atmosphere; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "marquee",
+        "value": "marquee 30s linear infinite",
+        "purpose": "Ticker band. Signature element of the ink ground."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "nav-collapse",
+        "value": "720px"
+      },
+      {
+        "name": "nav-tight",
+        "value": "400px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Mono micro-label in the blend-difference top chrome. Bone at rest, acid on hover.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">WRITING</a><a class=\"ds-nav-link\" href=\"#\">PROJECTS</a><a class=\"ds-nav-link\" href=\"#\">ABOUT</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 1.5rem; align-items: center; padding: 1.1rem 2rem; background: var(--ink, #0c0c0e); } .ds-nav-link { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bone, #ece7dd); text-decoration: none; transition: color 0.2s ease; } .ds-nav-link:hover { color: var(--acid, #d8ff3e); } .ds-nav-link:focus-visible { outline: 1px solid var(--acid, #d8ff3e); outline-offset: 3px; }"
+    },
+    {
+      "name": "Link Pill",
+      "kind": "button",
+      "refersTo": "link-pill",
+      "description": "The only button shape in the system. Hairline border, no fill in any state, colour-only hover.",
+      "html": "<a class=\"ds-link-pill\" href=\"#\">READ THE ARCHIVE</a>",
+      "css": ".ds-link-pill { display: inline-flex; align-items: center; gap: 0.6rem; font-family: 'Newsreader', Georgia, serif; font-size: 1rem; color: var(--bone, #ece7dd); text-decoration: none; padding: 0.8rem 1.3rem; border: 1px solid #2c2c33; border-radius: 999px; transition: color 0.2s ease, border-color 0.2s ease; } .ds-link-pill:hover { color: var(--acid, #d8ff3e); border-color: var(--acid, #d8ff3e); } .ds-link-pill:focus-visible { outline: 1px solid var(--acid, #d8ff3e); outline-offset: 3px; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "product-card",
+      "description": "Specimen card on the ink ground. Anton title, italic tagline, mono status row with a live tally dot.",
+      "html": "<a class=\"ds-prod-card\" href=\"#\"><span class=\"ds-prod-status\" data-status=\"live\"><span class=\"ds-dot\"></span>LIVE</span><span class=\"ds-pc-title\">DINJURE</span><span class=\"ds-pc-tag\">A daily number you have to deduce.</span></a>",
+      "css": ".ds-prod-card { display: flex; flex-direction: column; padding: 1.8rem 1.6rem; border: 1px solid rgba(236,231,221,0.28); border-radius: 10px; text-decoration: none; color: var(--bone, #ece7dd); transition: border-color 0.2s ease, transform 0.2s ease; } .ds-prod-card:hover { border-color: var(--acid, #d8ff3e); } .ds-prod-status { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a9a49a; } .ds-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--acid, #d8ff3e); box-shadow: 0 0 8px var(--acid, #d8ff3e); } .ds-pc-title { font-family: 'Anton', sans-serif; font-weight: 400; font-size: 2rem; text-transform: uppercase; line-height: 1; margin-top: 0.9rem; } .ds-pc-tag { margin-top: 0.7rem; font-family: 'Newsreader', Georgia, serif; font-size: 1rem; font-style: italic; color: rgba(236,231,221,0.82); }"
+    },
+    {
+      "name": "Status Dot",
+      "kind": "chip",
+      "refersTo": "product-card",
+      "description": "The tally light. Glow appears only on genuinely-live state; idle and building dots are flat.",
+      "html": "<span class=\"ds-tally\" data-state=\"live\"><span class=\"ds-tally-dot\"></span>LIVE</span> <span class=\"ds-tally\" data-state=\"building\"><span class=\"ds-tally-dot\"></span>BUILDING</span> <span class=\"ds-tally\" data-state=\"idle\"><span class=\"ds-tally-dot\"></span>ARCHIVED</span>",
+      "css": ".ds-tally { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a9a49a; margin-right: 1.2rem; } .ds-tally-dot { width: 7px; height: 7px; border-radius: 50%; background: #ece7dd; } .ds-tally[data-state=\"live\"] .ds-tally-dot { background: #d8ff3e; box-shadow: 0 0 8px #d8ff3e; } .ds-tally[data-state=\"building\"] .ds-tally-dot { background: #4a45ff; } .ds-tally[data-state=\"idle\"] .ds-tally-dot { background: #a9a49a; }"
+    },
+    {
+      "name": "Paper Plate",
+      "kind": "card",
+      "refersTo": "paper-plate",
+      "description": "Full-bleed light interruption in the dark ground. Zero radius — it is a sheet, not an object.",
+      "html": "<section class=\"ds-plate\"><span class=\"ds-plate-kicker\">FIELD NOTE 004</span><h2 class=\"ds-plate-title\">THE BRAIN THAT SLEEPS</h2><p class=\"ds-plate-tag\">What happens when the notes keep writing themselves.</p></section>",
+      "css": ".ds-plate { background: #f2ede3; color: #17161c; padding: 3rem 2rem; border-radius: 0; } .ds-plate-kicker { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #57534b; } .ds-plate-title { font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(1.5rem, 3.4vw, 2.6rem); line-height: 1.06; text-transform: uppercase; margin-top: 0.8rem; } .ds-plate-tag { margin-top: 0.7rem; font-family: 'Newsreader', Georgia, serif; font-size: 1.08rem; font-style: italic; color: #57534b; max-width: 52rem; }"
+    },
+    {
+      "name": "Credit Row",
+      "kind": "custom",
+      "refersTo": "paper-plate",
+      "description": "The ledger row — dotted rule, label left, value right. The system's signature structural device.",
+      "html": "<div class=\"ds-ledger\"><div class=\"ds-credit-row\"><span>BUILT WITH</span><span>ASTRO</span></div><div class=\"ds-credit-row\"><span>TYPE</span><span>ANTON / NEWSREADER / SPACE MONO</span></div></div>",
+      "css": ".ds-ledger { max-width: 560px; color: #a9a49a; font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; } .ds-credit-row { display: flex; justify-content: space-between; gap: 2rem; padding: 0.55rem 0; border-bottom: 1px dotted #2c2c33; }"
+    },
+    {
+      "name": "Prose Blockquote",
+      "kind": "custom",
+      "refersTo": "paper-plate",
+      "description": "Klein spine on the left — the annotation hand marking a passage in the record.",
+      "html": "<blockquote class=\"ds-quote\">The model did not fail. It did exactly what the instructions said, which is the whole problem.</blockquote>",
+      "css": ".ds-quote { border-left: 3px solid #2823f0; padding-left: 1.2rem; margin: 1.6rem 0; font-family: 'Newsreader', Georgia, serif; font-size: 1.22rem; line-height: 1.6; font-style: italic; color: #ece7dd; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Notebook",
+    "overview": "maystash reads like a technical logbook kept by someone who writes well. Evidence gets recorded plainly — dated, labelled, ruled off — and the author occasionally annotates in blue. Nothing here is decorated for the sake of decoration; the ornament is the record-keeping itself. Mono labels, dotted rules, and terse specimen cards do the structural work, and long-form prose in a real reading serif does the rest.\n\nThe palette runs near-black by default with warm bone text, and the home page interrupts itself with light paper plates — the notebook opened flat under a lamp. Klein blue is the annotation hand: selection, blockquote, title offset, the mark of the author intervening in the record. Acid green is the only thing on the site that looks powered.\n\nFilm grain sits over everything at 5.5% opacity. It is incidental atmosphere, not the thesis — it warms the black and keeps the paper plates from reading as pure digital white. Removing it would not break the system; over-emphasizing it would.",
+    "keyCharacteristics": [
+      "Mono micro-labels are the dominant structural device, not an accent",
+      "Dotted and hairline rules carry hierarchy where boxes would in other systems",
+      "Two grounds: ink-default, paper-interruption",
+      "Klein annotates; acid responds",
+      "Flat by decree, with exactly one sanctioned exception"
+    ],
+    "rules": [
+      {
+        "name": "The One Volt Rule",
+        "body": "Acid has five sanctioned roles: response (hover/focus on ink), live status (tally dots, logo cursor), emphasis (one word per page tagline), index marks (CH.05, 01), and row CTAs (WATCH, VISIT — acid at rest, and acid through the klein fill at 7.07:1). Roles 4 and 5 are paired across both reel pages. Coverage under ~5%.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Hands Rule",
+        "body": "Klein is printed; acid is electric. Acid appears only in response to the reader (hover, focus) or on genuinely-changing data. Nothing is acid merely because it is important. A colour that both decorates and signals does neither job.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ground Decides Rule",
+        "body": "Which accent carries the response is set by the ground, not by preference. On ink, acid responds (17.02:1) and Klein is unusable as a foreground (2.41:1). On paper, Klein responds (6.95:1) and acid is invisible (1.02:1). Klein-hot on ink reaches only 3.34:1 — legal for non-text marks, illegal for small text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Never-Black Rule",
+        "body": "The ground is #0c0c0e and the foreground is #ece7dd. Pure #000 and pure #fff do not appear in this system.",
+        "section": "colors"
+      },
+      {
+        "name": "The Label Floor Rule",
+        "body": "No functional text renders below 11px at any viewport. Mono labels are already small by design; shrinking them further on mobile is where legibility actually breaks, not where the design gets tighter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Three Voices Rule",
+        "body": "Anton stamps, Newsreader writes, Space Mono labels. A heading never runs in Newsreader; body copy never runs in Anton; a date never runs in anything but mono.",
+        "section": "typography"
+      },
+      {
+        "name": "The Short Shout Rule",
+        "body": "Uppercase belongs to display type and mono labels. It is legitimate on headings of any length, because Anton is a display face — but a passage of running body copy never goes uppercase.",
+        "section": "typography"
+      },
+      {
+        "name": "The Rule-Not-Box Rule",
+        "body": "Hierarchy comes from hairlines, dotted borders, and whitespace. Reach for a border-bottom: 1px dotted before reaching for a container with a background.",
+        "section": "layout"
+      },
+      {
+        "name": "The Tally Light Rule",
+        "body": "The acid glow means 'this is live right now.' Applying it to anything static is a lie told in CSS. 'Building' and 'archived' are states, not signals: they take their colour flat, with no halo.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Flat-Everywhere-Else Rule",
+        "body": "Outside the tally light and the print offset, this system has no shadows. Hover states change colour and border, never elevation.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Sheet Rule",
+        "body": "Anything that spans the full viewport is a sheet and takes no corner radius. Radius signals 'this is an object you can act on.'",
+        "section": "shapes"
+      },
+      {
+        "name": "The Twin Reels Rule",
+        "body": "/writing and /projects are the same component wearing different nouns: index mark, title, tagline, meta row, CTA. Any change to one is a change to both. They have already drifted apart once.",
+        "section": "components"
+      },
+      {
+        "name": "The Honest Fill Rule",
+        "body": "A row that fills with colour on hover is promising a click. It gets that fill only when it actually has a destination — /projects gates the fill behind .is-linked, and a project with no URL stays flat.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do reach for a hairline or dotted rule before reaching for a bordered box. See The Rule-Not-Box Rule.",
+      "Do keep every functional text size at 11px or above, including mono labels on mobile.",
+      "Do use Klein for the site's own structural marks and acid strictly for reader-response and live state.",
+      "Do give full-bleed sheets zero corner radius and interactive objects a radius.",
+      "Do honour prefers-reduced-motion on any new motion — the existing system disables grain, reveal, and smooth scroll completely.",
+      "Do cap prose measure (52rem wide statements, 36rem narrow) even when the container is wider."
+    ],
+    "donts": [
+      "Don't add a shadow. The tally glow and the Klein print offset are the entire depth vocabulary.",
+      "Don't put the acid glow on anything whose state cannot change while the reader watches.",
+      "Don't give acid a fourth role. Response, live status, one tagline word — anything else is a violation.",
+      "Don't put Klein on ink or acid on paper as a foreground colour. See The Ground Decides Rule.",
+      "Don't use pure #000 or #fff.",
+      "Don't set running body copy in uppercase. Headings and mono labels only.",
+      "Don't use bounce or elastic easing (cubic-bezier with an overshoot past 1). The established reveal curve is cubic-bezier(0.2, 0.6, 0.2, 1) — decelerating, no overshoot.",
+      "Don't introduce a fourth typeface. Three voices, three jobs.",
+      "Don't give a hover fill to an element with no destination. See The Honest Fill Rule."
+    ]
+  }
+}

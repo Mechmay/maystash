@@ -257,7 +257,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     isolation: isolate;
     transition: transform 0.25s ease;
   }
-  .avatar-wrap:hover .av { transform: scale(1.03) rotate(-1deg); }
+  .avatar-wrap:hover .av,
+  .avatar-wrap:focus-visible .av { transform: scale(1.03) rotate(-1deg); }
   .avatar-wrap:active .av { transform: scale(0.98); }
 
   .pose {
@@ -305,7 +306,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   /* ---- motion: the memoji itself is the art, CSS adds life ---- */
   .av { animation: sway 12s ease-in-out infinite; transform-origin: 50% 85%; }
   .avatar-wrap.is-talking .av { animation: sway 12s ease-in-out infinite, nod 1.4s ease-in-out infinite; }
-  .avatar-wrap.is-react .av { animation: sway 12s ease-in-out infinite, pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .avatar-wrap.is-react .av { animation: sway 12s ease-in-out infinite, pop 0.5s var(--ease-reveal); }
 
   @keyframes sway {
     0%, 100% { rotate: -1.2deg; translate: 0 0; }
@@ -341,7 +342,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     background: none; border: none; cursor: pointer;
     color: var(--paper); font-size: var(--step-meta); line-height: 1; padding: 0.2rem;
   }
-  .chat-close:hover { color: var(--acid); }
+  .chat-close:hover,
+  .chat-close:focus-visible { color: var(--acid); }
   .chat-log {
     max-height: 15rem;
     overflow-y: auto;
@@ -362,7 +364,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     border-bottom: 1px solid currentColor;
     overflow-wrap: break-word;
   }
-  .msg.bot a:hover { background: var(--klein); color: var(--paper-hi); border-bottom-color: transparent; }
+  .msg.bot a:hover,
+  .msg.bot a:focus-visible { background: var(--klein); color: var(--paper-hi); border-bottom-color: transparent; }
   .msg.bot strong { font-weight: 700; }
 
   .chat-suggest { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 0.9rem 0.7rem; }
@@ -380,7 +383,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     padding: 0.35rem 0.7rem;
     color: var(--paper-mute);
   }
-  .chat-suggest button:hover { border-color: var(--klein); color: var(--klein); }
+  .chat-suggest button:hover,
+  .chat-suggest button:focus-visible { border-color: var(--klein); color: var(--klein); }
   .chat-form { display: flex; border-top: 1px solid #e2dbcc; }
   .chat-form input {
     flex: 1;
@@ -391,7 +395,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     background: none;
     color: var(--paper-ink);
   }
-  .chat-form input:focus { outline: none; background: var(--paper-hi); }
+  /* The old rule set `outline: none; background: var(--paper-hi)` — and .chat is
+     ALREADY --paper-hi, so the focus indicator on the page's only text input was
+     literally nothing. Klein because the chat sits on paper (The Ground Decides Rule). */
+  .chat-form input:focus-visible { outline: 2px solid var(--klein); outline-offset: -2px; }
   .chat-form button {
     border: none;
     background: var(--acid);
@@ -400,7 +407,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     cursor: pointer;
     font-size: var(--step-sm);
   }
-  .chat-form button:hover { background: var(--klein); color: var(--bone); }
+  .chat-form button:hover,
+  .chat-form button:focus-visible { background: var(--klein); color: var(--bone); }
 
 
   .stage-name {
@@ -409,7 +417,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     line-height: 0.9;
     letter-spacing: 0.01em;
     color: var(--paper-ink);
-    text-shadow: 0.035em 0.035em 0 var(--klein);
+    text-shadow: var(--shadow-print);
   }
   .stage-tag { margin-top: 1.4rem; font-size: 1.2rem; color: #4a4740; }
   .stage-tag em { color: var(--klein); font-style: italic; font-weight: 600; }
@@ -422,9 +430,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     padding-bottom: 2px;
     transition: border-color var(--dur-state) ease, color var(--dur-state) ease;
   }
-  .stage-social a:hover { color: var(--klein); border-color: var(--klein); }
+  .stage-social a:hover,
+  .stage-social a:focus-visible { color: var(--klein); border-color: var(--klein); }
   .stage-social .lead-link { color: var(--klein); font-weight: 700; border-bottom-color: var(--klein); }
-  .roll { position: absolute; bottom: 2rem; color: var(--paper-dim); animation: bob 2.2s ease-in-out infinite; }
+  .roll { position: absolute; bottom: 2rem; color: var(--paper-mute); animation: bob 2.2s ease-in-out infinite; }
   @keyframes bob { 50% { transform: translateY(6px); } }
 
   @media (max-width: 620px) {
@@ -442,18 +451,21 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .arm > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
   .arm-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
   .arm-all { text-decoration: none; }
-  .arm-all:hover { text-decoration: underline; }
+  .arm-all:hover,
+  .arm-all:focus-visible { text-decoration: underline; }
 
   /* paper arm */
   .paper { background: var(--paper); color: var(--paper-ink); }
   .paper .arm-slate { color: #6a655c; }
   .paper .arm-all { color: var(--klein); }
   .pcard { display: flex; gap: 2rem; align-items: flex-start; padding: 2rem 1.4rem; border-top: 1px solid #d8d1c2; text-decoration: none; color: inherit; transition: background var(--dur-state) ease; }
-  .pcard:hover { background: var(--paper-2); }
+  .pcard:hover,
+  .pcard:focus-visible { background: var(--paper-2); }
   .pcard-ch { color: var(--klein); padding-top: 0.5rem; min-width: 4.5rem; }
   .pcard-title { font-family: var(--font-display); font-weight: 400; font-size: var(--type-plate); line-height: 1.06; color: var(--paper-ink); text-transform: uppercase; }
   .pcard-tag { margin-top: 0.7rem; font-size: 1.08rem; font-style: italic; color: var(--paper-mute); max-width: 52rem; }
-  .pcard-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--paper-dim); }
+  /* --paper-dim is 3.11:1 on paper — below AA. Dates are functional text. */
+  .pcard-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--paper-mute); }
   .pcard-meta .cta { color: var(--klein); }
 
   /* klein block */
@@ -461,20 +473,24 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .block-klein .arm-slate.light, .block-klein .arm-all.light { color: var(--bone); }
   .block-klein .arm-all.light { opacity: 0.85; }
   .prod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; max-width: 1200px; margin: 0 auto; }
-  .prod-card { display: flex; flex-direction: column; padding: 1.8rem 1.6rem; border: 1px solid var(--bone-a28); border-radius: var(--r-card); text-decoration: none; color: var(--bone); transition: border-color var(--dur-state) ease, transform var(--dur-state) ease, background var(--dur-state) ease; }
-  .prod-card:hover { border-color: var(--acid); transform: translateY(-3px); background: rgba(0,0,0,0.14); }
+  .prod-card { display: flex; flex-direction: column; padding: 1.8rem 1.6rem; border: 1px solid var(--bone-a28); border-radius: var(--r-card); text-decoration: none; color: var(--bone); transition: border-color var(--dur-state) ease, background var(--dur-state) ease; }
+  /* Border carries the hover alone: no elevation (The Flat-Everywhere-Else Rule),
+     no pure black (The Never-Black Rule). */
+  .prod-card:hover,
+  .prod-card:focus-visible { border-color: var(--acid); background: var(--bone-a08); }
   .pc-status { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--bone-a72); margin-bottom: 1rem; }
   .pc-status .dot { width: 7px; height: 7px; border-radius: var(--r-dot); background: var(--bone); }
   /* impeccable-disable-next-line dark-glow -- tally light: sanctioned live-status glow, DESIGN.md Elevation */
   .pc-status[data-status="live"] .dot { background: var(--acid); box-shadow: var(--glow-tally); }
   .pc-title { font-family: var(--font-display); font-weight: 400; font-size: 2rem; text-transform: uppercase; line-height: 1; }
   .pc-tag { margin-top: 0.7rem; font-size: var(--step-base); font-style: italic; color: var(--bone-a82); flex: 1; }
-  .pc-tags { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.3rem; color: var(--acid); }
+  .pc-tags { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.3rem; color: var(--bone-a72); }
 
   /* acid block */
   .block-acid { background: var(--acid); color: var(--ink); text-align: left; }
   .block-acid .arm-slate.dark, .block-acid .arm-all.dark { color: #2a3200; }
-  .about-text { font-size: var(--type-statement); line-height: 1.35; max-width: 52rem; margin: 1.2rem 0 1.6rem; font-family: var(--font-display); font-weight: 400; letter-spacing: 0.01em; }
+  /* Newsreader, not Anton: body copy never runs in the display face (The Three Voices Rule). */
+  .about-text { font-size: var(--type-lead); line-height: 1.5; max-width: 52rem; margin: 1.2rem 0 1.6rem; font-family: var(--font-body); font-weight: 400; }
   .block-acid .arm-all.dark { display: inline-block; border-bottom: 2px solid #2a3200; text-decoration: none; }
 
   /* contact (dark) */
@@ -485,9 +501,11 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .contact-text { max-width: 36rem; font-size: var(--step-lead); color: var(--bone-dim); margin-bottom: 2.2rem; }
   .contact-links { display: flex; flex-direction: column; gap: 0.9rem; align-items: flex-start; }
   .c-link { color: var(--bone); text-decoration: none; padding: 0.8rem 1.3rem; border: 1px solid var(--rule); border-radius: var(--r-pill); transition: color var(--dur-state) ease, border-color var(--dur-state) ease; }
-  .c-link:hover { color: var(--acid); border-color: var(--acid); }
+  .c-link:hover,
+  .c-link:focus-visible { color: var(--acid); border-color: var(--acid); }
   .c-link.primary { background: var(--acid); color: var(--ink); border-color: var(--acid); font-weight: 700; }
-  .c-link.primary:hover { background: transparent; color: var(--acid); }
+  .c-link.primary:hover,
+  .c-link.primary:focus-visible { background: transparent; color: var(--acid); }
 
   @media (max-width: 640px) { .pcard { flex-direction: column; gap: 0.5rem; } }
 
@@ -495,6 +513,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     .av, .avatar-wrap.is-talking .av, .avatar-wrap.is-react .av { animation: none; }
     .pose { transition: none; }
     .roll { animation: none; }
+    /* Continuous horizontal scroll is the motion most likely to cause harm, and
+       it was the one still running. The speech rotation is JS and is gated in
+       the script. WCAG 2.2.2. */
+    .marquee-track { animation: none; }
   }
 </style>
 
@@ -611,18 +633,33 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 
   // Rotation waits for each line to finish speaking, so nothing overlaps.
   let rotating = false;
+  // Generation token. stopRotation() can land while a loop sits inside an await;
+  // the `if (rotating) return` guard then passes for the next startRotation() and
+  // the OLD loop wakes to find rotating===true again, so two loops end up fighting
+  // over bubble.textContent. Each loop captures its generation and exits if a newer
+  // one has started.
+  let generation = 0;
   const startRotation = async () => {
     if (rotating) return;
+    // Text that rewrites itself under the reader is exactly what reduced-motion
+    // is asking us not to do. Set the first line and stop. WCAG 2.2.2.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (bubble) { bubble.textContent = lines[0]; bubble.style.opacity = '1'; }
+      setPose(restFor(0));
+      return;
+    }
     rotating = true;
-    while (rotating) {
+    const mine = ++generation;
+    while (rotating && mine === generation) {
       const line = lines[i];
       await speak(line, restFor(i));
-      if (!rotating) break;
+      if (!rotating || mine !== generation) break;
       await wait(PACE.holdEnd);
+      if (!rotating || mine !== generation) break;
       i = (i + 1) % lines.length;
     }
   };
-  const stopRotation = () => { rotating = false; stopSpeaking(); };
+  const stopRotation = () => { rotating = false; generation++; stopSpeaking(); };
   startRotation();
 
   // ---- chat ----
@@ -772,8 +809,13 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     startRotation();
   };
 
-  const ask = async (question: string) => {
-    if (busy || !question.trim()) return;
+  const ask = (question: string) => {
+    if (busy || !question.trim()) return false;
+    void run(question);
+    return true;
+  };
+
+  const run = async (question: string) => {
     busy = true;
     asked.add(question.trim().toLowerCase());
     suggest?.setAttribute('hidden', '');
@@ -801,7 +843,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     } catch {
       pending?.remove();
       addMsg("Couldn't reach the server. Check your connection and try again.", 'bot err');
-      setPose('no');
+      setPose('idle');  // 'no' is not in POSES — setPose would no-op and freeze the face in `think`.
     } finally {
       busy = false;
     }
@@ -821,8 +863,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     e.preventDefault();
     if (!input) return;
     const q = input.value;
-    input.value = '';
-    ask(q);
+    // Clear ONLY once ask() has accepted. It returns early while `busy`, and the
+    // old order cleared first — so a question typed during an in-flight reply was
+    // destroyed silently, with no message and nothing to retry.
+    if (ask(q)) input.value = '';
   });
 
   suggest?.addEventListener('click', (e) => {

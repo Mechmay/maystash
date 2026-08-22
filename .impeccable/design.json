@@ -281,19 +281,19 @@
     }
   ],
   "narrative": {
-    "northStar": "The Field Notebook",
-    "overview": "maystash reads like a technical logbook kept by someone who writes well. Evidence gets recorded plainly — dated, labelled, ruled off — and the author occasionally annotates in blue. Nothing here is decorated for the sake of decoration; the ornament is the record-keeping itself. Mono labels, dotted rules, and terse specimen cards do the structural work, and long-form prose in a real reading serif does the rest.\n\nThe palette runs near-black by default with warm bone text, and the home page interrupts itself with light paper plates — the notebook opened flat under a lamp. Klein blue is the annotation hand: selection, blockquote, title offset, the mark of the author intervening in the record. Acid green is the only thing on the site that looks powered.\n\nFilm grain sits over everything at 5.5% opacity. It is incidental atmosphere, not the thesis — it warms the black and keeps the paper plates from reading as pure digital white. Removing it would not break the system; over-emphasizing it would.",
+    "northStar": "The Picture House",
+    "overview": "maystash is an independent cinema run by the person who made everything playing in it. The site's own language settles this and the design answers to it: work arrives as REEL 001, sits under NOW SHOWING or IN PRODUCTION, retires IN THE VAULT, and the footer signs off WRITTEN & DIRECTED BY MAY · SHOT ON PLAIN TEXT FILES · FIN. Articles are chapters and scenes; the plain-language pieces are MATINEE SCREENINGS.\n\nTwo halves, one building. Exhibition — the marquee, the showtimes, the programme, the reel numbering. Production — the credits, the vocabulary of things being made rather than merely shown. That is why a screening schedule and a director's credit sit on the same page without arguing: the projectionist wrote the film.\n\nThe palette runs near-black by default with warm bone text — the house lights down. The landing page interrupts that dark with light paper plates: the printed programme you are handed on the way in. Klein blue is the ink of that programme, and the offset behind the display type is a poster printed slightly out of register. Acid green is the only thing in the building that is switched on — the tally light, the exit sign, the projector running.",
     "keyCharacteristics": [
-      "Mono micro-labels are the dominant structural device, not an accent",
+      "Mono micro-labels are the dominant structural device — they are the showtimes, the reel numbers, the credits",
       "Dotted and hairline rules carry hierarchy where boxes would in other systems",
-      "Two grounds: ink-default, paper-interruption",
-      "Klein annotates; acid responds",
+      "Two grounds: ink-default (house lights down), paper-interruption (the printed programme)",
+      "Klein is printed ink; acid is the only thing switched on",
       "Flat by decree, with exactly one sanctioned exception"
     ],
     "rules": [
       {
         "name": "The One Volt Rule",
-        "body": "Acid has five sanctioned roles: response (hover/focus on ink), live status (tally dots, logo cursor), emphasis (one word per page tagline), index marks (CH.05, 01), and row CTAs (WATCH, VISIT — acid at rest, and acid through the klein fill at 7.07:1). Roles 4 and 5 are paired across both reel pages. Coverage under ~5%.",
+        "body": "Acid has six sanctioned roles: response (hover/focus on ink), live status, tagline emphasis, index marks, row CTAs, and ONE full-bleed acid ground (.block-acid on the landing page) — capped at exactly one site-wide. Coverage under ~5% of any screen excluding that plate. Anything else in acid is drift.",
         "section": "colors"
       },
       {
@@ -376,5 +376,6 @@
       "Don't introduce a fourth typeface. Three voices, three jobs.",
       "Don't give a hover fill to an element with no destination. See The Honest Fill Rule."
     ]
-  }
+  },
+  "description": "A one-person picture house — work written, directed, and screened in the same building."
 }

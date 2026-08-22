@@ -1,6 +1,6 @@
 ---
 name: maystash
-description: A technical field notebook — evidence recorded plainly, annotated in blue, occasionally powered.
+description: A one-person picture house — work written, directed, and screened in the same building.
 colors:
   ink: "#0c0c0e"
   bone: "#ece7dd"
@@ -166,19 +166,21 @@ components:
 
 ## Overview
 
-**Creative North Star: "The Field Notebook"**
+**Creative North Star: "The Picture House"**
 
-maystash reads like a technical logbook kept by someone who writes well. Evidence gets recorded plainly — dated, labelled, ruled off — and the author occasionally annotates in blue. Nothing here is decorated for the sake of decoration; the ornament is the record-keeping itself. Mono labels, dotted rules, and terse specimen cards do the structural work, and long-form prose in a real reading serif does the rest.
+maystash is an independent cinema run by the person who made everything playing in it. The site's own language settles this and the design answers to it: work arrives as `REEL 001`, sits under `NOW SHOWING` or `IN PRODUCTION`, retires `IN THE VAULT`, and the footer signs off `WRITTEN & DIRECTED BY MAY` · `SHOT ON PLAIN TEXT FILES` · `FIN.` Articles are chapters and scenes; the plain-language pieces are `MATINEE SCREENINGS`.
 
-The palette runs near-black by default with warm bone text, and the home page interrupts itself with light paper plates — the notebook opened flat under a lamp. Klein blue is the annotation hand: selection, blockquote, title offset, the mark of the author intervening in the record. Acid green is the only thing on the site that looks powered.
+Two halves, one building. **Exhibition** — the marquee, the showtimes, the programme, the reel numbering. **Production** — the credits, the vocabulary of things being made rather than merely shown. That is why a screening schedule and a director's credit sit on the same page without arguing: the projectionist wrote the film.
 
-Film grain sits over everything at 5.5% opacity. It is incidental atmosphere, not the thesis — it warms the black and keeps the paper plates from reading as pure digital white. Removing it would not break the system; over-emphasizing it would.
+The palette runs near-black by default with warm bone text — the house lights down. The landing page interrupts that dark with light paper plates: the printed programme you are handed on the way in. Klein blue is the ink of that programme, and the offset behind the display type is a poster printed slightly out of register. Acid green is the only thing in the building that is switched on — the tally light, the exit sign, the projector running.
+
+Film grain sits over everything at 5.5% opacity, and under this north star it stops being decoration: it is the projection itself. It warms the black, keeps the paper plates from reading as digital white, and quietly asserts that everything here is being *screened* rather than merely displayed. It is still atmosphere — over-emphasising it would be a costume — but it is the one effect that earns its place on theme alone.
 
 **Key Characteristics:**
-- Mono micro-labels are the dominant structural device, not an accent
+- Mono micro-labels are the dominant structural device — they are the showtimes, the reel numbers, the credits
 - Dotted and hairline rules carry hierarchy where boxes would in other systems
-- Two grounds: ink-default, paper-interruption
-- Klein annotates; acid responds
+- Two grounds: ink-default (house lights down), paper-interruption (the printed programme)
+- Klein is printed ink; acid is the only thing switched on
 - Flat by decree, with exactly one sanctioned exception
 
 ## Colors
@@ -194,9 +196,9 @@ A high-contrast ink-and-bone base, interrupted by paper, annotated in one satura
 
 ### Neutral
 - **Ink** (`#0c0c0e`): The default ground. Near-black with a trace of blue, never pure `#000`.
-- **Bone** (`#ece7dd`): Body text and default foreground. Warm off-white — the paper colour of an aged notebook, not screen white.
+- **Bone** (`#ece7dd`): Body text and default foreground. Warm off-white — aged programme stock, not screen white.
 - **Bone Dim** (`#a9a49a`): Metadata, footer credits, secondary prose, table headers.
-- **Paper / Paper 2** (`#f2ede3` / `#e7e0d2`): The light plates on the home page. The notebook laid open.
+- **Paper / Paper 2** (`#f2ede3` / `#e7e0d2`): The light plates on the landing page. The printed programme, recto and verso.
 - **Paper Ink** (`#17161c`): Foreground on paper plates.
 - **Rule** (`#2c2c33`): Hairline and dotted dividers, pill borders. Structural, never decorative.
 
@@ -206,12 +208,15 @@ A high-contrast ink-and-bone base, interrupted by paper, annotated in one satura
 1. **Response** — hover and focus states on ink grounds.
 2. **Live status** — tally dots and the logo's blinking cursor. A page legitimately listing three live projects shows three acid dots; that is the rule working, not failing.
 3. **Emphasis** — exactly one word per page tagline (`.ph-tagline em`).
-4. **Index marks** — the specimen numbering that opens a row: `CH.05` on `/writing`, `01` on `/projects`. The Field Notebook's cataloguing hand, and the only thing giving the index column presence.
+4. **Index marks** — the reel numbering that opens a row: `CH.05` on `/writing`, `01` on `/projects`. The programme's running order, and the only thing giving the index column presence.
 5. **Row CTAs** — `WATCH →` and `VISIT →`. Constant markers, acid at rest and acid through the klein fill (7.07:1). The row carries the hover response; the CTA does not need to.
+6. **The acid plate** — one full-bleed acid *ground* per site, `.block-acid` on the landing page. This is the deliberate exception and it is capped at exactly one: the colour-blocked scroll (paper → klein → acid → ink) is the landing page's structure, and the acid band is the beat before the close. Text on it is `--ink`, never bone. A second acid ground anywhere would make the first one meaningless.
 
 Roles 4 and 5 are paired across both reel pages and must never diverge.
 
-Coverage stays under ~5% of any screen. The test is roles and area, not element count: acid on something that is none of these five is the violation.
+**Why role 6 exists.** It was added after the landing page was found violating this rule with a full-bleed acid section. The choice was to strip the plate or to sanction it; the plate is authored and structural, so it was sanctioned — but the five *other* acid usages found alongside it (tag rows at rest, an acid primary button, and more) were drift and were removed. Sanctioning one intentional exception is not the same as widening the rule.
+
+Coverage stays under ~5% of any screen **excluding the single sanctioned plate**, which is a ground and is measured separately. The test is roles and area, not element count: acid on something that is none of these six is the violation.
 
 **The Two Hands Rule.** Klein is printed; acid is electric. Acid appears only in response to the reader (hover, focus) or on genuinely-changing data. Nothing is acid merely because it is important. A colour that both decorates and signals does neither job.
 
@@ -225,7 +230,7 @@ Coverage stays under ~5% of any screen. The test is roles and area, not element 
 **Body Font:** Newsreader (Georgia, serif fallback)
 **Label/Mono Font:** Space Mono (monospace fallback)
 
-**Character:** A three-voice pairing that maps directly onto the notebook metaphor: Anton is the stamped heading, Newsreader is the written entry, Space Mono is the pre-printed field label. Each voice owns a job and never borrows another's.
+**Character:** A three-voice pairing that maps onto the building: Anton is the marquee and the poster, Newsreader is the film itself, Space Mono is the printed showtime and the credit roll. Each voice owns a job and never borrows another's.
 
 ### Hierarchy
 - **Display** (400, `clamp(3rem, 12vw, 7rem)`, 0.9): Page-owning statements — hero, contact. Uppercase. One per screen.
@@ -277,7 +282,7 @@ Exactly one shadow is sanctioned, plus one typographic offset.
 
 Two form languages coexist by role. **Plates are hard-edged** — full-bleed paper sections carry no radius at all, because they are sheets, not cards. **Interactive objects are pilled or softly rounded** — `999px` on links and status chips, `10px` on product cards, `16px` on panels, `18px` on chat bubbles, `50%` on dots and the avatar.
 
-Borders are hairline (`1px`) and low-contrast (`#2c2c33`, or `rgba(236,231,221,0.28)` on dark cards). Dotted borders appear on the footer credit rows and read as notebook ruling.
+Borders are hairline (`1px`) and low-contrast (`#2c2c33`, or `rgba(236,231,221,0.28)` on dark cards). Dotted borders appear on the footer credit rows and read as the leader dots on a printed programme.
 
 ### Named Rules
 

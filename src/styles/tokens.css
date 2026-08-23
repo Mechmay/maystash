@@ -26,7 +26,8 @@
   --paper-ink: #17161c;    /* foreground on paper (15.41:1) */
   --paper-dim: #8a867c;    /* secondary text on paper */
   --paper-mute: #57534b;   /* taglines and asides on paper */
-  --paper-hi: #fbfaf6;     /* raised surfaces on paper (bubbles). Never pure #fff */
+  --paper-hi: #fbfaf6;    /* raised surfaces on paper (bubbles). Never pure #fff */
+  --paper-rule: #d8d1c2;  /* hairline ON paper — was three raw hex copies */
 
   /* ---- rules + dividers -------------------------------------------- */
   --rule: #2c2c33;         /* pill borders, dotted credit rows */

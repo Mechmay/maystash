@@ -222,6 +222,23 @@ Coverage stays under ~5% of any screen **excluding the single sanctioned plate**
 
 **The Ground Decides Rule.** Which accent carries the response is set by the ground, not by preference — the contrast leaves no choice. On **ink**, acid responds (17.02:1) and Klein is unusable as a foreground (2.41:1). On **paper**, Klein responds (6.95:1) and acid is invisible (1.02:1). This is why the landing page's corner nav hovers Klein while every ink page hovers acid: same rule, different ground. Klein-hot on ink reaches only 3.34:1, so it is legal for non-text marks (a status dot) and illegal for small text.
 
+**The Ground Map.** Which ground a surface actually uses, because the rule above
+is useless without it. The landing hero is the inversion people get wrong:
+
+| Surface | Ground |
+|---|---|
+| landing hero (`.launch`) | paper |
+| marquee | klein |
+| landing writing arm (`.paper`) | paper |
+| landing projects arm (`.block-klein`) | klein |
+| the acid plate (`.block-acid`) | acid |
+| landing contact | ink |
+| `/writing`, `/projects`, `/about`, post pages | ink |
+
+The hero is paper and the inner pages are ink. Assuming the reverse puts acid on
+paper at 1.02:1 and Klein on ink at 2.41:1 — both invisible, both legal-looking
+in the source.
+
 **The Never-Black Rule.** The ground is `#0c0c0e` and the foreground is `#ece7dd`. Pure `#000` and pure `#fff` do not appear in this system.
 
 ## Typography

@@ -47,6 +47,16 @@ const statusLabel: Record<string, string> = {
   archived: 'IN THE VAULT',
 };
 
+// The strip row answers "has he shipped anything", so `live` reads SHIPPED where
+// the cards below read NOW PLAYING. The other two are the cards' own words on
+// purpose — the strip and the grid must never describe the same project
+// differently. Archived is not "in production": it is shelved, and saying
+// otherwise claims work nobody is doing.
+const stripKick: Record<string, string> = {
+  ...statusLabel,
+  live: 'SHIPPED',
+};
+
 // Which avatar frame set the launcher uses. Both live under public/ and hold
 // the same six frame names, so switching is a one-word rollback.
 //   'avatar'    — the original Apple Memoji cut-outs (head only)
@@ -84,7 +94,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
               >
                 <span class="strip-kick mono">
                   {shipped.data.status === 'live' && <span class="strip-dot"></span>}
-                  {shipped.data.status === 'live' ? 'SHIPPED' : 'IN PRODUCTION'}
+                  {stripKick[shipped.data.status] ?? statusLabel.building}
                 </span>
                 <span class="strip-title">{shipped.data.title}</span>
                 <span class="strip-meta mono">{shipped.data.tags.slice(0, 2).join(' · ')}</span>

@@ -3,13 +3,23 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts = allPosts.slice(0, 3);
 
-const projects = (await getCollection('projects', ({ data }) => !data.draft))
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);
+const allProjects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+const projects = allProjects.slice(0, 3);
+
+// ---- the proof strip ----------------------------------------------------
+// A live window, never a hand-picked pair. `lead` is whatever post carries the
+// newest date; publish something dated later and it takes the slot on the next
+// build with no edit here. `shipped` searches the WHOLE project set, not the
+// three the grid below happens to show.
+const lead = allPosts.at(0);
+const shipped = allProjects.find((p) => p.data.status === 'live') ?? allProjects.at(0);
+const shippedHref = shipped?.data.url ?? '/projects';
+const shippedExternal = shipped?.data.url?.startsWith('http') ?? false;
 
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
@@ -34,6 +44,42 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
       <Nav variant="corners" />
 
       <div class="stage">
+        <div class="stage-main">
+          <h1 class="stage-name">MAYSTASH</h1>
+          <p class="stage-tag">Security, web3, and applied AI — <em>built, broken, and written down</em> by one person.</p>
+
+          <div class="strip">
+            {lead && (
+              <a class="strip-row" href={`/posts/${lead.id}/`}>
+                <span class="strip-kick mono">NOW SHOWING</span>
+                <span class="strip-title">{lead.data.title}</span>
+                <span class="strip-meta mono">{fmt(lead.data.date)}</span>
+              </a>
+            )}
+            {shipped && (
+              <a
+                class="strip-row"
+                href={shippedHref}
+                target={shippedExternal ? '_blank' : undefined}
+                rel={shippedExternal ? 'noopener' : undefined}
+              >
+                <span class="strip-kick mono">
+                  {shipped.data.status === 'live' && <span class="strip-dot"></span>}
+                  {shipped.data.status === 'live' ? 'SHIPPED' : 'IN PRODUCTION'}
+                </span>
+                <span class="strip-title">{shipped.data.title}</span>
+                <span class="strip-meta mono">{shipped.data.tags.slice(0, 2).join(' · ')}</span>
+              </a>
+            )}
+          </div>
+
+          <div class="stage-cta mono">
+            <a class="cta-strong" href="mailto:hello@maystash.xyz">WORK WITH ME →</a>
+            <a class="cta-weak" href="/writing">ALL WRITING</a>
+            <a class="cta-ghost" href="https://github.com/Mechmay" target="_blank" rel="me noopener">GITHUB <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+
         <button class="avatar-wrap" id="avatar" type="button" aria-label="Chat with May — ask about him, his projects and his writing">
           <div class="bubble mono" id="bubble">Hey, I'm May 👋</div>
           <div class="av" id="av" data-set={AVATAR_SET}>
@@ -76,12 +122,6 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
             />
             <button type="submit" class="mono" aria-label="Send">→</button>
           </form>
-        </div>
-        <h1 class="stage-name">MAYSTASH</h1>
-        <p class="stage-tag">I build, break, and write down the useful parts — <em>security, web3, applied AI, and products that start at zero.</em></p>
-        <div class="stage-social mono">
-          <a href="mailto:hello@maystash.xyz" class="lead-link">HELLO@MAYSTASH.XYZ</a>
-          <a href="https://github.com/Mechmay" target="_blank" rel="me noopener">GITHUB</a>
         </div>
       </div>
       <div class="roll mono">↓ ROLL FILM</div>
@@ -227,10 +267,91 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     }
   }
 
-  .stage { text-align: center; max-width: 40rem; }
+  /* Evidence left, avatar right. On a narrow screen the grid collapses to one
+     column and DOM order carries the sequence — wordmark, line, strip, actions,
+     THEN the avatar. No `order` property anywhere: the reading order a screen
+     reader gets is the order everyone gets. */
+  .stage {
+    width: 100%;
+    max-width: 68rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+    text-align: left;
+  }
+  .stage > .chat { grid-column: 1 / -1; justify-self: center; }
+
+  /* ---- proof strip ---- */
+  .strip { margin-top: 1.8rem; border-top: 1px solid var(--paper-rule); }
+  .strip-row {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--paper-rule);
+    text-decoration: none;
+    color: inherit;
+    transition: color var(--dur-state) ease;
+  }
+  .strip-row:hover .strip-title,
+  .strip-row:focus-visible .strip-title { color: var(--klein); }
+  /* Colour alone is not a focus indicator. Klein responds on paper (6.95:1). */
+  .strip-row:focus-visible { outline: 2px solid var(--klein); outline-offset: 3px; }
+  .strip-kick {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: var(--step-floor); letter-spacing: 0.14em; color: var(--paper-mute);
+  }
+  /* live tally. Klein, not acid — acid on paper measures 1.02:1 and would be an
+     invisible dot claiming to signal "shipped". See The Ground Decides Rule. */
+  .strip-dot { width: 7px; height: 7px; border-radius: var(--r-dot); background: var(--klein); }
+  .strip-title {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(1.1rem, 2.4vw, 1.7rem); line-height: 1.1;
+    text-transform: uppercase; color: var(--paper-ink);
+  }
+  .strip-meta { font-size: var(--step-floor); color: var(--paper-mute); white-space: nowrap; }
+
+  /* ---- actions ---- */
+  .stage-cta { display: flex; gap: 1.2rem; align-items: center; margin-top: 1.6rem; flex-wrap: wrap; }
+  .cta-strong {
+    background: var(--klein); color: var(--paper-hi); text-decoration: none;
+    padding: 0.7rem 1.2rem; font-size: var(--step-label); letter-spacing: 0.12em; font-weight: 700;
+  }
+  .cta-weak {
+    color: var(--paper-mute); text-decoration: none;
+    font-size: var(--step-label); letter-spacing: 0.12em;
+    border-bottom: 2px solid var(--paper-rule); padding-bottom: 2px;
+    transition: color var(--dur-state) ease, border-color var(--dur-state) ease;
+  }
+  .cta-weak:hover,
+  .cta-weak:focus-visible { color: var(--klein); border-bottom-color: var(--klein); }
+  .cta-weak:focus-visible { outline: 2px solid var(--klein); outline-offset: 3px; }
+  /* Klein ring around a klein block reads as a fat border, not focus — the
+     primary action takes the ink ring instead. */
+  .cta-strong:focus-visible { outline: 2px solid var(--paper-ink); outline-offset: 3px; }
+  /* Tertiary. A credential, not an action — quieter than ALL WRITING on purpose,
+     so the row still reads as one primary and one secondary. `rel="me"` keeps
+     the IndieWeb identity link the old hero carried. */
+  /* Sits after a wider gap than the secondary link, and carries the off-site
+     mark. Contrast floor rules out going lighter (--paper-dim is 3.11:1), and
+     the label is already at the 11px floor, so hierarchy comes from treatment,
+     not from shrinking it into an accessibility failure. */
+  .cta-ghost {
+    margin-left: 0.6rem;
+    color: var(--paper-mute); text-decoration: none;
+    font-size: var(--step-label); letter-spacing: 0.12em;
+    border-bottom: 2px solid transparent; padding-bottom: 2px;
+    transition: color var(--dur-state) ease, border-color var(--dur-state) ease;
+  }
+  .cta-ghost:hover,
+  .cta-ghost:focus-visible { color: var(--klein); border-bottom-color: var(--klein); }
+  .cta-ghost:focus-visible { outline: 2px solid var(--klein); outline-offset: 3px; }
   .avatar-wrap {
     position: relative;
     display: inline-block;
+    justify-self: center;
     /* The bubble is absolutely positioned above the avatar, so it contributes
        nothing to layout height. This margin reserves its space in flow —
        without it the centring has no idea the bubble is there and lets it
@@ -378,14 +499,14 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     text-transform: uppercase;
     cursor: pointer;
     background: none;
-    border: 1px solid #d8d1c2;
+    border: 1px solid var(--paper-rule);
     border-radius: var(--r-pill);
     padding: 0.35rem 0.7rem;
     color: var(--paper-mute);
   }
   .chat-suggest button:hover,
   .chat-suggest button:focus-visible { border-color: var(--klein); color: var(--klein); }
-  .chat-form { display: flex; border-top: 1px solid #e2dbcc; }
+  .chat-form { display: flex; border-top: 1px solid var(--paper-rule); }
   .chat-form input {
     flex: 1;
     font: inherit;
@@ -419,22 +540,19 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     color: var(--paper-ink);
     text-shadow: var(--shadow-print);
   }
-  .stage-tag { margin-top: 1.4rem; font-size: 1.2rem; color: #4a4740; }
+  .stage-tag { margin-top: 1.2rem; font-size: var(--step-lead); line-height: 1.45; color: var(--paper-mute); max-width: 34rem; }
   .stage-tag em { color: var(--klein); font-style: italic; font-weight: 600; }
-  .stage-social { display: flex; gap: 1.6rem; justify-content: center; margin-top: 1.8rem; }
-  .stage-social a {
-    color: var(--paper-ink);
-    text-decoration: none;
-    letter-spacing: 0.12em;
-    border-bottom: 2px solid transparent;
-    padding-bottom: 2px;
-    transition: border-color var(--dur-state) ease, color var(--dur-state) ease;
-  }
-  .stage-social a:hover,
-  .stage-social a:focus-visible { color: var(--klein); border-color: var(--klein); }
-  .stage-social .lead-link { color: var(--klein); font-weight: 700; border-bottom-color: var(--klein); }
   .roll { position: absolute; bottom: 2rem; color: var(--paper-mute); animation: bob 2.2s ease-in-out infinite; }
   @keyframes bob { 50% { transform: translateY(6px); } }
+
+  /* Two columns need room for a three-line headline beside a disc. Below this
+     the stage is a single column and the avatar lands under the strip. */
+  @media (max-width: 860px) {
+    .stage { grid-template-columns: 1fr; max-width: 34rem; }
+    .avatar-wrap { margin-top: 3.5rem; }
+    .strip-row { grid-template-columns: 1fr; gap: 0.25rem; }
+    .strip-meta { white-space: normal; }
+  }
 
   @media (max-width: 620px) {
     /* The corner links themselves are Nav.astro's; the hero only owes them room. */
@@ -458,7 +576,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .paper { background: var(--paper); color: var(--paper-ink); }
   .paper .arm-slate { color: #6a655c; }
   .paper .arm-all { color: var(--klein); }
-  .pcard { display: flex; gap: 2rem; align-items: flex-start; padding: 2rem 1.4rem; border-top: 1px solid #d8d1c2; text-decoration: none; color: inherit; transition: background var(--dur-state) ease; }
+  .pcard { display: flex; gap: 2rem; align-items: flex-start; padding: 2rem 1.4rem; border-top: 1px solid var(--paper-rule); text-decoration: none; color: inherit; transition: background var(--dur-state) ease; }
   .pcard:hover,
   .pcard:focus-visible { background: var(--paper-2); }
   .pcard-ch { color: var(--klein); padding-top: 0.5rem; min-width: 4.5rem; }

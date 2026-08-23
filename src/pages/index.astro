@@ -118,6 +118,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
           </div>
         </div>
 
+        <a href="/ctf" class="ctf-hero mono">⚑ CTF</a>
+
         <button class="avatar-wrap" id="avatar" type="button" aria-label="Chat with May — ask about him, his projects and his writing">
           <div class="bubble mono" id="bubble">Hey, I'm May 👋</div>
           <div class="av" id="av" data-set={AVATAR_SET}>
@@ -244,6 +246,28 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     height: 100svh;
     pointer-events: none;
     z-index: 4;
+  }
+
+  /* Phone-only twin of the corner nav's CTF link. Hidden above 620px, where the
+     top-centre corner carries it instead. Only one is ever rendered, so it is
+     one link in the accessibility tree, not two. */
+  .ctf-hero { display: none; }
+  @media (max-width: 620px) {
+    .ctf-hero {
+      display: block;
+      justify-self: center;
+      margin: 1.5rem auto -0.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      color: var(--paper-ink);
+      text-decoration: none;
+      padding: 0.6rem 0.7rem;
+      border: 1px solid var(--ink-a35);
+      border-radius: var(--r-pill);
+    }
+    .ctf-hero:hover,
+    .ctf-hero:focus-visible { border-color: var(--klein); color: var(--klein); }
+    .ctf-hero:focus-visible { outline: 2px solid var(--klein); outline-offset: 3px; }
   }
 
   /* ---- launcher hero ---- */
@@ -584,6 +608,15 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   }
   .chat-form button:hover,
   .chat-form button:focus-visible { background: var(--klein); color: var(--bone); }
+  /* An acid block still reads as "press me" while it is doing nothing. The busy
+     state has to look inert, not merely be inert. */
+  .chat-form button:disabled {
+    background: none;
+    color: var(--paper-mute);
+    cursor: default;
+    border-left: 1px solid var(--paper-rule);
+  }
+  .chat-form input:disabled { color: var(--paper-mute); }
 
 
   .stage-name {
@@ -609,8 +642,18 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   }
 
   @media (max-width: 620px) {
-    /* The corner links themselves are Nav.astro's; the hero only owes them room. */
-    .launch { padding: 4.5rem 1.1rem 4rem; }
+    /* The nav is a flow row above the hero now, so the hero stops reserving
+       corner space and the frame stops being an overlay. */
+    /* Out of the overlay it no longer paints over the hero, so it has to carry
+       the paper ground itself — the links are --paper-ink and would otherwise
+       land dark-on-dark against the ink body (1.09:1). */
+    .corner-frame { position: static; height: auto; pointer-events: auto; background: var(--paper); }
+    .launch { padding: 1.5rem 1.1rem 3rem; min-height: 0; }
+    /* Wrapped onto its own line, the 0.6rem indent read as a misalignment
+       against the flush CTA above it. */
+    .cta-ghost { margin-left: 0; }
+    /* 22px tall failed WCAG 2.5.8; the padding grows the target, not the text. */
+    .cta-weak, .cta-ghost { padding-block: 0.6rem; }
   }
 
   /* ---- marquee ---- */
@@ -852,6 +895,8 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   const log = document.getElementById('chat-log');
   const form = document.getElementById('chat-form') as HTMLFormElement | null;
   const input = document.getElementById('chat-input') as HTMLInputElement | null;
+  const sendBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+  const sendGlyph = sendBtn?.textContent ?? '→';
   const suggest = document.getElementById('chat-suggest');
   const closeBtn = document.getElementById('chat-close');
   const history: { role: 'user' | 'assistant'; content: string }[] = [];
@@ -991,6 +1036,9 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   const closeChat = () => {
     if (!chat) return;
     chat.hidden = true;
+    // Without this focus lands on <body> and a keyboard user loses their place
+    // entirely — they have to tab back from the skip link.
+    btn?.focus();
     startRotation();
   };
 
@@ -1000,8 +1048,25 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
     return true;
   };
 
+  // A rejected submit has to be visible. Without this the controls stay live,
+  // `ask()` returns false, and pressing Send produces literally nothing — the
+  // classic "is it broken or am I?" moment, on the one control the page is
+  // asking a stranger to trust.
+  const setBusy = (state: boolean) => {
+    busy = state;
+    if (input) input.disabled = state;
+    if (sendBtn) {
+      sendBtn.disabled = state;
+      sendBtn.textContent = state ? '…' : sendGlyph;
+    }
+    form?.setAttribute('aria-busy', state ? 'true' : 'false');
+    // Disabling an element blurs it, so re-enabling has to hand focus back or
+    // the visitor is left with no caret and nothing focused after every reply.
+    if (!state && chat && !chat.hidden) input?.focus();
+  };
+
   const run = async (question: string) => {
-    busy = true;
+    setBusy(true);
     asked.add(question.trim().toLowerCase());
     suggest?.setAttribute('hidden', '');
     addMsg(question, 'you');
@@ -1024,13 +1089,21 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
       // The bubble is plain text, so drop the markdown the chat log renders.
       const spoken = reply.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim();
       bubbleSay(spoken.length > 46 ? spoken.slice(0, 44).trimEnd() + '…' : spoken);
-      if (res.ok) showSuggestions(reply);
+      // Not gated on res.ok. A failed request is exactly when the visitor has
+      // the least idea what to do next; hiding the only remaining affordances
+      // turns the panel into a dead end.
+      showSuggestions(res.ok ? reply : '');
     } catch {
       pending?.remove();
       addMsg("Couldn't reach the server. Check your connection and try again.", 'bot err');
       setPose('idle');  // 'no' is not in POSES — setPose would no-op and freeze the face in `think`.
+      // The bubble was set to 'Thinking…' at the top of run(). Without this it
+      // stays there forever, so the avatar claims it is still thinking while the
+      // log says the request failed.
+      bubbleSay("Couldn't reach the server.");
+      showSuggestions('');
     } finally {
-      busy = false;
+      setBusy(false);
     }
   };
 

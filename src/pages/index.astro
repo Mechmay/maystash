@@ -65,7 +65,7 @@ const AVATAR_SET = 'avatar-v2';
 const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 ---
 <Layout title="maystash — May builds, breaks, and writes it down" bareNav={true}>
-  <div class="home">
+  <main class="home" id="main">
     <!-- LAUNCHER HERO -->
     <header class="launch">
       <Nav variant="corners" />
@@ -218,7 +218,7 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
         <a href="https://github.com/Mechmay" target="_blank" rel="me noopener" class="c-link mono">GITHUB — MECHMAY</a>
       </div>
     </section>
-  </div>
+  </main>
 </Layout>
 
 <style>
@@ -539,7 +539,10 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   .chat-form input {
     flex: 1;
     font: inherit;
-    font-size: var(--step-sm);
+    /* 16px floor, not a style choice: iOS Safari zooms the whole page when a
+       text input under 16px takes focus, and it does not zoom back out. Was
+       --step-sm (15.2px), which is 0.8px into that trap. */
+    font-size: var(--step-base);
     border: none;
     padding: 0.8rem 0.9rem;
     background: none;

@@ -260,6 +260,14 @@ in the source.
 
 **The Label Floor Rule.** No functional text renders below 11px at any viewport — links, buttons, labels, hints, meta rows, all of it. The token is `--step-floor` (0.7rem / 11.2px); it exists so the floor has a name you can reach for instead of a number you have to remember. Contrast and size fail independently: fixing one is a half-fix, and a control at 4.8:1 and 9.9px is still unusable.
 
+**The No-Zoom Rule.** A text input never renders below 16px. This is a second,
+higher floor than the label floor and it is not a taste question: iOS Safari
+zooms the entire page when a text input under 16px takes focus, and it does not
+zoom back out. `--step-base` (1rem) is the smallest legal size for an `input`,
+`textarea`, or `select`; `--step-sm` (15.2px) is 0.8px inside the trap and looks
+identical on a desktop screen, which is why this needs to be a written rule
+rather than something to notice.
+
 **The Three Voices Rule.** Anton stamps, Newsreader writes, Space Mono labels. A heading never runs in Newsreader; body copy never runs in Anton; a date never runs in anything but mono.
 
 **The Short Shout Rule.** Uppercase belongs to display type and mono labels. It is legitimate on headings of any length, because Anton is a display face — but a passage of running body copy never goes uppercase.

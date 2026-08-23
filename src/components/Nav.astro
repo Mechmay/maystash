@@ -154,6 +154,9 @@ const barLinks = LINKS.filter((l) => !l.cornersOnly);
      ground and the padding these sit inside. */
   .corner {
     position: absolute;
+    /* The landing page hangs these in a .corner-frame that is pointer-events:
+       none, so the frame does not block the hero. The links take theirs back. */
+    pointer-events: auto;
     z-index: 3;
     color: var(--paper-ink);
     text-decoration: none;

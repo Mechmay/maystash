@@ -20,7 +20,7 @@ const statusLabel: Record<string, string> = {
     <p class="ph-tagline">Things I've built and shipped — games, agents, and products that start at <em>zero</em> and get pushed live.</p>
   </header>
 
-  <main class="slate-list">
+  <main class="slate-list" id="main">
     {projects.map((p, i) => {
       const { Content } = bodies[i];
       // The row's primary destination. No destination -> no stretched link and

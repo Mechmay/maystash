@@ -59,6 +59,11 @@ const baseLd = {
     {import.meta.env.PROD && <script defer src="/_vercel/insights/script.js" />}
   </head>
   <body>
+    {/* First focusable thing in the document, on every page. Off-screen until
+        it takes focus, then it lands in the top-left corner. Every page's main
+        landmark carries id="main" so this never points at nothing. */}
+    <a href="#main" class="skip-link mono">SKIP TO CONTENT</a>
+
     <div class="grain" aria-hidden="true"></div>
 
     {!bareNav && <Nav variant="bar" />}
@@ -102,6 +107,32 @@ const baseLd = {
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
+
+  /* Not display:none and not visibility:hidden — either would take it out of
+     the tab order, which is the one thing it exists to be in. It stays a real,
+     focusable link parked off-screen. */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0.6rem;
+    z-index: 100;
+    background: var(--klein);
+    color: var(--paper-hi);
+    font-size: var(--step-label);
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    padding: 0.7rem 1rem;
+    border: 2px solid var(--paper-hi);
+  }
+  /* :focus, not :focus-visible. A skip link is only ever reached by keyboard, and
+     :focus-visible is a browser heuristic — if any engine declines to match it
+     here, the link stays off-screen while holding focus, which is the worst
+     possible state: the user is on a control they cannot see. */
+  .skip-link:focus {
+    top: 0.6rem;
+    outline: 2px solid var(--acid);
+    outline-offset: 2px;
+  }
 
   body {
     background: var(--ink);

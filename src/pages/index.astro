@@ -65,11 +65,20 @@ const AVATAR_SET = 'avatar-v2';
 const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 ---
 <Layout title="maystash — May builds, breaks, and writes it down" bareNav={true}>
+  {/* The corner nav lives OUTSIDE <main> — it is site navigation repeated on
+      every page, and a landmark you skip TO should not contain the thing you
+      are skipping PAST. It still has to pin to the hero's box, so this frame
+      reproduces that box: absolutely positioned with no positioned ancestor,
+      it resolves against the initial containing block, which is anchored at the
+      document origin and is exactly one viewport wide. Same four corners, same
+      scroll-away behaviour, different place in the document. */}
+  <div class="corner-frame">
+    <Nav variant="corners" />
+  </div>
+
   <main class="home" id="main">
     <!-- LAUNCHER HERO -->
     <header class="launch">
-      <Nav variant="corners" />
-
       <div class="stage">
         <div class="stage-main">
           <h1 class="stage-name">MAYSTASH</h1>
@@ -223,6 +232,19 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 
 <style>
   /* Paper tokens are global now — see src/styles/tokens.css. */
+
+  /* Reproduces the hero's box for the corner nav without wrapping it. The frame
+     itself must not eat clicks meant for the avatar underneath — the corners
+     take their own pointer events back in Nav.astro. */
+  .corner-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100svh;
+    pointer-events: none;
+    z-index: 4;
+  }
 
   /* ---- launcher hero ---- */
   .launch {

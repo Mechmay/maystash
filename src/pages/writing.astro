@@ -19,7 +19,7 @@ const readMins = (body: string) => Math.max(1, Math.round(body.split(/\s+/).leng
     <p class="ph-tagline">Long-form, no fluff, everything reproducible. Technical field notes up top — plain-language <em>Matinee</em> screenings below.</p>
   </header>
 
-  <main class="reel">
+  <main class="reel" id="main">
     <div class="reel-header mono reveal">FEATURE PRESENTATION</div>
 
     {posts.map((post) => (

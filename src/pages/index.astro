@@ -21,6 +21,23 @@ const shipped = allProjects.find((p) => p.data.status === 'live') ?? allProjects
 const shippedHref = shipped?.data.url ?? '/projects';
 const shippedExternal = shipped?.data.url?.startsWith('http') ?? false;
 
+// ---- The Currency Rule --------------------------------------------------
+// `NOW SHOWING` is a claim about currency, so it has to be able to stop making
+// it. Past the window the row keeps its place and stops overselling: the post
+// is still the newest thing here, it just isn't news any more.
+//
+// 45 days is derived, not chosen by feel. Observed cadence across the live
+// posts is a 7-day median gap and a 13-day worst gap, so the window sits at
+// 3.5x the worst normal silence. A false "stale" on an active site is the more
+// expensive error — it makes a running site look abandoned — so the window errs
+// long.
+const FRESH_DAYS = 45;
+const freshUntil = lead ? new Date(lead.data.date.valueOf() + FRESH_DAYS * 864e5) : null;
+// Build-time answer. Corrected on the client below, because a static page built
+// six months ago would otherwise still be insisting it is current — the case
+// this rule exists for.
+const leadIsFresh = freshUntil ? Date.now() < freshUntil.valueOf() : true;
+
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
 
@@ -51,7 +68,9 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
           <div class="strip">
             {lead && (
               <a class="strip-row" href={`/posts/${lead.id}/`}>
-                <span class="strip-kick mono">NOW SHOWING</span>
+                <span class="strip-kick mono" data-fresh-until={freshUntil?.toISOString()}>
+                  {leadIsFresh ? 'NOW SHOWING' : 'LAST SCREENED'}
+                </span>
                 <span class="strip-title">{lead.data.title}</span>
                 <span class="strip-meta mono">{fmt(lead.data.date)}</span>
               </a>
@@ -639,6 +658,19 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
 </style>
 
 <script>
+  // ---- The Currency Rule, client half -----------------------------------
+  // The page is static, so its freshness answer is frozen at build time — and a
+  // page that hasn't been rebuilt in months is exactly the page most likely to
+  // be lying about being current. Re-check against the real clock on load.
+  // No JS: the build-time label stands, which is the old behaviour, not a break.
+  {
+    const kick = document.querySelector('.strip-kick[data-fresh-until]');
+    const until = kick ? Date.parse(kick.getAttribute('data-fresh-until') || '') : NaN;
+    if (kick && Number.isFinite(until) && Date.now() > until) {
+      kick.textContent = 'LAST SCREENED';
+    }
+  }
+
   // Kept short on purpose: the bubble is white-space:nowrap, so anything much
   // past ~42 characters runs off the edge on a narrow phone.
   const lines = [

@@ -147,7 +147,10 @@ truth about its date.
 4. **DESIGN.md documents how to behave on each ground but never states which
    surface is which ground.** The hero is paper; the inner pages are ink. That gap
    caused a real error during this shape. Record the ground map.
-5. **Staleness rule** for the `NOW SHOWING` kicker — see §5.
+5. ~~**Staleness rule** for the `NOW SHOWING` kicker~~ — **RESOLVED.** Now The
+   Currency Rule in DESIGN.md: 45-day window derived from observed cadence,
+   flipping the kicker to `LAST SCREENED`, corrected client-side against the real
+   clock because a static page freezes its own freshness answer.
 
 **Cleanup owed:** `src/pages/shape-preview/` and `src/components/ShapeVariant.astro`
 are throwaway and must be deleted before the next deploy.

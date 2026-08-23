@@ -329,6 +329,17 @@ Hairline top border. Credit rows are `display: flex` with `justify-content: spac
 
 **The Twin Reels Rule.** `/writing` and `/projects` are the same component wearing different nouns: an index mark, a title, a tagline, a meta row, a CTA. Any change to one is a change to both. The colour of `CH.05` and the colour of `01` are the same decision, and they have already drifted apart once.
 
+**The Currency Rule.** A label that claims currency must be able to stop
+claiming it. `NOW SHOWING` on the landing strip becomes `LAST SCREENED` once the
+newest post passes a 45-day window — the row keeps its place and its date, it
+just stops overselling. The window is derived from observed cadence (7-day median
+gap, 13-day worst), so it never fires during a normal slow patch; a false "stale"
+on a running site is the more expensive error. Because the page is static, the
+build-time answer is corrected against the real clock on load: a page that has
+not been rebuilt in months is exactly the page most likely to be lying about
+being current. The same test governs any future label that asserts freshness,
+availability, or live state.
+
 **The Honest Fill Rule.** A row that fills with colour on hover is promising a click. It gets that fill only when it actually has a destination — `/projects` gates the fill behind `.is-linked`, and a project with no URL stays flat. The same test governs any future hover affordance: if the gesture implies an action the element cannot perform, the interface is lying.
 
 ### Do:

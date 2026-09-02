@@ -26,3 +26,9 @@ User-agent: Bingbot
 Allow: /
 
 Sitemap: https://maystash.xyz/sitemap-index.xml
+
+# OAuth redirect target. Echoes a `code` query parameter, so it has no business
+# in an index -- and the Layout has no named head slot, so a per-page noindex
+# meta tag cannot be added without changing every page's layout.
+User-agent: *
+Disallow: /tiktok/callback

@@ -1,0 +1,113 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Privacy policy for the "Automate" TikTok developer app.
+//
+// Required by TikTok's app review: the form will not accept a submission
+// without a live privacy policy URL, and reviewers check that it describes what
+// the app ACTUALLY does. The most-cited rejection reason is a mismatch between
+// the submission and the live product, so this is deliberately written as a
+// narrow, accurate description of a single-operator drafting tool rather than a
+// generic template that claims more than the app does.
+//
+// Kept off the site nav on purpose: it is a compliance document for one
+// integration, not a page the blog's readers need.
+
+const updated = '2 September 2026';
+---
+
+<Layout
+  title="Privacy Policy — Automate"
+  description="Privacy policy for Automate, a personal TikTok drafting tool."
+>
+  <main class="legal" id="main">
+    <p class="eyebrow mono">AUTOMATE · TIKTOK INTEGRATION</p>
+    <h1>Privacy Policy</h1>
+    <p class="updated mono">Last updated {updated}</p>
+
+    <h2>What this covers</h2>
+    <p>
+      Automate is a private, single-operator tool used by May Abiodun to prepare image
+      carousels and upload them as drafts to her own TikTok account. It is not offered to
+      the public, has no user accounts, and is not used to process other people's data.
+    </p>
+
+    <h2>What it collects</h2>
+    <p>When the operator connects her own TikTok account, the tool stores:</p>
+    <ul>
+      <li>an OAuth access token and refresh token for that account;</li>
+      <li>the account's TikTok user identifier (<code>open_id</code>);</li>
+      <li>the status of uploads it has made, so a draft is not sent twice.</li>
+    </ul>
+    <p>
+      That is the complete list. The tool does not read the account's videos, followers,
+      messages, analytics, or any other person's information. It requests only the
+      permissions needed to upload a draft to the connected account.
+    </p>
+
+    <h2>What it does not collect</h2>
+    <ul>
+      <li>No data about TikTok users other than the connected account holder.</li>
+      <li>No advertising or tracking identifiers. The tool has no analytics.</li>
+      <li>No payment information.</li>
+    </ul>
+
+    <h2>Where it is stored</h2>
+    <p>
+      Tokens and upload records are held in a private Postgres database hosted by Supabase,
+      reachable only with a server-side secret key. The images the tool uploads are stored
+      in object storage and served from this domain, because TikTok downloads media from a
+      verified URL rather than accepting a direct file upload for photo posts. Those images
+      are content the operator created for publication and contain no personal data.
+    </p>
+
+    <h2>What is shared</h2>
+    <p>
+      Nothing is sold, and nothing is shared with third parties for their own purposes. Data
+      moves only between the operator's own systems and TikTok's API in order to place a
+      draft in the connected account.
+    </p>
+
+    <h2>Retention and deletion</h2>
+    <p>
+      Tokens are kept only while the integration is in use and are replaced each time they
+      are refreshed. The operator can revoke the app's access at any time from TikTok's own
+      settings, which invalidates the stored tokens immediately; the stored copies are then
+      deleted. To request deletion of anything held by this tool, use the contact address
+      below.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      If the tool's behaviour changes, this page is updated before the change ships, so that
+      what is described here stays true of what the app actually does.
+    </p>
+
+    <h2>Contact</h2>
+    <p>Questions or deletion requests: <a href="mailto:silkvoice1214@gmail.com">silkvoice1214@gmail.com</a></p>
+
+    <p class="foot mono"><a href="/tiktok/terms">Terms of Service →</a></p>
+  </main>
+</Layout>
+
+<style>
+  .legal {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 4rem 1.25rem 6rem;
+    line-height: 1.65;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    opacity: 0.6;
+    margin: 0 0 1rem;
+  }
+  .legal h1 { font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; margin: 0 0 0.5rem; }
+  .updated { font-size: 0.78rem; opacity: 0.6; margin: 0 0 2.5rem; }
+  .legal h2 { font-size: 1.15rem; margin: 2.2rem 0 0.6rem; }
+  .legal ul { padding-left: 1.2rem; }
+  .legal li { margin-bottom: 0.35rem; }
+  .legal code { font-size: 0.9em; opacity: 0.85; }
+  .foot { margin-top: 3rem; font-size: 0.82rem; }
+</style>

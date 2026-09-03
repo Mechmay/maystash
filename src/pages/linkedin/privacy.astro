@@ -1,0 +1,101 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Privacy policy for the "Automate" LinkedIn developer app.
+//
+// LinkedIn's app-creation form requires a live privacy policy URL before the
+// app can be created at all, same reason as the TikTok one at /tiktok/privacy:
+// narrow and accurate to what this tool actually does, not a generic template.
+
+const updated = '3 September 2026';
+---
+
+<Layout
+  title="Privacy Policy — Automate (LinkedIn)"
+  description="Privacy policy for Automate, a personal LinkedIn drafting tool."
+>
+  <main class="legal" id="main">
+    <p class="eyebrow mono">AUTOMATE · LINKEDIN INTEGRATION</p>
+    <h1>Privacy Policy</h1>
+    <p class="updated mono">Last updated {updated}</p>
+
+    <h2>What this covers</h2>
+    <p>
+      Automate is a private, single-operator tool used by May Abiodun to publish posts to
+      her own LinkedIn profile. It is not offered to the public, has no user accounts, and
+      is not used to process other people's data.
+    </p>
+
+    <h2>What it collects</h2>
+    <p>When the operator connects her own LinkedIn account, the tool stores:</p>
+    <ul>
+      <li>an OAuth access token for that account;</li>
+      <li>the account's LinkedIn member identifier, used to address the posting API;</li>
+      <li>the text and, where used, a single image of each post it has published.</li>
+    </ul>
+    <p>
+      That is the complete list. The tool does not read the account's connections, messages,
+      feed, or any other person's information. It requests only the permissions needed to
+      publish a post as the connected account (<code>openid</code>, <code>profile</code>,
+      <code>w_member_social</code>).
+    </p>
+
+    <h2>What it does not collect</h2>
+    <ul>
+      <li>No data about other LinkedIn members.</li>
+      <li>No advertising or tracking identifiers. The tool has no analytics.</li>
+      <li>No payment information.</li>
+    </ul>
+
+    <h2>Where it is stored</h2>
+    <p>
+      Tokens and post records are held in a private Postgres database hosted by Supabase,
+      reachable only with a server-side secret key.
+    </p>
+
+    <h2>What is shared</h2>
+    <p>
+      Nothing is sold, and nothing is shared with third parties for their own purposes. Data
+      moves only between the operator's own systems and LinkedIn's API in order to publish a
+      post to the connected account.
+    </p>
+
+    <h2>Retention and deletion</h2>
+    <p>
+      The token is kept only while the integration is in use. The operator can revoke the
+      app's access at any time from LinkedIn's own settings, which invalidates the stored
+      token immediately; the stored copy is then deleted. To request deletion of anything
+      held by this tool, use the contact address below.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      If the tool's behaviour changes, this page is updated before the change ships, so that
+      what is described here stays true of what the app actually does.
+    </p>
+
+    <h2>Contact</h2>
+    <p>Questions or deletion requests: <a href="mailto:silkvoice1214@gmail.com">silkvoice1214@gmail.com</a></p>
+  </main>
+</Layout>
+
+<style>
+  .legal {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 4rem 1.25rem 6rem;
+    line-height: 1.65;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    opacity: 0.6;
+    margin: 0 0 1rem;
+  }
+  .legal h1 { font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; margin: 0 0 0.5rem; }
+  .updated { font-size: 0.78rem; opacity: 0.6; margin: 0 0 2.5rem; }
+  .legal h2 { font-size: 1.15rem; margin: 2.2rem 0 0.6rem; }
+  .legal ul { padding-left: 1.2rem; }
+  .legal li { margin-bottom: 0.35rem; }
+  .legal code { font-size: 0.9em; opacity: 0.85; }
+</style>

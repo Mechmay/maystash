@@ -9,7 +9,7 @@ Post as thread from @checkthehash. One knot per tweet. Link only in last (algori
 
 It's been wrong since iteration 30. Nobody told it. By morning: a mountain of confident garbage, paid for with real money.
 
-The agent didn't fail. You did — at setup. 🧵
+The agent didn't fail. You did, at setup. 🧵
 
 ---
 
@@ -21,40 +21,40 @@ Every recurring AI job I run signs the same one before it's allowed to loop unsu
 ---
 
 **3/**
-Knot 1 — a schedule, written down. Not "whenever it triggers."
+Knot 1: a schedule, written down. Not "whenever it triggers."
 
-Knot 2 — ONE variable changes per round. Let it "improve" ten things and by round 3 you're doing archaeology instead of engineering.
+Knot 2: ONE variable changes per round. Let it "improve" ten things and by round 3 you're doing archaeology instead of engineering.
 
 ---
 
 **4/**
-Knot 3 — a versioned metric. Same measurement, every run.
+Knot 3: a versioned metric. Same measurement, every run.
 
-Redefine "success" mid-stream and every prior data point becomes a lie — unless you bump the version and mark the boundary.
+Redefine "success" mid-stream and every prior data point becomes a lie, unless you bump the version and mark the boundary.
 
 ---
 
 **5/**
-Knot 4 — a state file. One file: last run, what happened, what's next, what's blocking.
+Knot 4: a state file. One file: last run, what happened, what's next, what's blocking.
 
 The watchdog trick: if last_run is older than the schedule says it should be, the loop died silently. Now you can catch a death that's invisible by definition.
 
 ---
 
 **6/**
-Knot 5 — three hard stops:
+Knot 5: three hard stops:
 • a done condition
 • a blocked condition (halts + logs, never retries silently)
-• a budget cap — max tokens/$/files, per run
+• a budget cap: max tokens/$/files, per run
 
 Silent retries are how an agent burns a week's budget re-failing the same failure. Confidently.
 
 ---
 
 **7/**
-Knot 6 — the one everyone skips: an independent verifier.
+Knot 6: the one everyone skips: an independent verifier.
 
-Ask a model to grade its own output in the same session that produced it — glowing review, every time. The context that made the work can't be the context that grades it.
+Ask a model to grade its own output in the same session that produced it: glowing review, every time. The context that made the work can't be the context that grades it.
 
 ---
 
@@ -68,12 +68,12 @@ Corollary: loops draft and flag. Humans publish and delete. Keep the irreversibl
 **9/**
 Cheap model runs the routine rounds. Expensive model only gets called on failure or real judgment calls.
 
-Same seniority structure as any good team — and the versioned metric is what tells you the cheap model still passes.
+Same seniority structure as any good team, and the versioned metric is what tells you the cheap model still passes.
 
 ---
 
 **10/**
-20-minute setup, no new tools — a text file and a scheduler you already have:
+20-minute setup, no new tools: a text file and a scheduler you already have:
 
 Full six knots + the setup checklist:
 https://maystash.xyz/posts/agents-need-a-leash/
@@ -91,4 +91,4 @@ https://maystash.xyz/posts/agents-need-a-leash/
 
 ## Reply-guy snippet (drop under "my agent went off the rails" posts)
 
-Classic missing piece: the model that did the work also graded the work. Self-review always inflates — needs a fresh context or second agent that only sees the output and the yardstick. Wrote up the full six-clause contract (schedule, one var/round, versioned metric, state file, hard stops, independent verifier) here: https://maystash.xyz/posts/agents-need-a-leash/
+Classic missing piece: the model that did the work also graded the work. Self-review always inflates, and needs a fresh context or second agent that only sees the output and the yardstick. Wrote up the full six-clause contract (schedule, one var/round, versioned metric, state file, hard stops, independent verifier) here: https://maystash.xyz/posts/agents-need-a-leash/

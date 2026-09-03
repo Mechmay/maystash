@@ -31,7 +31,7 @@ That's the product four companies shipped this summer.
 
 In eight weeks the same shape arrived from several directions.
 
-In June, Anthropic put a persistent teammate inside Slack — one identity anyone on the team can tag, memory built from the channel's own history, a mode where it acts without being asked, and the ability to book work for itself days ahead.
+In June, Anthropic put a persistent teammate inside Slack: one identity anyone on the team can tag, memory built from the channel's own history, a mode where it acts without being asked, and the ability to book work for itself days ahead.
 
 In August, xAI opened the beta of an agent that gets its own computer in the cloud, one that stays awake after your laptop closes. Its headline trick is that it doesn't need a connection to your software at all. It signs in and clicks, the way a person does, which means it can operate the ugly old business program that has no integrations and never will.
 
@@ -45,7 +45,7 @@ Both halves are load-bearing. Take away memory and you have a chatbot. Take away
 
 Here's the part that isn't in the launch posts. The three things that make a persistent agent worth having are, unmodified, the three things that make it worth attacking.
 
-*It stays awake.* That's the pitch — work happens while you sleep. It's also the window, because nobody is watching the screen at 3:14 AM. The gap between a wrong action and a human noticing it just stretched from seconds to hours.
+*It stays awake.* That's the pitch: work happens while you sleep. It's also the window, because nobody is watching the screen at 3:14 AM. The gap between a wrong action and a human noticing it just stretched from seconds to hours.
 
 *It stays logged in.* That's what makes it useful instead of a demo: it holds live sessions into your mail, your files, your dashboards. It's also the reason it's worth conning. An agent with standing access isn't a program that might be exploited. It's a keyring that reads its own mail.
 
@@ -63,7 +63,7 @@ A security firm tested one of these base models against a standard suite of inst
 
 In May, someone drained roughly $150,000 out of an AI-connected wallet by sending an instruction encoded in Morse code. The encoding was the whole trick. A filter watching for dangerous words saw dots and dashes and waved it through, and the model, being a model, read straight through the costume.
 
-There's a third claim circulating — that on at least one product, multiple bots share a single machine and, with it, a shared pool of logins. If true, a bot fooled while reading a hostile web page is sitting next to every other authenticated session on that box. I can't confirm it. Two of the reports making the claim wouldn't load for me, and I'm not going to assert something load-bearing off a headline. Note it, chase it, don't repeat it as fact.
+There's a third claim circulating, that on at least one product, multiple bots share a single machine and, with it, a shared pool of logins. If true, a bot fooled while reading a hostile web page is sitting next to every other authenticated session on that box. I can't confirm it. Two of the reports making the claim wouldn't load for me, and I'm not going to assert something load-bearing off a headline. Note it, chase it, don't repeat it as fact.
 
 The confirmed items are damning enough without help.
 
@@ -81,7 +81,7 @@ The alternative is unglamorous and has been sitting there the whole time: a smal
 
 What you give up is real, and I'd rather name it than sell around it. You give up polish. You give up somebody else's on-call rotation, because when it breaks at 3 AM the person fixing it is you. And you give up, for now, the trick the rented agent is genuinely best at: driving software through its screen with no integration required.
 
-Rent buys polish and coverage. Own buys control, and arithmetic that doesn't punish you for hiring people. Neither is right for everyone. But almost nobody is *asking*, because the launch posts frame it as a subscription decision — and it isn't. It's a question about where your business's memory and credentials live.
+Rent buys polish and coverage. Own buys control, and arithmetic that doesn't punish you for hiring people. Neither is right for everyone. But almost nobody is *asking*, because the launch posts frame it as a subscription decision, and it isn't. It's a question about where your business's memory and credentials live.
 
 **Three questions before you hire one**
 
@@ -97,7 +97,7 @@ Who owns the machine? And underneath that: where the memory lives, whose logins 
 
 I keep the coworker metaphor because the industry chose it, and because it's more useful than the people who chose it seem to realise.
 
-You would not hand a brand-new hire every password in the company on day one. You'd give them what the job needs, watch the first few weeks, keep a log, and stay reachable when they hit something strange. Not because you assume they're malicious, but because you assume they're *new* — and because the world contains people who will lie to them on purpose to get at you.
+You would not hand a brand-new hire every password in the company on day one. You'd give them what the job needs, watch the first few weeks, keep a log, and stay reachable when they hit something strange. Not because you assume they're malicious, but because you assume they're *new*, and because the world contains people who will lie to them on purpose to get at you.
 
 Every one of these agents is on day one. All of them.
 

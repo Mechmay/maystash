@@ -1,6 +1,6 @@
 # maystash
 
-> Personal site of May — long-form, reproducible writing on AI agents, second brains
+> Personal site of May, long-form, reproducible writing on AI agents, second brains
 > (persistent AI memory systems), security, and building products from zero.
 > Every article is a complete blueprint: frameworks, templates, and copy-paste starter kits.
 > Plain-markdown source, no paywall, no gating.
@@ -8,7 +8,7 @@
 ## Posts
 
 - [The AI Memory Everyone's Building Is a Diary. Here's How to Build a Brain That Sleeps.](https://maystash.xyz/posts/brain-that-sleeps/):
-  Seven primitives for a self-improving AI second brain on plain text files — index-first
+  Seven primitives for a self-improving AI second brain on plain text files: index-first
   retrieval, verified/guess tagging, rule distillation, git as memory versioning, a weekly
   "dreaming" consolidation pass, memory-poisoning defenses, and a copy-paste starter kit.
 
@@ -24,7 +24,7 @@
 
 - [Your AI Agent Doesn't Need More Autonomy. It Needs a Leash With Six Knots.](https://maystash.xyz/posts/agents-need-a-leash/):
   The six-clause contract every recurring AI job (a "loop") should sign before it runs
-  unsupervised — explicit schedule, one changed variable per round, a versioned metric,
+  unsupervised: explicit schedule, one changed variable per round, a versioned metric,
   a state file (with the watchdog trick: a stale last_run means silent death), three hard
   stops (done condition, blocked condition that halts and logs instead of retrying, and a
   budget cap), and an independent verifier so the context that produced the work never
@@ -32,10 +32,10 @@
   invents one, and loops draft/flag while humans keep publish and delete. Includes a
   20-minute setup checklist.
 
-- [Prompt Injection Isn't Hacking. It's a Con Job — and Your AI Is the Mark.](https://maystash.xyz/posts/injection-is-a-con-job/):
+- [Prompt Injection Isn't Hacking. It's a Con Job, and Your AI Is the Mark.](https://maystash.xyz/posts/injection-is-a-con-job/):
   Prompt injection explained as a confidence trick rather than an exploit. Root cause: an LLM
   receives instructions and data through the same channel, so it must judge which is which,
-  and judgment can be conned — there is no patch for grammar (OWASP ranks it #1 on its LLM
+  and judgment can be conned: there is no patch for grammar (OWASP ranks it #1 on its LLM
   risk list). Indirect injection (instructions planted in a page, README, ticket, or document
   the agent reads later) matters more than direct chat-box tricks because the victim isn't
   present when the trap is set. Worst case is memory poisoning: an instruction written into
@@ -49,14 +49,14 @@
   AI smart enough to avoid being fooled" but "when it is fooled, what can the fool reach, and
   how fast do I find out?"
 
-- [One of Our Players Never Lost. That Wasn't Skill — It Was Our Bug.](https://maystash.xyz/posts/player-who-never-lost/):
+- [One of Our Players Never Lost. That Wasn't Skill. It Was Our Bug.](https://maystash.xyz/posts/player-who-never-lost/):
   Plain-language case study of two cheats against a daily number-puzzle game (Dinjure) and
   the fixes. Cheat one: the daily secret was derived by client-side code shipped to every
   browser, so anyone reading the page source could compute the answer and "solve" in one
-  guess — fixed by moving secret generation and answer-checking to the server so the client
+  guess, fixed by moving secret generation and answer-checking to the server so the client
   never holds the answer. Cheat two: unlimited free anonymous accounts plus an end-of-game
   answer reveal let a player scout the code on a throwaway account, then solve on their real
-  one — caught by timestamp patterns (the clincher: the throwaway lost and the real account
+  one, caught by timestamp patterns (the clincher: the throwaway lost and the real account
   still solved perfectly), fixed server-side by excluding the affected scores from ranking
   rather than banning. Detection logic deliberately unpublished. Lessons: anything sent to
   the client is readable, frictionless free access is also free abuse surface, cheating is
@@ -64,17 +64,17 @@
 
 - [We Stopped Chasing the Cheater. We Gave Him a Different Puzzle.](https://maystash.xyz/posts/we-gave-him-a-different-puzzle/):
   Sequel to the Dinjure cheat story, and the case against detection as a strategy. Catching a
-  cheater teaches him the shape of the net, so each catch buys a shorter-lived rule —
+  cheater teaches him the shape of the net, so each catch buys a shorter-lived rule:
   "detection is rent." The reframe that ended it: stop asking who is taking it and ask what is
   being taken. He was buying a cheap route to today's ending, so the ending was removed from
-  everywhere cheap: signed-out players now get a clearly labelled warm-up round — a real
-  puzzle that is never the ranked daily — while the ranked game requires an account worth
+  everywhere cheap: signed-out players now get a clearly labelled warm-up round, a real
+  puzzle that is never the ranked daily, while the ranked game requires an account worth
   keeping, which a disposable identity cannot be. The decoy is labelled on purpose: a labelled
   decoy leaks exactly as much as a secret one (nothing), and secrecy would have broken the
   end-of-game receipt proving the answer wasn't rigged. Auditing every place that decides
   whether a game is "real" found six spots counting warm-ups as genuine (including public
-  best-score posting), one that graded in-progress warm-up guesses against the real answer —
-  the same leak in another room, unexploited and unnoticed — and an unrelated bug where a
+  best-score posting), one that graded in-progress warm-up guesses against the real answer,
+  the same leak in another room, unexploited and unnoticed, and an unrelated bug where a
   network hiccup wiped real accounts mid-session. The countermeasure was then emailed to all
   players, including the cheater: a countermeasure nobody knows about only catches people; one
   everybody knows about ends the game. Honest close: one route (throwaway account with a real
@@ -93,9 +93,9 @@
   AI-integrated wallet in May 2026 by a Morse-code-encoded injection that a word filter waved
   through. A widely repeated claim that bots share one machine and one login pool is flagged
   explicitly as unconfirmed rather than repeated. Second half is the commercial question
-  nobody frames correctly: renting a seat beside an agent ($120–300 per seat per month, on the
+  nobody frames correctly: renting a seat beside an agent ($120-300 per seat per month, on the
   vendor's machine, priced per human) versus self-hosting one (small server, tokens only, your
-  disk, your model choice) — and the honest cost of owning it: no polish, no vendor on-call,
+  disk, your model choice), and the honest cost of owning it: no polish, no vendor on-call,
   no GUI computer-use. Closes on three questions before any agent gets a login: what can it
   reach if confused, what is within arm's reach when something lies to it, and who owns the
   machine its memory lives on. Sequel in argument to "Prompt Injection Isn't Hacking."
@@ -105,7 +105,7 @@
   DIRECT_POST verb is gated behind SELF_ONLY until reviewed, but MEDIA_UPLOAD (draft-to-inbox)
   needs no audit: it delivers the finished post into the account's inbox and a human taps
   publish, producing an ordinary public post from an app never submitted for review. The
-  own-account gate is "no unattended access," not "no access" — review only buys posting to
+  own-account gate is "no unattended access," not "no access." Review only buys posting to
   other people's accounts and removing the human tap. Includes verifying publication from the
   unauthenticated embed endpoint (with a known-public control), and the two portal traps: the
   draft lands as an inbox notification not in Drafts, and the config form saves nothing while
@@ -118,4 +118,4 @@
 
 ## Author
 
-May — cybersecurity, web3, applied AI, 0→1 products.
+May: cybersecurity, web3, applied AI, 0→1 products.

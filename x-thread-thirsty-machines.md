@@ -27,7 +27,7 @@ So why do the "AI water" numbers swing 2,000x?
 
 Because everyone measures a different fence:
 • water at the data center
-• + water at the power plant (2–10x more)
+• + water at the power plant (2-10x more)
 • + the one-time cost of training
 
 Same reality. Three fences. Always ask which one.
@@ -38,7 +38,7 @@ Same reality. Three fences. Always ask which one.
 Zoom out and it gets silly.
 
 US golf courses: ~1.5 billion gallons of water. Per day.
-Every US data center combined — all cloud, all AI — 17.4 billion. For the whole year.
+Every US data center combined, all cloud, all AI, 17.4 billion. For the whole year.
 
 Golf out-drinks the entire American internet ~30x.
 
@@ -47,7 +47,7 @@ Golf out-drinks the entire American internet ~30x.
 **5/**
 The chips are thirstier than the chatbots.
 
-TSMC — the one company that makes AI's chips — uses more water in a year than every US data center in America combined.
+TSMC, the one company that makes AI's chips, uses more water in a year than every US data center in America combined.
 
 AI's total share of US water: about 0.02%.
 
@@ -68,7 +68,7 @@ Not OpenAI. Not Google. Not Anthropic.
 **7/**
 But the town next to the data center is still right to be mad.
 
-The Dalles, Oregon: Google grew to a *quarter* of the city's water — and sued a newspaper for 13 months to keep the number secret.
+The Dalles, Oregon: Google grew to a *quarter* of the city's water, and sued a newspaper for 13 months to keep the number secret.
 
 Averages don't live anywhere. People do.
 
@@ -80,7 +80,7 @@ Locally: a quarter of your town's water, hidden.
 
 The scandal isn't the drinking. It's the missing receipts.
 
-Full breakdown — burgers, jeans, golf, every company, every town — no jargon:
+Full breakdown: burgers, jeans, golf, every company, every town, no jargon:
 
 https://maystash.xyz/posts/thirsty-machines/
 
@@ -89,7 +89,7 @@ https://maystash.xyz/posts/thirsty-machines/
 ## Alt single-tweet version (if not threading)
 
 Your ChatGPT question: a few drops.
-Your burger: 2,500 liters — 50,000 chatbot answers.
+Your burger: 2,500 liters, or 50,000 chatbot answers.
 US golf out-drinks the entire internet 30x.
 
 Only ONE AI lab has published an audited water bill.
@@ -99,4 +99,4 @@ https://maystash.xyz/posts/thirsty-machines/
 
 ## Reply-guy snippet (drop under AI-water-FUD tweets)
 
-The data-center water number is real but tiny (~0.02% of US use — golf uses 30x more). The real problem isn't the amount, it's that only one AI lab has ever published an audited water bill. Wrote up all the numbers here: https://maystash.xyz/posts/thirsty-machines/
+The data-center water number is real but tiny (~0.02% of US use, golf uses 30x more). The real problem isn't the amount, it's that only one AI lab has ever published an audited water bill. Wrote up all the numbers here: https://maystash.xyz/posts/thirsty-machines/

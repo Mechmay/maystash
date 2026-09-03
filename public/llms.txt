@@ -100,6 +100,28 @@
   reach if confused, what is within arm's reach when something lies to it, and who owns the
   machine its memory lives on. Sequel in argument to "Prompt Injection Isn't Hacking."
 
+- [I Made My AI Agents Keep Receipts. Here's the Bill — Including the Rows That Say Zero.](https://maystash.xyz/posts/receipts/):
+  The agent value-ledger method with real numbers: every agent logs each task, prices it in
+  dollars of human labour, and mails the owner a weekly bill whether flattering or not.
+  $1,200 CAD across three rows for one bookkeeping client, every figure labelled estimate and
+  unaudited in the post itself; the 80-exception row priced at null on purpose (with the
+  question that prices it); a twelve-percent failure printed next to the wins; the four
+  anti-inflation rules; and a prediction bot whose metric could only return good news as the
+  cautionary example. Closes on four of the author's own monitors caught lying — 52 false
+  "ok" logs from a short-circuited success message, a watchdog dead inside the graveyard it
+  guarded, a stale-log detector crying wolf, and a documented fix never applied.
+
+- [TikTok's API Told Me I Could Only Post to Myself. The Post Went Fully Public. Both Were True.](https://maystash.xyz/posts/self-only/):
+  Posting to your own TikTok account does not need the app-review audit everyone dreads. The
+  DIRECT_POST verb is gated behind SELF_ONLY until reviewed, but MEDIA_UPLOAD (draft-to-inbox)
+  needs no audit: it delivers the finished post into the account's inbox and a human taps
+  publish, producing an ordinary public post from an app never submitted for review. The
+  own-account gate is "no unattended access," not "no access" — review only buys posting to
+  other people's accounts and removing the human tap. Includes verifying publication from the
+  unauthenticated embed endpoint (with a known-public control), and the two portal traps: the
+  draft lands as an inbox notification not in Drafts, and the config form saves nothing while
+  an error counter fakes progress.
+
 ## Feeds
 
 - [RSS](https://maystash.xyz/rss.xml)

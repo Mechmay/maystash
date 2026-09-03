@@ -9,6 +9,8 @@
 
 /** Slugs of every published (non-draft) post — used to linkify replies. */
 export const POST_SLUGS: string[] = [
+  "receipts",
+  "self-only",
   "coworker-who-never-logs-out",
   "we-gave-him-a-different-puzzle",
   "player-who-never-lost",
@@ -30,7 +32,42 @@ Published pieces, newest first, each with the URL to send people to.
 Always give the specific piece's URL, never just "maystash.xyz", when
 pointing at an article.
 
-1. "Your New AI Coworker Never Sleeps, Never Logs Out, and Will Believe Anything It Reads"
+1. "I Made My AI Agents Keep Receipts. Here's the Bill — Including the Rows That Say Zero."
+   FEATURE — maystash.xyz/posts/receipts/
+   Six weeks of agents doing real work for a real client, priced in dollars
+   at a real rate card. The method, the number, the four rules that stop
+   the number being a lie, and the month I spent discovering that my own
+   monitors were lying to me in three different directions. Somebody is
+   about to cancel something. Not because it failed. Because they can't
+   remember it working. That's how most automation dies. Not caught in a
+   scandal — just quietly unfunded in month three, when the person paying
+   can recall the two times it got something wrong and none of the forty
+   times it didn't. Good work is invisible by design. Invisible things lose
+   budget fights to visible ones. So in August I made a rule for every
+   agent I build: it logs every task it does, prices that task in dollars
+   of human labour, and mails the owner the bill on Friday whether the bill
+   is flattering or not. No ledger, no launch.
+   Topics: ai, agents, measurement, automation, money.
+
+2. "TikTok's API Told Me I Could Only Post to Myself. The Post Went Fully Public. Both Were True."
+   FEATURE — maystash.xyz/posts/self-only/
+   Every guide says posting to your own TikTok needs an app review — a
+   privacy policy, a demo video, weeks of waiting. I got a public post out
+   of an app I never submitted. Here's the door everyone walks past, and
+   how to read an API that lies to you in a way that's technically honest.
+   You want a small thing. A script that takes a finished post — your own
+   words, your own images — and puts it on your own TikTok account. Not
+   spam, not someone else's feed. Yours. TikTok's documentation reads like
+   a locked door. To publish directly to a profile, your app needs to pass
+   an audit: a public product URL, a privacy policy, a recorded demo of the
+   posting flow, screenshots, evidence of a finished product. Until you
+   pass, every post the API makes is forced to SELFONLY — visible to nobody
+   but you. And the sandbox you're told to test in doesn't lift that
+   restriction either. Weeks of review to earn the right to post to your
+   own account.
+   Topics: ai, automation, tiktok, apis, content.
+
+3. "Your New AI Coworker Never Sleeps, Never Logs Out, and Will Believe Anything It Reads"
    FEATURE — maystash.xyz/posts/coworker-who-never-logs-out/
    In mid-2026 the major labs shipped persistent agents — Anthropic's
    Claude Tag in Slack (June 23), xAI's Grok Bot with its own cloud VM
@@ -51,21 +88,21 @@ pointing at an article.
    who owns the machine.
    Topics: ai, agents, security, prompt-injection, automation.
 
-2. "We Stopped Chasing the Cheater. We Gave Him a Different Puzzle."
+4. "We Stopped Chasing the Cheater. We Gave Him a Different Puzzle."
    MATINEE — maystash.xyz/posts/we-gave-him-a-different-puzzle/
    The sequel: the scoreboard stayed clean for exactly a day. The game
    accidentally lied to the cheater, that accident became the fix, and the
    fix then bit an innocent player.
    Topics: games, security, cheating, dinjure, explainers.
 
-3. "One of Our Players Never Lost. That Wasn't Skill — It Was Our Bug."
+5. "One of Our Players Never Lost. That Wasn't Skill — It Was Our Bug."
    MATINEE — maystash.xyz/posts/player-who-never-lost/
    A player cracked Dinjure's daily puzzle in one guess, every day, for
    weeks. Two cheats, two fixes, and the one detail deliberately not
    published.
    Topics: games, security, cheating, dinjure, explainers.
 
-4. "Prompt Injection Isn't Hacking. It's a Con Job — and Your AI Is the Mark."
+6. "Prompt Injection Isn't Hacking. It's a Con Job — and Your AI Is the Mark."
    FEATURE — maystash.xyz/posts/injection-is-a-con-job/
    Prompt injection is when instructions are smuggled inside data the model
    reads — a web page, a document, an email — and the model follows them as
@@ -77,7 +114,7 @@ pointing at an article.
    which is why filters and blocklists keep losing.
    Topics: security, ai, prompt-injection, agents.
 
-5. "Your AI Agent Doesn't Need More Autonomy. It Needs a Leash With Six Knots."
+7. "Your AI Agent Doesn't Need More Autonomy. It Needs a Leash With Six Knots."
    FEATURE — maystash.xyz/posts/agents-need-a-leash/
    Everyone wants agents that run unsupervised; almost nobody builds the
    discipline that makes unsupervised safe. The loop contract that keeps
@@ -85,7 +122,7 @@ pointing at an article.
    agent may touch, how long it may run, and what it must write down.
    Topics: ai, agents, automation, loops.
 
-6. "Your Burger Drinks More Than Your Chatbot. So Why Are the Wells Running Dry?"
+8. "Your Burger Drinks More Than Your Chatbot. So Why Are the Wells Running Dry?"
    MATINEE — maystash.xyz/posts/thirsty-machines/
    A plain-language guide to AI and water. One chatbot answer costs a few
    drops to a shot glass; a hamburger costs ~2,500 litres. US golf courses
@@ -99,7 +136,7 @@ pointing at an article.
    0.02% of a country's water and still a quarter of one town's.
    Topics: ai, water, data-centers, environment, explainers.
 
-7. "The AI Memory Everyone's Building Is a Diary. Here's How to Build a Brain That Sleeps."
+9. "The AI Memory Everyone's Building Is a Diary. Here's How to Build a Brain That Sleeps."
    FEATURE — maystash.xyz/posts/brain-that-sleeps/
    A complete blueprint for a self-improving AI second brain on plain text
    files: the seven primitives (index-first retrieval, verified/guess

@@ -5,6 +5,7 @@ date: 2026-07-25
 chapter: "03"
 tags: ["security", "ai", "prompt-injection", "agents"]
 draft: false
+cover: true
 botNotes: >-
   Prompt injection is when instructions are smuggled inside data the model
   reads — a web page, a document, an email — and the model follows them as
@@ -54,6 +55,8 @@ The con only pays if the mark can reach the vault. An agent that summarizes emai
 
 **Habit 3 — Audit trail: make lies traceable.**
 You can't guarantee no lie ever gets in. You *can* guarantee a lie can't hide. Version the memory (git is perfect — free diffs, timestamps, rollback). Tag claims as verified-on-a-date or unverified-guess. Run a periodic pass that re-checks recent, cheap-to-verify entries. Then a poisoned fact has three ugly problems: it enters as a low-authority guess, a scheduled review pokes at it, and `git log` names the exact moment and source that introduced it. Rollback is one command. The con relies on never being audited; so audit.
+
+![](/art/injection-is-a-con-job-02.jpg)
 
 ## The mindset shift
 

@@ -11,6 +11,8 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     section: z.enum(['feature', 'matinee']).default('feature'),
     draft: z.boolean().default(false),
+    // When true, /art/<slug>-01.jpg renders as a hero under the title card.
+    cover: z.boolean().default(false),
     // Optional. Facts for the site's chat assistant that the post's own opening
     // doesn't carry — the payoff numbers, the actual definition. Left out, the
     // generator summarises from the opening paragraphs instead.

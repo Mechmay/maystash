@@ -4,7 +4,8 @@ tagline: "Six weeks of agents doing real work for a real client, priced in dolla
 date: 2026-09-03
 chapter: "04"
 tags: ["ai", "agents", "measurement", "automation", "money"]
-draft: true
+draft: false
+cover: true
 ---
 
 INT. A KITCHEN TABLE — SUNDAY EVENING.
@@ -133,6 +134,8 @@ The client ledger still doesn't have one. That's the honest state: **$1,200 of v
 And the one that isn't closed at all: **the ledger is still unaudited.** Same as when I wrote it. Written by the session that did the work, flagged in its own file, three weeks later and still true.
 
 I'd rather print that sentence again than quietly drop it.
+
+![](/art/receipts-02.jpg)
 
 ## What the receipts changed
 

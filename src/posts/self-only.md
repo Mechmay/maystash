@@ -4,7 +4,8 @@ tagline: "Every guide says posting to your own TikTok needs an app review — a 
 date: 2026-09-03
 chapter: "06"
 tags: ["ai", "automation", "tiktok", "apis", "content"]
-draft: true
+draft: false
+cover: true
 ---
 
 INT. A DEVELOPER PORTAL — LATE.
@@ -63,6 +64,8 @@ The door is unlocked, but the hallway to it has two tripwires I hit so you don't
 **The form that saves nothing while looking like it's saving.** Configuring the app means a portal form with a lot of required fields. Click Save with any field still missing and — this is the trap — **it fires no request at all.** Nothing is saved. But the on-screen error counter ticks down as you fill fields in, 4 → 2 → 1, which feels *exactly* like progress being saved incrementally. It isn't. Everything you typed lives only in that browser tab until the form is 100% complete, and a reload, a navigation, or an environment switch throws all of it away — uploaded image included. I lost the same work twice before I understood it. The only honest check that your work is actually saved is a **hard reload** — if it survives that, it's real; if the fields are empty, the "saving" was a UI animation the whole time.
 
 Both traps are the same lesson in different clothes, and it's the lesson under this entire post: **a hopeful signal is not a confirmed state.** The error counter going down, the API's success message, the word "draft" — each one is a story the interface tells you, and each one was wrong. The only things I trusted in the end were the view from the public street and the state that survived a hard reload.
+
+![](/art/self-only-02.jpg)
 
 ## The smaller, truer version of "automate my posting"
 

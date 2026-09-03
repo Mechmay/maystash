@@ -5,6 +5,7 @@ date: 2026-07-18
 chapter: "02"
 tags: ["ai", "agents", "automation", "loops"]
 draft: false
+cover: true
 botNotes: >-
   Everyone wants agents that run unsupervised; almost nobody builds the
   discipline that makes unsupervised safe. The loop contract that keeps
@@ -73,6 +74,8 @@ Routine rounds run on the cheapest model that passes the metric. Escalate to the
 And notice what the metric quietly does here: it's not just quality control, it's a **router**. Without a versioned metric you can't even *know* whether the cheap model passes.
 
 ---
+
+![](/art/agents-need-a-leash-02.jpg)
 
 ## The 20-minute setup
 

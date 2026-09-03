@@ -54,6 +54,12 @@ const jsonLd = {
     <div class="tc-open mono">— COLD OPEN —</div>
   </header>
 
+  {post.data.cover && (
+    <figure class="hero">
+      <img src={`/art/${post.id}-01.jpg`} alt={post.data.tagline} loading="eager" width="1280" height="853" />
+    </figure>
+  )}
+
   <article class="prose">
     <Content />
   </article>
@@ -118,6 +124,19 @@ const jsonLd = {
   }
   .tc-open { margin-top: 3.5rem; color: var(--acid); }
 
+  .hero {
+    max-width: 60rem;
+    margin: 3rem auto 0;
+    padding: 0 1.5rem;
+  }
+  .hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--rule, #26262b);
+    border-radius: 3px;
+  }
+
   .post-end { text-align: center; padding: 5rem 1rem 6rem; }
   .end-slate { color: var(--bone-dim); margin-bottom: 1.6rem; }
   .back { color: var(--acid); text-decoration: none; }
@@ -161,6 +180,14 @@ const jsonLd = {
   }
   .prose p { margin: 1.15rem 0; }
   .prose strong { color: var(--bone); font-weight: 640; }
+  .prose img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 2.6rem 0;
+    border: 1px solid var(--rule, #26262b);
+    border-radius: 3px;
+  }
   .prose em { color: var(--bone); }
   .prose a { color: var(--acid); text-underline-offset: 3px; }
   .prose ul, .prose ol { margin: 1.2rem 0 1.2rem 1.4rem; }

@@ -6,6 +6,7 @@ chapter: "M3"
 section: "matinee"
 tags: ["games", "security", "cheating", "dinjure", "explainers"]
 draft: false
+cover: true
 botNotes: >-
   The sequel: the scoreboard stayed clean for exactly a day. The game
   accidentally lied to the cheater, that accident became the fix, and the
@@ -101,6 +102,8 @@ We fixed it the boring way — give the question a time limit, retry it, and if 
 **Anything free and unlimited gets used at scale by exactly one person you didn't picture.** Ours was free accounts, a kindness to first-timers. It stayed a kindness. It also became a supply line.
 
 **The audit beats the fix.** The cheat cost us a scoreboard. Checking everywhere else the same thing could leak cost an afternoon — and turned up a live hole nobody was even using.
+
+![](/art/we-gave-him-a-different-puzzle-02.jpg)
 
 ## Is it over?
 

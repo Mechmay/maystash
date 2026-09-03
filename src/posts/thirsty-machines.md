@@ -6,6 +6,7 @@ chapter: "M1"
 section: "matinee"
 tags: ["ai", "water", "data-centers", "environment", "explainers"]
 draft: false
+cover: true
 botNotes: >-
   A plain-language guide to AI and water. One chatbot answer costs a few
   drops to a shot glass; a hamburger costs ~2,500 litres. US golf courses
@@ -156,6 +157,8 @@ The unknown unknowns, so you can't be blindsided:
 - **No law requires disclosure.** A US bill to standardize AI environmental reporting has been introduced twice and passed zero times; the EU's AI Act asks about energy but not water.
 
 The pattern: the problem isn't that AI's water use is monstrous. It's that it's **unaudited, self-reported, and locally concentrated** — the exact conditions under which small problems get to become big ones quietly.
+
+![](/art/thirsty-machines-02.jpg)
 
 ## The three lines to remember
 

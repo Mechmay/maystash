@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = false;
+
+// OAuth redirect target for the LinkedIn side of the content machine.
+//
+// Same design as /instagram/callback and /tiktok/callback: this page does NOT
+// exchange the code. Doing that here would put LINKEDIN_CLIENT_SECRET into
+// Vercel's environment -- a public host holding a master credential to serve an
+// exchange that happens a few times a year. The secret stays in .env and
+// scripts/linkedin-auth.mjs does the exchange.
+//
+// LinkedIn returns ?code=...&state=... on success, or ?error=...&error_description=...
+// on denial. The code is single-use and short-lived; copy it from this page.
+
+const url = Astro.url;
+const code = url.searchParams.get('code');
+const error = url.searchParams.get('error');
+const errorDesc = url.searchParams.get('error_description');
+---
+
+<Layout title="LinkedIn authorization" description="OAuth redirect target.">
+  <main class="cb" id="main">
+    <p class="eyebrow mono">CONTENT MACHINE · LINKEDIN AUTHORIZATION</p>
+
+    {error && (
+      <>
+        <h1>Authorization failed</h1>
+        <p class="err mono">{error}</p>
+        {errorDesc && <p>{errorDesc}</p>}
+        <p>Nothing was stored. Start the flow again from the terminal.</p>
+      </>
+    )}
+
+    {!error && code && (
+      <>
+        <h1>Authorized</h1>
+        <p>Copy this code and paste it into the terminal command waiting for it. It is
+           single-use and short-lived.</p>
+        <pre class="code"><code>{code}</code></pre>
+        <p class="hint">
+          <code>node --env-file=.env scripts/linkedin-auth.mjs --code &lt;paste&gt;</code>
+        </p>
+      </>
+    )}
+
+    {!error && !code && (
+      <>
+        <h1>Nothing to do</h1>
+        <p>This page is the redirect target for a LinkedIn authorization flow. Opening it
+           directly does nothing.</p>
+      </>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .cb {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 4rem 1.25rem 6rem;
+    line-height: 1.65;
+  }
+  .eyebrow { font-size: 0.72rem; letter-spacing: 0.16em; opacity: 0.6; margin: 0 0 1rem; }
+  .cb h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); margin: 0 0 1rem; }
+  .code {
+    padding: 1rem 1.1rem;
+    border-radius: 3px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    word-break: break-all;
+    white-space: pre-wrap;
+    border: 1px solid currentColor;
+  }
+  .hint { font-size: 0.78rem; opacity: 0.7; }
+  .err { font-weight: 600; }
+</style>

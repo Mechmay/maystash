@@ -5,6 +5,7 @@ date: 2026-08-18
 chapter: "05"
 tags: ["ai", "agents", "security", "prompt-injection", "automation"]
 draft: false
+cover: true
 botNotes: >-
   In mid-2026 the major labs shipped persistent agents — Anthropic's Claude
   Tag in Slack (June 23), xAI's Grok Bot with its own cloud VM (August 11),
@@ -103,6 +104,8 @@ Whichever way you go, these are the questions I'd ask before an agent gets a log
 **What happens when it reads something that lies to it?** Because it will. Not maybe. Any agent processing mail, tickets, or web pages will eventually process one written by somebody who knows it's an agent. The question isn't whether it gets fooled. It's what's within arm's reach when it does.
 
 **Who owns the machine?** And underneath: where does the memory live, whose logins are loaded into it, and what happens to both if that vendor changes their pricing, their terms, or their mind.
+
+![](/art/coworker-who-never-logs-out-02.jpg)
 
 ## The coworker, revisited
 

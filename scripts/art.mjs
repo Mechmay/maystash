@@ -18,7 +18,7 @@
 //
 // Output: public/art/<slug>-NN.jpg  (NN = 01, 02, ...)
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { accessToken } from './gcp-auth.mjs';
@@ -48,45 +48,69 @@ const HOUSE = [
   'ABSOLUTELY NO TEXT, no letters, no numbers, no words, no logos, no watermarks, no captions anywhere in the image.',
 ].join(' ');
 
-// One or more scenes per post. Keep each scene a PLACE or an OBJECT — the
-// metaphor made physical — never a literal diagram and never a person's face.
+// Two scenes per post: [0] = the establishing wide (cover), [1] = a tighter
+// detail or a second beat of the SAME metaphor, for mid-post. Keep each scene a
+// PLACE or an OBJECT — the metaphor made physical — never a literal diagram and
+// never a person's face.
 const MANIFEST = {
   'agents-need-a-leash': [
     'A dim server room at 3:47 AM, one machine rack awake and glowing while the rest sit dark. '
     + 'Its single indicator LED throws a thin electric-blue line of light across a bare concrete floor. '
     + 'In the foreground, six frayed rope ends lie coiled and unattached to anything, catching the edge of the light.',
+    'Extreme close-up of a single thick rope on dark concrete, tied with six evenly spaced knots down its length, '
+    + 'lit by one hard raking light so each knot casts a long shadow. A thin rim of electric klein blue catches the rope. Shallow depth of field.',
   ],
   'we-gave-him-a-different-puzzle': [
     'Two identical paper puzzle cards laid on black felt under one hard overhead lamp. '
     + 'The left card sits crisp inside the pool of light; the right card lies just outside it, in shadow. '
     + 'A single stroke of acid yellow-green catches the lit card\'s torn edge.',
+    'A single paper puzzle card lying face-down just outside a circular pool of hard overhead light on black felt, '
+    + 'its torn edge rimmed in acid yellow-green, the rest sinking into deep shadow. Quiet, still, cinematic.',
   ],
   'receipts': [
     'A long paper receipt curling out of an old thermal printer in near-darkness, '
     + 'lit by one hard raking light so the paper glows against black. '
     + 'The roll trails off the edge of a desk into shadow; a thin line of klein blue rims the printer\'s slot.',
+    'A long curled paper receipt lying across a dark desk, a plain glass magnifier resting on it and catching one hard light, '
+    + 'the paper glowing white against black, a faint klein-blue reflection in the glass. Macro, shallow depth of field. No readable text.',
   ],
   'thirsty-machines': [
     'A backyard grill at dusk seen in cinematic wide shot, a single burger on the grate catching warm light, '
     + 'and behind it, across a chain-link fence, the cold silhouette of a data-center cooling tower breathing pale vapour into a bruised orange sky. '
     + 'Warm foreground, cold industrial background.',
+    'A single plain glass of water on a dark counter, beaded with condensation, lit by one hard light, '
+    + 'and reflected small and cold in the curve of the glass, the silhouette of an industrial cooling tower. Deep shadow, macro, cinematic.',
   ],
   'player-who-never-lost': [
-    'An empty competition leaderboard rendered as a physical departures-board in a dark hall, '
+    'An empty competition leaderboard rendered as a physical split-flap departures board in a dark hall, '
     + 'one top row lit and all rows below it falling into shadow. '
-    + 'A single acid yellow-green pixel-glow marks the top line. Long cinematic shadows.',
+    + 'A single acid yellow-green indicator glows at the top line. Long cinematic shadows. No readable text.',
+    'A single game counter sitting alone inside a pool of hard overhead light on black felt, casting a long shadow, '
+    + 'its rim catching a stroke of acid yellow-green. Everything around it in deep shadow. Still, cinematic, quiet.',
   ],
   'injection-is-a-con-job': [
     'A grand hotel lobby at night, marble and shadow, a single figure-shaped absence of light walking past an unattended security desk toward a bank of elevators. '
     + 'One klein-blue lamp glows over the desk. Nobody is looking. Deep noir shadows, cinematic wide.',
+    'A hotel key card lying on a polished marble floor inside a single shaft of klein-blue light, deep noir shadow all around, '
+    + 'the grain of the marble catching the edge of the light. Macro, cinematic, tense. No readable text.',
   ],
   'brain-that-sleeps': [
     'A single filing cabinet drawer open in a dark archive, one folder inside it lit from within by a soft klein-blue glow, '
     + 'the rest of the cabinet receding into black. Motes of dust hang in the single shaft of light. Cinematic, still, quiet.',
+    'Rows of wooden index-card drawers in a dark archive receding into black, one drawer edge pulled open and lit from within '
+    + 'by a soft klein-blue glow, dust hanging in the beam. Deep perspective, single light source, cinematic and quiet.',
   ],
   'coworker-who-never-logs-out': [
     'An open-plan office at 3 AM, every desk dark and empty except one, where a monitor still glows and an empty ergonomic chair sits slightly turned, as if just vacated. '
     + 'The glow spills klein blue across the empty desks around it. Cinematic wide, long shadows.',
+    'A cold cup of coffee sitting beside a glowing keyboard on a dark desk at night, the screen-glow spilling klein blue across the keys, '
+    + 'the chair behind it empty. Nobody there. Macro, shallow depth of field, long shadows.',
+  ],
+  'self-only': [
+    'A single door standing ajar in a dark concrete corridor, one hard shaft of electric klein-blue light spilling out through the gap onto the floor, '
+    + 'a row of other identical doors beside it sealed shut and dark. Cinematic wide, deep perspective, film grain. No text.',
+    'A phone lying face-up on a dark surface, its screen the only light, throwing a cold klein-blue glow upward, '
+    + 'a single notification dot glowing on the black screen. Everything else in deep shadow. Macro, shallow depth of field. No readable text.',
   ],
 };
 
@@ -129,6 +153,7 @@ async function main() {
   const args = process.argv.slice(2);
   const dry = args.includes('--dry');
   const all = args.includes('--all');
+  const skipExisting = args.includes('--skip-existing');
   const slugs = all ? Object.keys(MANIFEST) : args.filter((a) => !a.startsWith('--'));
   if (!slugs.length) {
     console.error('usage: node scripts/art.mjs <slug> [--dry] | --all');
@@ -139,7 +164,11 @@ async function main() {
   for (const slug of slugs) {
     const scenes = MANIFEST[slug];
     if (!scenes) { console.error(`no manifest entry for "${slug}"`); process.exit(1); }
-    scenes.forEach((prompt, i) => jobs.push({ slug, n: i + 1, prompt }));
+    scenes.forEach((prompt, i) => {
+      const name = `${slug}-${String(i + 1).padStart(2, '0')}.jpg`;
+      if (skipExisting && existsSync(join(ART_DIR, name))) return;
+      jobs.push({ slug, n: i + 1, prompt });
+    });
   }
 
   const est = jobs.length * IMAGE_COST;

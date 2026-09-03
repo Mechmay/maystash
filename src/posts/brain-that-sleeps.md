@@ -240,6 +240,8 @@ Summary: one line saying what this project is and where it stands.
 ## Decisions
 - 2026-07-05 — chose SQLite over Postgres: single-user, zero ops.
 
+![](/art/brain-that-sleeps-02.jpg)
+
 ## Next steps
 - [ ] Verify the dark-theme guess against analytics
 ```

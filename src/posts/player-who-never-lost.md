@@ -6,6 +6,7 @@ chapter: "M2"
 section: "matinee"
 tags: ["games", "security", "cheating", "dinjure", "explainers"]
 draft: false
+cover: true
 botNotes: >-
   A player cracked Dinjure's daily puzzle in one guess, every day, for
   weeks. Two cheats, two fixes, and the one detail deliberately not
@@ -61,6 +62,8 @@ You can be lucky. You can't be lucky *from* a failure. Whatever he learned, he l
 **The fix:** this one never touches his device at all — it lives entirely on our side, and his game looks exactly the same as it did yesterday. Scores that show that telltale relationship to a throwaway account quietly stop counting toward rank. No ban, no accusation, no dramatic banner. He can still play every day, keep his stats, keep his streak. He just can't be champion with borrowed answers.
 
 And here's the one thing this article won't tell you: exactly what we look for. Publishing the tripwire is how you teach the next person to step over it.
+
+![](/art/player-who-never-lost-02.jpg)
 
 ## What this is really about
 

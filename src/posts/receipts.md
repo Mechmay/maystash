@@ -1,7 +1,7 @@
 ---
 title: "I Made My AI Agents Keep Receipts. Here's the Bill — Including the Rows That Say Zero."
-tagline: "Three months of agents doing real work for a real client, priced in dollars at a real rate card. The method, the number, the four rules that stop the number being a lie, and the parts of my own setup that produced nothing at all."
-date: 2026-08-13
+tagline: "Six weeks of agents doing real work for a real client, priced in dollars at a real rate card. The method, the number, the four rules that stop the number being a lie, and the month I spent discovering that my own monitors were lying to me in three different directions."
+date: 2026-09-03
 chapter: "04"
 tags: ["ai", "agents", "measurement", "automation", "money"]
 draft: true
@@ -15,7 +15,7 @@ That's how most automation dies. Not caught in a scandal — just quietly unfund
 
 So in August I made a rule for every agent I build: **it logs every task it does, prices that task in dollars of human labour, and mails the owner the bill on Friday whether the bill is flattering or not.** No ledger, no launch.
 
-Three months in, here is the actual output, the method, and the parts where the method turns on me.
+Six weeks in, here is the actual output, the method, and the month I spent finding out that my own monitors were lying to me in three different directions.
 
 ## The number, up front
 
@@ -96,17 +96,43 @@ The bot's real failure wasn't being wrong. Being wrong is fine and cheap. The fa
 
 So when I say the client ledger is unaudited, I'm not being coy. I know precisely what an unaudited number does, because I have one framed on the wall.
 
-## Three things that produced nothing at all
+## Then my own monitors lied to me, three different ways in one month
 
-Since we're doing receipts:
+I wrote the section above about a bot with a flattering scoreboard. Then I went looking at my own instruments, and found the same disease everywhere — each instance failing in a *different* direction, which is the part I'd never have predicted.
 
-**Three overnight jobs died for sixteen days and nothing noticed.** The operating system quietly refuses to let scheduled jobs read files in one particular folder. Exit code 126, "Operation not permitted", written to a log nobody was reading. Sixteen days of nothing, on a schedule, on time.
+**Sixteen days of nothing, on schedule, on time.** Three overnight jobs were dying instantly because the operating system quietly refuses to let scheduled tasks read files in one particular folder. Exit code 126, "Operation not permitted," written to a log nobody was reading. That one has an ending, at least: the jobs live on a small server now, outside the folder the OS was protecting, and they've run every night since.
 
-**A watchdog cried wolf for three weeks about a job that had never existed.** It read a status file that said "hasn't run." Correct. There was no job. The status file was the only evidence of a thing that was never built.
+**Green light, nothing happening.** My notes system syncs itself on a schedule. The script did this:
 
-**One monitor flagged "these numbers look frozen" and was ignored for two weeks** — by me — because flagging was all it could do. A detector with no owning action isn't a control. It's a diary.
+```
+git commit -q -m "..." && log "committed"
+```
 
-And the honest gap in this very post: **I still don't know what the compute cost.** A few dollars, probably. Probably is not a number. You cannot quote anyone a monthly price off a *probably*, and until I instrument it, the cost side of my own ledger is exactly the kind of estimate I'd refuse from anyone else.
+Commit started failing on a stale lock file. And `&&` short-circuits — so the failure printed *nothing at all*, the script sailed past it, the next two steps succeeded by having nothing to do, and the run signed off with `ok`. Result: **52 consecutive "ok" entries across four days, a green status light, and not one thing saved.** Every other writer was blocked by the same lock the whole time.
+
+Two rules fell out of it, and they're the most useful thing in this post:
+
+**Log on the failure branch, not the success branch.** `cmd && log_success` makes a broken run and a skipped run look identical.
+
+**Assert the postcondition, not the return code.** The script now re-checks whether anything actually got saved. That would have caught this on day one, whatever the cause — and it doesn't need me to have predicted the cause.
+
+**The watchdog was in the graveyard it was guarding.** The job whose entire purpose is to flag other jobs as overdue was itself among the dead. So a four-week outage of everything went unreported, while the status files all read plausibly. **A health check may never live inside the thing it checks** — it needs a different alarm clock, a different key, and ideally a different machine. A dead man's switch that shares a failure mode with its subject stays silent at precisely the moment it matters.
+
+**Then the same instrument cried wolf.** A detector read the last forty lines of an append-only log to decide if something was broken. One real failure scrolled through that window for a full day — so runs that *completed successfully* kept reporting themselves dead. **One stale line produced four false alarms and two healthy jobs pronounced dead.** Judge the current run's own output, not a window into history that happens to contain the past.
+
+And a fourth, quieter one: the fix for the first outage had been *written down* five weeks before it was applied. **A documented fix is not an applied fix.** Verify the artifact exists, not that the plan exists.
+
+## The gap I closed, and the one I didn't
+
+Last month I wrote that I didn't know what the compute cost — "a few dollars, probably" — and that *probably* is not a number you can quote anyone.
+
+I've since had to instrument it for a different build, and the real figures are unremarkable in the best way: **$1.07 to render an eight-image carousel, about eight cents to draft the copy, and roughly a dollar a month for the data scraping.** Not the scary number, not the rounding error — just a number, finally, with a decimal point in it.
+
+The client ledger still doesn't have one. That's the honest state: **$1,200 of value against a cost line I can now measure and haven't yet.** I know exactly what that combination is worth, because I've spent this whole post describing what it does to a number.
+
+And the one that isn't closed at all: **the ledger is still unaudited.** Same as when I wrote it. Written by the session that did the work, flagged in its own file, three weeks later and still true.
+
+I'd rather print that sentence again than quietly drop it.
 
 ## What the receipts changed
 
@@ -118,7 +144,9 @@ It's a **map.** The row that repeats and prices high is the one worth building p
 
 It's a **weekly conversation** nobody has to schedule. The unpriced-tasks question gets answered in the owner's own words, which is the renewal discussion happening without a sales call in sight.
 
-And it settles the argument the whole industry keeps having in the abstract. Does this stuff actually save anyone anything? I don't have to speculate. I have three rows, a rate I can defend, one row worth nothing until a human tells me otherwise, a twelve-percent failure printed next to a success, and a cost line I'm not allowed to guess at any more.
+And it's an **immune system.** Every lie in the back half of this post was caught by the same reflex the ledger installs — distrust the instrument, check the postcondition, never let the thing that did the work report on the work. The ledger was built to convince a client. It ended up auditing me.
+
+So it settles the argument the whole industry keeps having in the abstract. Does this stuff actually save anyone anything? I don't have to speculate. I have three rows, a rate I can defend, one row worth nothing until a human tells me otherwise, a twelve-percent failure printed next to a success, four monitors caught lying, and a cost line I'm no longer allowed to guess at.
 
 That's a smaller claim than the ones on the timeline this week.
 

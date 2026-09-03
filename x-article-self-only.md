@@ -7,6 +7,12 @@ Canonical link at bottom.
 
 **Safe to post: no offer, no CTA, technical write-up — same category as CH.02/03/05, not OBA-gated.**
 
+**X caption** (the short post that carries the Article link, X auto-attaches the Article's cover + headline as a card, so this text sits above it):
+
+TikTok says posting to your own account needs an audit: privacy policy, recorded demo, weeks of review. I found a path that skips all of it and still publishes fully public. How, and the two portal traps that cost me hours:
+
+(223 chars, well under the 280 limit, leaves room if X's own link-card padding eats a few.)
+
 ---
 
 ## TikTok's API Told Me I Could Only Post to Myself. The Post Went Fully Public. Both Were True.

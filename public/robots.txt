@@ -32,3 +32,4 @@ Sitemap: https://maystash.xyz/sitemap-index.xml
 # meta tag cannot be added without changing every page's layout.
 User-agent: *
 Disallow: /tiktok/callback
+Disallow: /instagram/callback

@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = false;
+
+// OAuth redirect target for the Instagram side of the content machine.
+//
+// Same design as /tiktok/callback and for the same reason: this page does NOT
+// exchange the code. Doing that here would put IG_APP_SECRET into Vercel's
+// environment -- a third home for a master credential, on a public host, to
+// serve an exchange that happens a few times a year. The secret stays in .env
+// and `scripts/ig-auth.mjs` does the exchange.
+//
+// One Instagram-specific detail: Instagram appends a literal `#_` to the code
+// in the address bar. It is a fragment, so it never reaches the server and is
+// not in `code` here -- but it IS in what you get by copying the URL by hand,
+// and it makes the exchange fail with an unhelpful error. Copy from this page,
+// not the address bar. (ig-auth.mjs strips it anyway, belt and braces.)
+//
+// Kept out of search via public/robots.txt rather than a meta tag: the shared
+// Layout exposes only a default slot.
+
+const url = Astro.url;
+const code = url.searchParams.get('code');
+const error = url.searchParams.get('error');
+const errorDesc = url.searchParams.get('error_description');
+const reason = url.searchParams.get('error_reason');
+---
+
+<Layout title="Instagram authorization" description="OAuth redirect target.">
+  <main class="cb" id="main">
+    <p class="eyebrow mono">CONTENT MACHINE · INSTAGRAM AUTHORIZATION</p>
+
+    {error && (
+      <>
+        <h1>Authorization failed</h1>
+        <p class="err mono">{error}{reason ? ` — ${reason}` : ''}</p>
+        {errorDesc && <p>{errorDesc}</p>}
+        <p>Nothing was stored. Start the flow again from the terminal.</p>
+      </>
+    )}
+
+    {!error && code && (
+      <>
+        <h1>Authorized</h1>
+        <p>Copy this code and paste it into the terminal command waiting for it. It is
+           single-use and expires in an hour.</p>
+        <pre class="code"><code>{code}</code></pre>
+        <p class="hint">
+          <code>node --env-file=.env scripts/ig-auth.mjs --code &lt;paste&gt;</code>
+        </p>
+        <p class="hint">Copy from this page rather than the address bar — Instagram appends
+           a <code>#_</code> to the URL that is not part of the code.</p>
+      </>
+    )}
+
+    {!error && !code && (
+      <>
+        <h1>Nothing to do</h1>
+        <p>This page is the redirect target for an Instagram authorization flow. Opening it
+           directly does nothing.</p>
+      </>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .cb {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 4rem 1.25rem 6rem;
+    line-height: 1.65;
+  }
+  .eyebrow { font-size: 0.72rem; letter-spacing: 0.16em; opacity: 0.6; margin: 0 0 1rem; }
+  .cb h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); margin: 0 0 1rem; }
+  .code {
+    padding: 1rem 1.1rem;
+    border-radius: 3px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    word-break: break-all;
+    white-space: pre-wrap;
+    border: 1px solid currentColor;
+  }
+  .hint { font-size: 0.78rem; opacity: 0.7; }
+  .err { font-weight: 600; }
+</style>

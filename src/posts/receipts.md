@@ -4,7 +4,7 @@ tagline: "Six weeks of agents doing real work for a real client, priced in dolla
 date: 2026-09-03
 chapter: "04"
 tags: ["ai", "agents", "measurement", "automation", "money"]
-draft: false
+draft: true
 cover: true
 ---
 

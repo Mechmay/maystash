@@ -1,6 +1,7 @@
 ---
 import '../styles/tokens.css';
 import Nav from '../components/Nav.astro';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title: string;
@@ -57,6 +58,10 @@ const baseLd = {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
     {import.meta.env.PROD && <script defer src="/_vercel/insights/script.js" />}
+    {/* Vercel Insights answers "did they arrive". Analytics answers "did they
+        finish reading". Both are PROD-only; see Analytics.astro for what is
+        deliberately switched off. */}
+    <Analytics />
   </head>
   <body>
     {/* First focusable thing in the document, on every page. Off-screen until

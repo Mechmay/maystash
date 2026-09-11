@@ -53,6 +53,14 @@ const HOUSE = [
 // PLACE or an OBJECT — the metaphor made physical — never a literal diagram and
 // never a person's face.
 const MANIFEST = {
+  'green-means-the-runner-ran': [
+    'A dark control room lined with a wall of old analog status lamps, every single lamp glowing a steady, calm acid yellow-green. '
+    + 'Through an open doorway at the back, a lone machine sits cold and dark, its power cable lying unplugged on the concrete floor. '
+    + 'Cinematic wide, deep perspective, the lamps the only light. No text.',
+    'Extreme close-up of one glowing acid yellow-green indicator lamp set into a dark, dusty metal panel. '
+    + 'Beside it, the cable that should feed it has been cut clean through, the severed copper catching the lamp light. '
+    + 'Macro, shallow depth of field, everything else in deep shadow. No readable text.',
+  ],
   'agents-need-a-leash': [
     'A dim server room at 3:47 AM, one machine rack awake and glowing while the rest sit dark. '
     + 'Its single indicator LED throws a thin electric-blue line of light across a bare concrete floor. '

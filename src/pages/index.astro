@@ -63,6 +63,12 @@ const stripKick: Record<string, string> = {
 //   'avatar-v2' — AInfluencer-generated 3D character (head + shoulders)
 const AVATAR_SET = 'avatar-v2';
 const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
+// Poses that also have a rendered motion clip (public/<set>/motion/<name>.webm|mp4).
+// Rendered on Vertex Veo from that pose's own still, with the SAME frame passed as
+// first and last frame, so a clip starts and ends on the still it replaces and
+// the idle loop has no seam. Talking stays on the stills: a pre-rendered clip
+// cannot lip-sync a sentence nobody has written yet.
+const MOTION = AVATAR_SET === 'avatar-v2' ? ['idle', 'greet'] : [];
 ---
 <Layout title="maystash — May builds, breaks, and writes it down" bareNav={true}>
   {/* The corner nav lives OUTSIDE <main> — it is site navigation repeated on
@@ -133,6 +139,25 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
                 fetchpriority={n === 0 ? 'high' : undefined}
                 width="768"
                 height="768"
+              />
+            ))}
+            {/* No <source> here on purpose: the script attaches it after the page
+                has loaded and gone idle, so a clip never competes with the
+                first paint or the high-priority still above. No JS, reduced
+                motion, or Save-Data = the stills, exactly as before. */}
+            {MOTION.map((m) => (
+              <video
+                class="pose motion"
+                data-motion={m}
+                data-webm={`/${AVATAR_SET}/motion/${m}.webm`}
+                data-mp4={`/${AVATAR_SET}/motion/${m}.mp4`}
+                muted
+                playsinline
+                loop={m === 'idle'}
+                preload="none"
+                aria-hidden="true"
+                width="480"
+                height="480"
               />
             ))}
           </div>
@@ -727,6 +752,9 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   @media (prefers-reduced-motion: reduce) {
     .av, .avatar-wrap.is-talking .av, .avatar-wrap.is-react .av { animation: none; }
     .pose { transition: none; }
+    /* The script never loads the clips under reduced motion; this is the belt
+       to that brace, in case a clip was already attached when the setting flipped. */
+    .av:not(.force-motion) .motion { display: none; }
     .roll { animation: none; }
     /* Continuous horizontal scroll is the motion most likely to cause harm, and
        it was the one still running. The speech rotation is JS and is gated in
@@ -773,17 +801,87 @@ const POSES = ['idle', 'talk-open', 'talk-o', 'think', 'greet', 'zen'];
   let i = 0;
 
   // ---- pose engine: cross-fade between the real memoji frames ----
+  // `img.pose` and not `.pose`: the motion <video>s share the class for layout
+  // and would otherwise register under an empty pose name.
   const frames = new Map<string, HTMLElement>();
-  document.querySelectorAll<HTMLElement>('.pose').forEach((el) => {
+  document.querySelectorAll<HTMLElement>('img.pose').forEach((el) => {
     frames.set(el.dataset.pose ?? '', el);
   });
+
+  // Motion clips stand in for a still once they can actually play. Until then,
+  // and forever if they never load, the still is used, so a slow network or a
+  // refused autoplay degrades to the old page rather than to an empty disc.
+  const motion = new Map<string, HTMLVideoElement>();
   let current = 'idle';
+  let shown: HTMLElement | undefined = frames.get('idle');
+
+  const show = (name: string) => {
+    const next = motion.get(name) ?? frames.get(name);
+    if (!next || next === shown) return;
+    if (next instanceof HTMLVideoElement) {
+      if (!next.loop) next.currentTime = 0;       // one-shot clips start from the top
+      next.play().catch(() => {                   // low-power mode, autoplay policy
+        motion.delete(name);
+        if (current === name) show(name);         // fall back to the still
+      });
+    }
+    next.classList.add('is-on');
+    const prev = shown;
+    prev?.classList.remove('is-on');
+    // Pause a clip once it has faded out, not before, or the cross-fade freezes.
+    if (prev instanceof HTMLVideoElement) {
+      window.setTimeout(() => { if (!prev.classList.contains('is-on')) prev.pause(); }, 400);
+    }
+    shown = next;
+  };
+
   const setPose = (name: string) => {
     if (!frames.has(name) || name === current) return;
-    frames.get(current)?.classList.remove('is-on');
-    frames.get(name)?.classList.add('is-on');
     current = name;
+    show(name);
   };
+
+  {
+    // `?motion` opts IN to the clips despite a reduced-motion setting. It exists
+    // because the site's own author runs macOS with Reduce Motion on, and would
+    // otherwise never see the avatar he paid to animate. It only ever widens
+    // what the visitor explicitly asked for; nobody gets motion by default who
+    // said they don't want it.
+    const forced = new URLSearchParams(location.search).has('motion');
+    if (forced) av?.classList.add('force-motion');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches && !forced;
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+    const clips = [...document.querySelectorAll<HTMLVideoElement>('video.motion')];
+    const attach = () => {
+      for (const v of clips) {
+        const name = v.dataset.motion ?? '';
+        v.muted = true;                            // the attribute alone does not satisfy every autoplay policy
+        for (const [src, type] of [[v.dataset.webm, 'video/webm'], [v.dataset.mp4, 'video/mp4']]) {
+          if (!src) continue;
+          const s = document.createElement('source');
+          s.src = src;
+          s.type = type as string;
+          v.appendChild(s);
+        }
+        v.preload = 'auto';
+        v.addEventListener('canplaythrough', () => {
+          motion.set(name, v);
+          if (current === name && shown !== v) show(name);
+        }, { once: true });
+        // A one-shot clip (the wave) ends on the still it started from; hand
+        // back to idle so the face keeps breathing instead of freezing mid-hold.
+        if (!v.loop) v.addEventListener('ended', () => { if (current === name) setPose('idle'); });
+        v.load();
+      }
+    };
+    if (!reduce && !saveData && clips.length) {
+      const whenIdle = () => ('requestIdleCallback' in window
+        ? window.requestIdleCallback(attach, { timeout: 3000 })
+        : window.setTimeout(attach, 1200));
+      if (document.readyState === 'complete') whenIdle();
+      else window.addEventListener('load', whenIdle, { once: true });
+    }
+  }
 
   // ---- speech ----
   // The whole sentence appears at once (a quick fade, not a typewriter), then

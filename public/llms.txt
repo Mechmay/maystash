@@ -111,6 +111,16 @@
   draft lands as an inbox notification not in Drafts, and the config form saves nothing while
   an error counter fakes progress.
 
+- [Green Means the Runner Ran. It Never Meant the Work Got Done.](https://maystash.xyz/posts/green-means-the-runner-ran/):
+  A catalogue of thirteen times May's own systems reported success while broken, and the six
+  patterns they share: a scheduler that logged "succeeded" every 30 minutes for 7 days while
+  its job never ran, a sync script that logged "OK" 52 times while a stale lock blocked every
+  commit, an OAuth dashboard reading "connected" for 3 weeks on dead tokens, a stale project
+  folder that looked like a healthy repo, an error message that named the wrong cause, an
+  unquoted # that silently truncated a secret, and the inverse: a measurer that read a real
+  zero as a deletion. Core rule: a runner reporting success proves the runner ran, never that
+  the work happened — assert on the artifact the work should produce, not the runner's status.
+
 ## Feeds
 
 - [RSS](https://maystash.xyz/rss.xml)

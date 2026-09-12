@@ -4,7 +4,7 @@ tagline: "For seven days a scheduler told me my job had succeeded, every thirty 
 date: 2026-09-11
 chapter: "07"
 tags: ["ai", "automation", "reliability", "monitoring", "security"]
-draft: true
+draft: false
 cover: true
 botNotes: >-
   A catalogue of times May's own systems reported success while broken, and

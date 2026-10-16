@@ -126,6 +126,12 @@
 - [RSS](https://maystash.xyz/rss.xml)
 - [Sitemap](https://maystash.xyz/sitemap-index.xml)
 
+## Pages
+
+- [Selected systems](https://maystash.xyz/work): the evidence behind May's resume, for hiring managers. AI security, agent systems and reliability work, each linked to where it can be checked.
+- [The Guard Bot](https://maystash.xyz/ctf): a live, playable prompt-injection challenge with three guards and three commonly shipped defences.
+- [Projects](https://maystash.xyz/projects): shipped products.
+
 ## Author
 
-May: cybersecurity, web3, applied AI, 0→1 products.
+May: cybersecurity, web3, applied AI, 0→1 products. Based in Halifax, Nova Scotia.

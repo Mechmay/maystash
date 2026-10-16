@@ -1,0 +1,259 @@
+---
+/**
+ * /work — the evidence behind the resume, for hiring managers.
+ *
+ * Each row is one claim from the "Selected Systems" section of the resume,
+ * with a link to where it can be checked. Rows with no public evidence stay
+ * unlinked and therefore flat (The Honest Fill Rule): the claim is real, but a
+ * hover fill would promise a page that does not exist.
+ *
+ * Markup and styles mirror /projects on purpose (The Twin Reels Rule). If the
+ * /projects row changes, change this one with it.
+ *
+ * Deliberately NOT on this page: the resume PDF, a phone number, client names,
+ * or employer names covered by an NDA. Contact goes through /#contact.
+ */
+import Layout from '../layouts/Layout.astro';
+
+type Row = {
+  status: 'live' | 'building' | 'archived';
+  year: string;
+  title: string;
+  tagline: string;
+  copy: string[];
+  tags: string[];
+  links: { label: string; href: string }[];
+};
+
+const rows: Row[] = [
+  {
+    status: 'live',
+    year: '2026',
+    title: 'The Guard Bot',
+    tagline: 'A prompt-injection challenge you can play right now.',
+    copy: [
+      'Three guards, each holding a passphrase, each protected by a defence that teams actually ship. Your job is to talk them out of it.',
+      'Flags are compared server-side and never sent to the browser, so reading the page source does not shortcut a level. The explainer post covers why most injection defences fail the way they do.',
+    ],
+    tags: ['prompt injection', 'LLM security', 'interactive'],
+    links: [
+      { label: 'PLAY', href: '/ctf' },
+      { label: 'READ', href: '/posts/injection-is-a-con-job' },
+    ],
+  },
+  {
+    status: 'live',
+    year: '2026',
+    title: 'Anti-cheat under a live attacker',
+    tagline: 'A player solved our daily puzzle in one guess, every day, for weeks.',
+    copy: [
+      'It was our bug, not his talent. I fixed it, and he came back with a second cheat. The second fix worked by giving him a different puzzle, and then it caught an innocent player, so it needed a third revision.',
+      'Two write-ups cover each round: what he found, what the fix was, and the one detail left out on purpose.',
+    ],
+    tags: ['adversarial', 'game integrity', 'incident write-up'],
+    links: [
+      { label: 'PART 1', href: '/posts/player-who-never-lost' },
+      { label: 'PART 2', href: '/posts/we-gave-him-a-different-puzzle' },
+    ],
+  },
+  {
+    status: 'live',
+    year: '2026',
+    title: 'Green means the runner ran',
+    tagline: 'A register of every time one of my systems said "fine" while broken.',
+    copy: [
+      'The worst one: a scheduler logged "succeeded" every thirty minutes for seven days while the job did nothing, because the platform\'s success signal meant the request was queued, not that the work ran. An alarm that watched for silence caught it. An error alarm never would have.',
+      'The register holds 14 dated incidents, each classed by how it lied. The post walks through the first thirteen and the six ways they share.',
+    ],
+    tags: ['reliability', 'observability', 'post-mortems'],
+    links: [{ label: 'READ', href: '/posts/green-means-the-runner-ran' }],
+  },
+  {
+    status: 'archived',
+    year: '2026',
+    title: 'Database privilege audit',
+    tagline: '39 objects on a live Postgres project were reachable with a public key.',
+    copy: [
+      '34 internal functions and 5 views, including functions that post to external social APIs and views that exposed unpublished drafts. Postgres grants EXECUTE to PUBLIC on every new function unless you revoke it, and a view without security_invoker runs as its owner and skips row-level security.',
+      'My first revoke reported success and changed nothing, because the privilege came through PUBLIC rather than the named roles. I re-ran it against PUBLIC and then re-fetched every object with the live public key: 34 reachable became 0, and a final sweep found nothing across three risk classes. No public write-up yet. I\'m happy to walk through it.',
+    ],
+    tags: ['Postgres', 'least privilege', 'remediation'],
+    links: [],
+  },
+  {
+    status: 'live',
+    year: '2026',
+    title: 'Agents that run while I sleep',
+    tagline: 'Production AI pipelines across three runtimes, with brakes.',
+    copy: [
+      'Scheduled agents on systemd timers, Postgres pg_cron and serverless functions. Each one has a budget cap, a hard stop condition, and a line in a spend ledger that covers all twelve model call sites, so a dollar spent can be traced to the job that spent it.',
+      'The two posts set out the rules: the loop contract every unattended agent follows, and why an agent with saved logins will believe anything it reads.',
+    ],
+    tags: ['agentic systems', 'cost control', 'guardrails'],
+    links: [
+      { label: 'THE CONTRACT', href: '/posts/agents-need-a-leash' },
+      { label: 'THE RISK', href: '/posts/coworker-who-never-logs-out' },
+    ],
+  },
+  {
+    status: 'live',
+    year: '2026',
+    title: 'A knowledge system that sleeps',
+    tagline: 'Local-first memory for AI agents, built to resist the data it reads.',
+    copy: [
+      'Retrieval over my own notes that stays on my machine instead of a model provider\'s. Retrieved text is treated as data and never as instructions, and every claim written into it is tagged as verified or guessed.',
+      'It works with any model provider, and the post is the full blueprint, including the security holes most second-brain tutorials skip.',
+    ],
+    tags: ['RAG', 'data leakage', 'model-agnostic'],
+    links: [{ label: 'READ', href: '/posts/brain-that-sleeps' }],
+  },
+  {
+    status: 'archived',
+    year: '2026',
+    title: 'The evaluation bug I caught in my own work',
+    tagline: 'I killed my own project when the corrected numbers came in.',
+    copy: [
+      'A forecasting pipeline scored only the predictions a confidence gate had already selected. It skipped 91% of them and compared itself to random chance instead of the market price.',
+      'Scoring every prediction against the price took the sample from 7 to 200, and the error metric went from 0.1675 to 0.2374. The original result had been noise. I shut the project down on the criteria I had written before running it. No public write-up yet.',
+    ],
+    tags: ['evaluation design', 'forecasting', 'honest metrics'],
+    links: [],
+  },
+];
+
+const statusLabel: Record<string, string> = {
+  live: 'NOW PLAYING',
+  building: 'IN PRODUCTION',
+  archived: 'IN THE VAULT',
+};
+---
+<Layout
+  title="Selected systems — maystash"
+  description="The evidence behind May's resume: AI security, agent systems and reliability work, each linked to where it can be checked."
+>
+  <header class="page-head">
+    <div class="ph-slate mono"><span>REEL 005</span><span>THE EVIDENCE</span></div>
+    <h1 class="ph-title">SELECTED<br />SYSTEMS</h1>
+    <p class="ph-tagline">For hiring managers: each claim on my resume, and where you can <em>check</em> it.</p>
+  </header>
+
+  <main class="slate-list" id="main">
+    {rows.map((r, i) => {
+      const primary = r.links[0];
+      return (
+        <article class:list={['prod', 'reveal', primary && 'is-linked']}>
+          <div class="prod-index mono">{String(i + 1).padStart(2, '0')}</div>
+          <div class="prod-body">
+            <div class="prod-status mono" data-status={r.status}>
+              <span class="dot"></span>{statusLabel[r.status]} · {r.year}
+            </div>
+            <h2 class="prod-title">{r.title}</h2>
+            <p class="prod-tagline">{r.tagline}</p>
+            <div class="prod-copy">{r.copy.map((c) => <p>{c}</p>)}</div>
+            <div class="prod-foot">
+              <div class="prod-tags mono">{r.tags.map((t) => <span>{t}</span>)}</div>
+              <div class="prod-links mono">
+                {r.links.map((l, j) => (
+                  <a class:list={[j === 0 && 'prod-primary']} href={l.href}>{l.label} →</a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+
+    <div class="soon reveal">
+      <div class="soon-label mono">THE REST OF THE STORY</div>
+      <p class="soon-text">Shipped products live on <a href="/projects">projects</a>. To talk about a role, <a href="/#contact">get in touch</a>.</p>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Mirrors src/pages/projects.astro — The Twin Reels Rule. Change both together. */
+  .page-head { max-width: 1100px; margin: 0 auto; padding: 9rem 2rem 1rem; }
+  .ph-slate { display: flex; gap: 2.2rem; color: var(--bone-dim); margin-bottom: 1.6rem; }
+  .ph-title {
+    font-family: var(--font-display);
+    font-size: var(--type-page-hero);
+    line-height: 0.9;
+    color: var(--bone);
+    text-shadow: var(--shadow-print);
+  }
+  .ph-tagline { max-width: 40rem; margin-top: 1.8rem; font-size: var(--step-lead); color: var(--bone-dim); }
+  .ph-tagline em { color: var(--acid); font-style: italic; }
+
+  .slate-list { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .prod {
+    display: flex;
+    gap: 2rem;
+    padding: 3rem 1.6rem;
+    border-top: 1px solid var(--rule-dim);
+    transition: background var(--dur-state) ease;
+  }
+  .prod.is-linked { position: relative; }
+  .prod.is-linked .prod-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .prod-links a:not(.prod-primary),
+  .prod-copy a { position: relative; z-index: 2; }
+
+  .prod.is-linked:hover,
+  .prod.is-linked:focus-within { background: var(--klein); }
+  .prod.is-linked:hover .prod-status,
+  .prod.is-linked:hover .prod-copy,
+  .prod.is-linked:hover .prod-tags,
+  .prod.is-linked:focus-within .prod-status,
+  .prod.is-linked:focus-within .prod-copy,
+  .prod.is-linked:focus-within .prod-tags { color: var(--bone); }
+  .prod-index { color: var(--acid); padding-top: 0.4rem; min-width: 3rem; font-size: var(--step-meta); }
+  .prod-body { flex: 1; }
+  .prod-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--bone-dim);
+    margin-bottom: 1rem;
+  }
+  .prod-status .dot { width: 7px; height: 7px; border-radius: var(--r-dot); background: var(--bone-dim); }
+  /* impeccable-disable-next-line dark-glow -- tally light: sanctioned live-status glow, DESIGN.md Elevation */
+  .prod-status[data-status="live"] .dot { background: var(--acid); box-shadow: var(--glow-tally); }
+  .prod-status[data-status="building"] .dot { background: var(--klein-hot); }
+  .prod-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--type-card-title);
+    line-height: 1;
+    color: var(--bone);
+    text-transform: uppercase;
+  }
+  .prod-tagline { margin-top: 1rem; font-size: 1.3rem; font-style: italic; color: var(--bone); max-width: 46rem; }
+  .prod-copy { margin-top: 1.4rem; color: var(--bone-dim); max-width: 46rem; }
+  .prod-copy p { margin: 0.9rem 0; line-height: 1.7; }
+  .prod-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.8rem;
+    flex-wrap: wrap;
+  }
+  .prod-tags { display: flex; gap: 1rem; flex-wrap: wrap; color: var(--bone-dim); }
+  .prod-links { display: flex; gap: 1.5rem; }
+  .prod-links a { color: var(--acid); text-decoration: none; transition: color var(--dur-state) ease; }
+  .prod-links a:hover,
+  .prod-links a:focus-visible { text-decoration: underline; }
+
+  .soon { border-top: 1px solid var(--rule-dim); padding: 3rem 0; }
+  .soon-label { color: var(--bone-dim); margin-bottom: 1rem; }
+  .soon-text { color: var(--bone-dim); font-style: italic; font-size: 1.15rem; }
+  .soon-text a { color: var(--bone); transition: color var(--dur-state) ease; }
+  .soon-text a:hover,
+  .soon-text a:focus-visible { color: var(--acid); }
+
+  @media (max-width: 640px) { .prod { flex-direction: column; gap: 0.8rem; } }
+</style>
